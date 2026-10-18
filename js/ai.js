@@ -11,7 +11,7 @@ const DEFAULT_KEY = "sb_publishable_mRzT0lXHpvXgfQiO8o--Jw_9ii-wJ39";
 const CFG = "english_b2_ai_cfg";
 
 const PROVIDERS = {
-  groq: { url: "https://api.groq.com/openai/v1/chat/completions", model: "llama-3.3-70b-versatile", label: "Groq (бесплатно, быстро)" },
+  groq: { url: "https://api.groq.com/openai/v1/chat/completions", model: "openai/gpt-oss-120b", label: "Groq (бесплатно, быстро)" },
   gemini: { url: "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", model: "gemini-2.5-flash", label: "Google Gemini (бесплатно)" },
   openrouter: { url: "https://openrouter.ai/api/v1/chat/completions", model: "meta-llama/llama-3.3-70b-instruct:free", label: "OpenRouter (бесплатные модели)" },
 };

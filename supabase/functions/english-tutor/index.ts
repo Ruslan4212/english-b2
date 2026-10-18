@@ -241,6 +241,35 @@ function pickProvider(): Provider | null {
   return null;
 }
 const PROVIDER = pickProvider();
+
+/** Модели по убыванию пригодности: русский язык и следование инструкции. */
+const PREFERRED: Record<string, string[]> = {
+  groq: ["openai/gpt-oss-120b", "moonshotai/kimi-k2-instruct", "qwen/qwen3-32b", "llama-3.3-70b-versatile", "openai/gpt-oss-20b"],
+  gemini: ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-flash-latest"],
+};
+
+/**
+ * Провайдеры переименовывают и снимают модели — захардкоженное имя однажды
+ * отвечает 404. Один раз спрашиваем список доступных и берём первую подходящую.
+ */
+let modelReady: Promise<void> | null = null;
+function resolveModel(): Promise<void> {
+  if (!PROVIDER || PROVIDER.name === "anthropic" || env(PROVIDER.name.toUpperCase() + "_MODEL")) return Promise.resolve();
+  const p = PROVIDER;
+  modelReady ??= (async () => {
+    try {
+      const res = await fetch(p.url.replace(/\/chat\/completions$/, "/models"), { headers: { authorization: "Bearer " + p.key } });
+      if (!res.ok) return;
+      const ids: string[] = ((await res.json())?.data ?? []).map((m: { id: string }) => String(m.id).replace(/^models\//, ""));
+      if (!ids.length) return;
+      const better = (PREFERRED[p.name] ?? []).find((m) => ids.includes(m));
+      p.model = better ?? (ids.includes(p.model) ? p.model : ids.find((m) => !/whisper|guard|tts|embed|image|vision|orpheus/i.test(m)) ?? p.model);
+    } catch {
+      /* оставляем модель по умолчанию */
+    }
+  })();
+  return modelReady;
+}
 const anthropic = PROVIDER?.name === "anthropic" ? new Anthropic({ apiKey: env("ANTHROPIC_API_KEY") }) : null;
 
 const ALLOWED_ORIGINS = (env("ENGLISH_ALLOWED_ORIGINS") || "https://ruslan4212.github.io,http://localhost:5288,http://127.0.0.1:5288")
@@ -289,6 +318,7 @@ async function run(req: { system: string; messages: { role: string; content: str
     const text = response.content.map((b) => (b.type === "text" ? b.text : "")).join("");
     return req.json ? extractJson(text) : { text };
   }
+  await resolveModel();
   const p = PROVIDER as Exclude<Provider, { name: "anthropic" }>;
   const call = async () => {
     const res = await fetch(p.url, {
