@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>English B2 Path</title>
+<meta name="description" content="Пошаговый курс английского с нуля до B2 по 18-месячному плану, с ИИ-наставником">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="top">
+  <button class="burger" id="burger" aria-label="Меню">☰</button>
+  <a class="brand" href="#/today">🎓 <b>English</b> B2 Path</a>
+  <div class="top-stats" id="topStats"></div>
+  <button class="icon-btn" id="themeBtn" title="Тема">🌓</button>
+</header>
+<div class="layout">
+  <nav class="side" id="side">
+    <a href="#/today" data-r="today">📅 Сегодня</a>
+    <a href="#/map" data-r="map">🗺️ Карта курса</a>
+    <a href="#/grammar" data-r="grammar">📘 Уроки</a>
+    <a href="#/words" data-r="words">🃏 Слова (Anki)</a>
+    <a href="#/listen" data-r="listen">🎧 Слушание</a>
+    <a href="#/read" data-r="read">📖 Чтение</a>
+    <a href="#/speak" data-r="speak">🗣️ Говорение</a>
+    <a href="#/write" data-r="write">✍️ Письмо</a>
+    <a href="#/work" data-r="work">💼 Рабочий английский</a>
+    <a href="#/errors" data-r="errors">🐞 Мои ошибки</a>
+    <a href="#/progress" data-r="progress">📊 Прогресс и часы</a>
+    <a href="#/resources" data-r="resources">🔗 Ресурсы</a>
+    <a href="#/settings" data-r="settings">⚙️ Настройки</a>
+  </nav>
+  <main id="app" class="main"></main>
+</div>
+
+<button class="fab" id="fab" title="ИИ-наставник">🤖 <span>Спросить наставника</span></button>
+<aside class="helper hide" id="helper">
+  <div class="helper-head">
+    <b>🤖 ИИ-наставник</b>
+    <span class="muted small" id="helperCtx"></span>
+    <button class="icon-btn" id="helperClose">✕</button>
+  </div>
+  <div class="helper-body" id="helperBody"></div>
+  <form class="helper-form" id="helperForm">
+    <textarea id="helperInput" rows="2" placeholder="Спросите что угодно: «почему тут the?», «объясни проще», «дай ещё примеров»…"></textarea>
+    <button class="btn primary" type="submit">➤</button>
+  </form>
+</aside>
+<div class="toast hide" id="toast"></div>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
