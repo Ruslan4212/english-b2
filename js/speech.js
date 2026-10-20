@@ -10,10 +10,22 @@ if (window.speechSynthesis) {
   speechSynthesis.onvoiceschanged = loadVoices;
 }
 
-/** Лучший голос: «естественные» онлайн-голоса Edge/Chrome звучат заметно живее. */
+/**
+ * Лучший голос: женский «естественный» (Edge: Aria/Jenny/Ava/Emma/Sonia/Libby —
+ * Online Natural, Chrome: Google US English, macOS: Samantha). Мужские и старые
+ * «роботизированные» голоса (Zira, David) — в самом конце.
+ */
+const FEMALE = /aria|jenny|ava|emma|michelle|ana|sonia|libby|maisie|natasha|clara|samantha|karen|moira|tessa|serena|zira|google us english|google uk english female|female/i;
+const MALE = /guy|ryan|davis|andrew|brian|christopher|eric|roger|steffan|thomas|david|mark|george|daniel|james|male/i;
 function pickVoice(accent) {
   const want = accent === "gb" ? /en[-_]gb/i : /en[-_]us/i;
-  const score = (v) => (want.test(v.lang) ? 10 : 0) + (/natural|online|neural/i.test(v.name) ? 5 : 0) + (/google/i.test(v.name) ? 3 : 0);
+  const score = (v) =>
+    (want.test(v.lang) ? 6 : 0) +
+    (/natural|online|neural/i.test(v.name) ? 10 : 0) +
+    (FEMALE.test(v.name) ? 8 : 0) -
+    (MALE.test(v.name) && !/female/i.test(v.name) ? 12 : 0) +
+    (/google/i.test(v.name) ? 4 : 0) -
+    (/zira|desktop/i.test(v.name) ? 6 : 0);
   return [...voices].sort((a, b) => score(b) - score(a))[0] || null;
 }
 
@@ -44,8 +56,38 @@ export function speak(text, { slow = false, rate } = {}) {
   });
 }
 
+let audioEl = null;
 export function stopSpeak() {
   window.speechSynthesis?.cancel();
+  if (audioEl) { audioEl.pause(); audioEl = null; }
+}
+
+/* ---------- голос Мии: нейроозвучка с сервера, запасной вариант — браузер ---------- */
+const ttsCache = new Map(); // текст → objectURL
+let serverTTS = null; // функция загрузки аудио задаётся из ai.js (чтобы не тянуть зависимость сюда)
+export function setServerTTS(fn) { serverTTS = fn; }
+
+export async function speakMia(text, { slow = false } = {}) {
+  const clean = String(text).replace(/==/g, "").trim();
+  if (!clean) return;
+  stopSpeak();
+  try {
+    let url = ttsCache.get(clean);
+    if (!url && serverTTS) {
+      const blob = await serverTTS(clean);
+      if (blob) { url = URL.createObjectURL(blob); ttsCache.set(clean, url); }
+    }
+    if (url) {
+      await new Promise((resolve) => {
+        audioEl = new Audio(url);
+        audioEl.playbackRate = slow ? 0.85 : 1;
+        audioEl.onended = audioEl.onerror = () => resolve();
+        audioEl.play().catch(() => resolve());
+      });
+      return;
+    }
+  } catch { /* упадём на голос браузера */ }
+  return speak(clean, { slow });
 }
 
 const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;

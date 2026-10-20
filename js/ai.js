@@ -3,6 +3,7 @@
 //  2) если функции нет — личный бесплатный ключ ученика (Groq / Gemini / OpenRouter),
 //     который хранится только в этом браузере.
 import { buildRequest } from "./prompts.js";
+import { setServerTTS } from "./speech.js";
 
 // Публичный проект Supabase (тот же, что у DevOps-игры). Это publishable-ключ:
 // он по дизайну открыт, защита — белый список Origin и лимиты внутри функции.
@@ -174,3 +175,24 @@ export async function story(topic, level) {
   const r = await ai("story", { topic, level }, 90000);
   return r && typeof r.text === "string" ? r : null;
 }
+
+/* ---------- голос Мии с сервера (/tts). null — сервер не умеет, пусть говорит браузер ---------- */
+let ttsDown = false;
+setServerTTS(async (text) => {
+  const c = aiConfig();
+  if (!c.useServer || ttsDown) return null;
+  try {
+    const res = await fetch(`${c.url}/functions/v1/english-tutor/tts`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", apikey: c.anon },
+      body: JSON.stringify({ text }),
+    });
+    if (!res.ok || !/audio/.test(res.headers.get("content-type") || "")) {
+      if (res.status === 502 || res.status === 404) ttsDown = true; // не дёргаем сервер на каждой фразе
+      return null;
+    }
+    return await res.blob();
+  } catch {
+    return null;
+  }
+});

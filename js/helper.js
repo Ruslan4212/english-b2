@@ -3,7 +3,7 @@ import { $, esc } from "./util.js";
 import { explain, askTutor, translate, NO_AI } from "./ai.js";
 import { currentLevel } from "./progress.js";
 import { avatar, richText, TUTOR } from "./avatar.js";
-import { speak } from "./speech.js";
+import { speakMia } from "./speech.js";
 
 let history = []; // [{role, content}]
 
@@ -20,7 +20,7 @@ export function renderMsg(box, cls, text, { tools = cls === "ai" } = {}) {
     row.innerHTML = `<div class="tools"><button class="tbtn" data-tr title="Перевести">文A</button><button class="tbtn" data-sp title="Озвучить">🔊</button></div>`;
     row.prepend(div);
     const plain = text.replace(/==/g, "");
-    row.querySelector("[data-sp]").onclick = () => speak(plain.replace(/[А-Яа-яЁё][^.!?]*[.!?]?/g, " "));
+    row.querySelector("[data-sp]").onclick = () => speakMia(/[А-Яа-яЁё]/.test(plain) ? plain.replace(/[^.!?\n]*[А-Яа-яЁё][^.!?\n]*[.!?]?/g, " ") : plain);
     row.querySelector("[data-tr]").onclick = async (e) => {
       const old = div.querySelector(".tr");
       if (old) return old.remove();

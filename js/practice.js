@@ -3,7 +3,7 @@
 import { S, update, addCard, addError, logTime } from "./store.js";
 import { $$, esc, md, today, toast, shuffle, uid, fmtDate } from "./util.js";
 import { queue, grade, preview, stats as srsStats } from "./srs.js";
-import { speak, stopSpeak, hasASR, asrError, listen as asr, startRecording, saveRecording, listRecordings, deleteRecording } from "./speech.js";
+import { speak, speakMia, stopSpeak, hasASR, asrError, listen as asr, startRecording, saveRecording, listRecordings, deleteRecording } from "./speech.js";
 import { chatTurn, correctText, generate, story, NO_AI } from "./ai.js";
 import { markToday, currentPhase, currentLevel, currentDay } from "./progress.js";
 import { dialog, renderStep, bindSay } from "./exercises.js";
@@ -346,7 +346,7 @@ function chat(app, topic) {
       for (const c of r.corrections || []) addError(`Разговор: ${topic.title}`, c.wrong, c.right, c.why);
     }
     renderMsg(box, "ai", r.reply);
-    if (app.querySelector("[data-voice]").checked) speak(r.reply);
+    if (app.querySelector("[data-voice]").checked) speakMia(r.reply);
     app.querySelector("[data-turns]").textContent = `реплик: ${turns} (для зачёта занятия — от 8)`;
   };
   const send = () => { const v = input.value.trim(); if (!v) return; input.value = ""; turn(v); };
@@ -696,7 +696,7 @@ function liveCall(app, topic) {
   const say = async (text) => {
     last = text;
     state(`${TUTOR.ru} говорит…`, "talk");
-    await speak(text.replace(/==/g, ""), slow ? { slow: true } : {});
+    await speakMia(text, { slow });
   };
 
   const listenLoop = async () => {
@@ -759,7 +759,7 @@ function liveCall(app, topic) {
   };
   app.querySelector("[data-end]").onclick = () => { finish(); location.hash = "#/errors"; };
   app.querySelector("[data-mute]").onclick = (e) => { muted = !muted; e.currentTarget.classList.toggle("off", muted); };
-  app.querySelector("[data-repeat]").onclick = () => last && speak(last.replace(/==/g, ""), { slow: true });
+  app.querySelector("[data-repeat]").onclick = () => last && speakMia(last, { slow: true });
   app.querySelector("[data-slow]").onclick = (e) => { slow = !slow; e.currentTarget.classList.toggle("on", slow); };
   window.addEventListener("hashchange", finish, { once: true });
 
