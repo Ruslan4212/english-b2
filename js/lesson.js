@@ -71,15 +71,31 @@ export function renderLesson(app, id) {
     return;
   }
   const level = base.level || "A1";
-  const w = base.review ? null : warmup(base);
+  // незаконченный урок продолжаем с того же шага (разминку при этом не добавляем — индексы шагов не съезжают)
+  const posKey = "english_b2_pos_" + base.id;
+  let saved = null;
+  if (!base.review) {
+    try { saved = JSON.parse(localStorage.getItem(posKey) || "null"); } catch { saved = null; }
+    if (saved && (saved.n !== base.steps.length + (saved.w ? 1 : 0) || saved.k <= 0)) saved = null;
+  }
+  const w = base.review || saved ? null : warmup(base);
+  const hasWarm = saved ? false : !!w;
   const steps = [...(w ? [w] : []), ...base.steps];
-  let k = 0;
-  let stats = { total: 0, firstTry: 0 };
-  const started = Date.now();
+  // шаг сохранён с учётом разминки; без неё сдвигаем на 1
+  let k = saved ? Math.min(steps.length - 1, saved.k - (saved.w ? 1 : 0)) : 0;
+  let stats = saved?.stats || { total: 0, firstTry: 0 };
+  const started = Date.now() - (saved?.ms || 0);
+  const savePos = () => {
+    if (base.review) return;
+    try {
+      localStorage.setItem(posKey, JSON.stringify({ k, n: steps.length, w: hasWarm, stats, ms: Date.now() - started, passed: [...passed] }));
+    } catch { /* нет хранилища */ }
+  };
 
   app.innerHTML = `<div class="card">
     <div class="player-head"><a href="#/grammar" class="btn sm ghost">✕</a><div class="bar"><i data-bar style="width:0"></i></div><span class="small muted" data-pos></span></div>
     <h1 style="margin-bottom:0">${esc(base.title)}</h1>
+    ${saved ? `<div class="banner info small" data-resume>Продолжаем с шага ${k + 1} из ${steps.length}. <button class="btn sm ghost" data-restart>Начать урок заново</button></div>` : ""}
     ${base.goal ? `<p class="muted" style="margin-top:4px">🎯 ${esc(base.goal)}</p>` : ""}
     <div class="step" data-step></div>
     <div class="player-nav"><button class="btn" data-prev>← Назад</button><span class="spacer"></span><button class="btn primary" data-next disabled>Дальше →</button></div>
@@ -89,6 +105,11 @@ export function renderLesson(app, id) {
   const nextBtn = app.querySelector("[data-next]");
   const prevBtn = app.querySelector("[data-prev]");
   const passed = new Set();
+  if (saved) for (let i = 0; i < k; i++) passed.add(i);
+  app.querySelector("[data-restart]")?.addEventListener("click", () => {
+    try { localStorage.removeItem(posKey); } catch { /* нет хранилища */ }
+    renderLesson(app, id);
+  });
 
   const ctx = {
     level,
@@ -97,6 +118,7 @@ export function renderLesson(app, id) {
         passed.add(k);
         stats.total += s.total;
         stats.firstTry += s.firstTry;
+        savePos();
       }
       nextBtn.disabled = false;
     },
@@ -116,6 +138,7 @@ export function renderLesson(app, id) {
     renderStep(steps[k], stepBox, ctx);
     if (passed.has(k)) nextBtn.disabled = false;
     window.scrollTo({ top: 0, behavior: "smooth" });
+    savePos();
   };
   prevBtn.onclick = () => { if (k > 0) { k--; show(); } };
   nextBtn.onclick = () => {
@@ -124,6 +147,7 @@ export function renderLesson(app, id) {
   };
 
   const finish = () => {
+    try { localStorage.removeItem(posKey); } catch { /* нет хранилища */ }
     const min = Math.max(5, Math.min(60, Math.round((Date.now() - started) / 60000)));
     const pct = stats.total ? Math.round((stats.firstTry / stats.total) * 100) : 100;
     let added = 0;
