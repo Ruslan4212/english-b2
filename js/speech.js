@@ -78,13 +78,15 @@ export async function speakMia(text, { slow = false } = {}) {
       if (blob) { url = URL.createObjectURL(blob); ttsCache.set(clean, url); }
     }
     if (url) {
-      await new Promise((resolve) => {
+      const played = await new Promise((resolve) => {
         audioEl = new Audio(url);
         audioEl.playbackRate = slow ? 0.85 : 1;
-        audioEl.onended = audioEl.onerror = () => resolve();
-        audioEl.play().catch(() => resolve());
+        audioEl.onended = () => resolve(true);
+        audioEl.onerror = () => resolve(false);
+        // автовоспроизведение может быть запрещено до первого клика — тогда говорит браузер
+        audioEl.play().catch(() => resolve(false));
       });
-      return;
+      if (played) return;
     }
   } catch { /* упадём на голос браузера */ }
   return speak(clean, { slow });
