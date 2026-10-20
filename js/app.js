@@ -1,6 +1,6 @@
 // Точка входа: роутер по hash, шапка, онбординг, «Сегодня», карта, уроки, прогресс, настройки.
 import { S, update, save, exportJson, importJson, reset, BLOCKS, logTime, totalHours } from "./store.js";
-import { $, $$, esc, md, today, fmtDate, daysBetween, toast, plural } from "./util.js";
+import { $, $$, esc, md, today, fmtDate, daysBetween, toast, plural, translit, studentName } from "./util.js";
 import { PHASES, DOW, TOTAL_WEEKS, dayInfo, tasksForDay, projectedFinish, CHECKPOINT_WEEKS, monthOfWeek } from "./plan.js";
 import { UNITS, LESSONS, lessonById } from "../data/index.js";
 import { renderLesson, nextLesson, lessonForToday } from "./lesson.js";
@@ -69,6 +69,11 @@ function route() {
   window.__ctx = null;
   const [name, arg] = location.hash.replace(/^#\/?/, "").split("/");
   if (!s.profile) return renderOnboarding();
+  // существующий ученик без имени: один раз за сессию уводим на «Сегодня», где висит карточка-вопрос
+  if (!s.profile.name && !sessionStorage.getItem("english_b2_name_shown") && name !== "today") {
+    try { sessionStorage.setItem("english_b2_name_shown", "1"); } catch { /* нет хранилища */ }
+    if (name && name !== "day") { location.hash = "#/today"; return; }
+  }
   const r = routes[name] ? name : "today";
   $$(".side a").forEach((a) => a.classList.toggle("active", a.dataset.r === r || (r === "lesson" && a.dataset.r === "grammar")));
   $("#side").classList.remove("open");
@@ -81,6 +86,50 @@ window.addEventListener("taskdone", (e) => {
   toast(`✅ Задача дня выполнена: ${e.detail.title}`);
   topStats();
 });
+
+/* ------------------------------ имя ученика ------------------------------ */
+/** Два поля (по-русски и латиницей). Латиница заполняется по translit, пока её не правили руками. */
+function nameFields(root, ru = "", en = "", onChange = () => {}) {
+  let manual = !!en && en !== translit(ru);
+  const fRu = root.querySelector("[data-name-ru]");
+  const fEn = root.querySelector("[data-name-en]");
+  fRu.value = ru;
+  fEn.value = en;
+  fRu.addEventListener("input", () => {
+    if (!manual) fEn.value = translit(fRu.value);
+    onChange();
+  });
+  fEn.addEventListener("input", () => {
+    manual = true;
+    onChange();
+  });
+  return () => ({ name: fRu.value.trim(), nameEn: fEn.value.trim() || translit(fRu.value) });
+}
+const nameFieldsHtml = () => `<div class="grid">
+    <label>Имя по-русски<input type="text" data-name-ru maxlength="30" placeholder="Руслан" autocomplete="given-name"></label>
+    <label>Как пишется латиницей<input type="text" data-name-en maxlength="30" placeholder="Ruslan"></label>
+  </div>`;
+
+/** Карточка-вопрос для учеников, у которых профиль есть, а имени нет. */
+function nameAsk() {
+  const s = S();
+  if (!s.profile || s.profile.name) return "";
+  return `<div class="card" data-nameask><h2>👋 Как вас зовут?</h2><p class="muted">Приложение подставит ваше имя в диалоги и упражнения, а Мия будет обращаться по имени.</p>
+    ${nameFieldsHtml()}<div class="row" style="margin-top:10px"><button class="btn primary" data-namesave disabled>Сохранить</button></div></div>`;
+}
+function bindNameAsk() {
+  const box = app.querySelector("[data-nameask]");
+  if (!box) return;
+  const btn = box.querySelector("[data-namesave]");
+  const get = nameFields(box, "", "", () => { btn.disabled = !box.querySelector("[data-name-ru]").value.trim(); });
+  btn.onclick = () => {
+    const v = get();
+    if (!v.name) return;
+    update((s) => { s.profile.name = v.name; s.profile.nameEn = v.nameEn; });
+    toast("Приятно познакомиться, " + v.name + "!");
+    route();
+  };
+}
 
 /* ---------------------------- онбординг ---------------------------- */
 function renderOnboarding() {
@@ -98,29 +147,39 @@ function renderOnboarding() {
 >i Говорить нужно с первого месяца. Ваш собеседник — AI-репетитор **Мия**: живой звонок голосом, исправления и объяснения. Всё обучение — внутри приложения, ничего искать не нужно.`)}
   </div>
   <div class="card">
-    <h2>1. Ваш уровень сейчас</h2>
+    <h2>1. Как вас зовут?</h2>
+    <p class="muted">Имя нужно, чтобы диалоги и упражнения были про вас, а Мия обращалась к вам по имени. Хранится только в этом браузере.</p>
+    ${nameFieldsHtml()}
+  </div>
+  <div class="card">
+    <h2>2. Ваш уровень сейчас</h2>
     <p class="muted">Если осталась школьная база — выберите свой уровень или пройдите встроенный тест в первый день курса: он предложит, с какой фазы начать. Пропускать лучше целые фазы, а не отдельные навыки.</p>
     <div class="grid">
       ${[["1", "С полного нуля", "Неделя 1: звуки и чтение"], ["14", "У меня A1", "Начать с фазы A2, месяц 4"], ["27", "У меня A2", "Начать с фазы B1, месяц 7"], ["53", "У меня B1", "Начать с фазы B2, месяц 13"]]
         .map(([w, t, d], i) => `<label class="card" style="cursor:pointer;margin:0"><input type="radio" name="start" value="${w}" ${i === 0 ? "checked" : ""}> <b>${t}</b><div class="muted small">${d}</div></label>`).join("")}
     </div>
-    <h2>2. Сколько часов в неделю готовы заниматься?</h2>
+    <h2>3. Сколько часов в неделю готовы заниматься?</h2>
     <p class="muted">Считаются только осознанные занятия, не фоновое прослушивание. B2 требует около 550 часов.</p>
     <div class="grid">
       ${[[5, "Минимум", "≈25 месяцев"], [7, "Базовый (план)", "≈18 месяцев"], [10, "Усиленный", "≈13 месяцев"], [15, "Интенсив", "≈8,5 месяца"]]
         .map(([h, t, d]) => `<label class="card" style="cursor:pointer;margin:0"><input type="radio" name="hours" value="${h}" ${h === 7 ? "checked" : ""}> <b>${h} ч/нед — ${t}</b><div class="muted small">до B2 ${d}</div></label>`).join("")}
     </div>
-    <h2>3. Какое произношение учить?</h2>
+    <h2>4. Какое произношение учить?</h2>
     <div class="row"><label><input type="radio" name="accent" value="us" checked> 🇺🇸 Американское</label><label><input type="radio" name="accent" value="gb"> 🇬🇧 Британское</label><button class="btn sm" data-test>🔊 Проверить голос</button></div>
     <div class="row" style="margin-top:18px"><button class="btn primary" data-go>Начать обучение →</button></div>
   </div>`;
+  const goBtn = app.querySelector("[data-go]");
+  goBtn.disabled = true;
+  const getName = nameFields(app, "", "", () => { goBtn.disabled = !app.querySelector("[data-name-ru]").value.trim(); });
   app.querySelector("[data-test]").onclick = () => {
     // временно подставляем акцент, не сохраняя профиль: онбординг ещё не завершён
     S().profile = { accent: app.querySelector("[name=accent]:checked").value };
     speak("Hello! Nice to meet you. Let's learn English together.");
     S().profile = null;
   };
-  app.querySelector("[data-go]").onclick = () => {
+  goBtn.onclick = () => {
+    const nm = getName();
+    if (!nm.name) return toast("Сначала напишите, как вас зовут");
     const startWeek = +app.querySelector("[name=start]:checked").value;
     update((s) => {
       s.profile = {
@@ -128,6 +187,8 @@ function renderOnboarding() {
         hoursPerWeek: +app.querySelector("[name=hours]:checked").value,
         accent: app.querySelector("[name=accent]:checked").value,
         rate: 0.92,
+        name: nm.name,
+        nameEn: nm.nameEn,
         startWeek: startWeek > 1 ? startWeek : 0,
       };
       s.day = (startWeek - 1) * 7;
@@ -190,7 +251,7 @@ function renderToday(viewDay) {
   if (info.week === 1 && info.dow === 0 && isCur) banners += `<div class="banner info">Неделя 1 — подготовка: 2–3 часа вместо обычных 7. Знакомимся со звуками, настраиваем инструменты.</div>`;
   if (CHECKPOINT_WEEKS[info.week]) banners += `<div class="banner info">🏁 Это последняя неделя фазы ${ph.level}. В воскресенье — контрольная точка.</div>`;
 
-  app.innerHTML = `
+  app.innerHTML = nameAsk() + `
     <span class="pill">Персональный план · день ${i + 1}</span>
     <div class="row"><h1 style="margin:6px 0 0">${isCur ? 'Твой план <span class="hl-blue">на сегодня</span>' : 'День <span class="hl-blue">плана</span>'}</h1><span class="spacer"></span>
       ${i > 0 ? `<a class="btn sm ghost" href="#/day/${i - 1}">←</a>` : ""}<a class="btn sm ghost" href="#/day/${i + 1}">→</a>${!isCur ? `<a class="btn sm" href="#/today">К текущему дню</a>` : ""}</div>
@@ -214,6 +275,7 @@ function renderToday(viewDay) {
       <span class="muted small">Учебный день не привязан к календарю: делайте его, когда удобно. Темп ${s.profile.hoursPerWeek} ч/нед → финиш ≈ ${fmtDate(projectedFinish(i))}.</span></div>` : ""}
     <div class="card" style="margin-top:18px"><h3>Фаза ${ph.n}: ${ph.level} — к концу фазы</h3><p>${esc(ph.goal)}</p><p class="muted small">Словарь: ${ph.vocab}. Ориентир накопленных часов: ${ph.hoursMark}.</p></div>`;
 
+  bindNameAsk();
   if (!isCur) return;
   $$("[data-chk]", app).forEach((el) =>
     (el.onclick = () => {
@@ -342,6 +404,7 @@ function renderSettings() {
     <div class="row" style="margin-top:10px"><button class="btn primary" data-save>Сохранить</button><button class="btn" data-ping>Проверить связь</button><span data-pingres class="small"></span></div>
   </div>
   <div class="card"><h2>Обучение</h2>
+    ${nameFieldsHtml()}
     <div class="grid">
       <label>Часов в неделю<select data-hours>${[5, 7, 10, 15].map((h) => `<option ${h === s.profile.hoursPerWeek ? "selected" : ""}>${h}</option>`).join("")}</select></label>
       <label>Произношение<select data-accent><option value="us" ${s.profile.accent === "us" ? "selected" : ""}>🇺🇸 Американское</option><option value="gb" ${s.profile.accent === "gb" ? "selected" : ""}>🇬🇧 Британское</option></select></label>
@@ -366,8 +429,13 @@ function renderSettings() {
     const ans = await aiPing();
     r.textContent = ans ? `✅ Наставник на связи: «${ans}»` : "❌ Нет ответа. Проверьте ключ или включите серверную функцию.";
   };
+  const getName = nameFields(app, s.profile.name || "", s.profile.nameEn || "");
   app.querySelector("[data-save2]").onclick = () => {
+    const nm = getName();
+    if (!nm.name) return toast("Имя не должно быть пустым");
     update((s) => {
+      s.profile.name = nm.name;
+      s.profile.nameEn = nm.nameEn;
       s.profile.hoursPerWeek = +val("[data-hours]");
       s.profile.accent = val("[data-accent]");
       s.profile.rate = +val("[data-rate]");

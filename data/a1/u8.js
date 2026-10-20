@@ -247,10 +247,10 @@ export default {
           t: "examples",
           h: "Образец рассказа — послушайте целиком",
           items: [
-            ["Hi! My name is Elena and I'm thirty-four.", "Привет! Меня зовут Елена, мне 34."],
+            ["Hi! My name is {N} and I'm thirty-four.", "Привет! Меня зовут {NR}, мне 34."],
             ["I'm from Russia and I live in Kazan with my family.", "Я из России и живу в Казани с семьёй."],
-            ["I'm married and I have a son. His name is Artem and he's eight.", "Я замужем, у меня есть сын. Его зовут Артём, ему восемь."],
-            ["My husband is an engineer. He's very kind and funny.", "Мой муж — инженер. Он очень добрый и весёлый."],
+            ["I have a brother and a sister. My sister's name is Katya and she's twenty.", "У меня есть брат и сестра. Сестру зовут Катя, ей двадцать."],
+            ["My brother is an engineer. He's very kind and funny.", "Мой брат — инженер. Он очень добрый и весёлый."],
             ["I'm an accountant. I work for a big company in the city centre.", "Я бухгалтер. Работаю в большой компании в центре."],
             ["I like my job because my colleagues are nice, but sometimes it's boring.", "Мне нравится работа, потому что коллеги приятные, но иногда скучно."],
             ["I usually get up at seven and I go to work by metro.", "Обычно я встаю в семь и езжу на работу на метро."],
@@ -279,7 +279,7 @@ export default {
           t: "translate",
           h: "Скажите о себе: переведите",
           items: [
-            ["Я живу в Москве с женой и дочерью.", "I live in Moscow with my wife and daughter.|I live in Moscow with my wife and my daughter.", "with my wife — притяжательное обязательно."],
+            ["Я живу в Москве с семьёй.", "I live in Moscow with my family.|I live with my family in Moscow.", "with my family — притяжательное обязательно."],
             ["Моя работа интересная, но иногда трудная.", "My job is interesting but sometimes difficult.|My job is interesting, but sometimes it's difficult.|My job is interesting but sometimes it is difficult.|My work is interesting, but sometimes difficult.|My job is interesting, but sometimes hard.", ""],
             ["На выходных я обычно встречаюсь с друзьями.", "At the weekend I usually meet my friends.|I usually meet my friends at the weekend.|On the weekend I usually meet my friends.|I usually meet friends at the weekend.|At the weekend I usually meet friends.", "usually — перед глаголом."],
             ["Я хочу хорошо говорить по-английски.", "I want to speak English well.|I want to speak good English.", "well — в конце."],
@@ -301,7 +301,7 @@ export default {
           h: "Произнесите ключевые фразы своего рассказа",
           items: [
             ["Let me tell you about myself.", "Позвольте рассказать о себе."],
-            ["I'm married and I have two children.", "Я женат, у меня двое детей."],
+            ["I have a brother and a sister.", "У меня есть брат и сестра."],
             ["I work for an IT company.", "Я работаю в IT-компании."],
             ["In my free time I like travelling.", "В свободное время я люблю путешествовать."],
             ["That's all about me. What about you?", "Это всё обо мне. А как насчёт вас?"],

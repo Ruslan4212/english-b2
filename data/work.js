@@ -4,7 +4,7 @@ const S = (id, month, title, ru, role, phrases) => ({ id, month, title, ru, role
 export default [
   S("colleagues", 5, "Знакомство с коллегами", "Первый день в команде: представиться, рассказать о роли, спросить о коллегах.",
     "You are a friendly new colleague meeting the student on their first day in an international team.", [
-    ["Hi, I'm Ivan. I've just joined the team.", "Привет, я Иван. Я только что присоединился к команде."],
+    ["Hi, I'm {N}. I've just joined the team.", "Привет, я {NR}. Я теперь в вашей команде."],
     ["I'm the new project manager.", "Я новый менеджер проекта."],
     ["What do you do here?", "Чем вы здесь занимаетесь?"],
     ["Which team are you in?", "В какой вы команде?"],
@@ -17,7 +17,7 @@ export default [
   ]),
   S("phone", 5, "Телефонный звонок", "Позвонить, попросить нужного человека, оставить сообщение, переспросить.",
     "You are a receptionist at a company; the person the student wants is in a meeting, so take a message.", [
-    ["Hello, this is Ivan from ABC Company.", "Здравствуйте, это Иван из компании ABC."],
+    ["Hello, this is {N} from ABC Company.", "Здравствуйте, это {NR} из компании ABC."],
     ["Could I speak to Mr Smith, please?", "Могу я поговорить с мистером Смитом?"],
     ["I'm calling about…", "Я звоню по поводу…"],
     ["Could you ask him to call me back?", "Не могли бы вы попросить его перезвонить?"],

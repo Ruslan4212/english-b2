@@ -8,7 +8,7 @@ export default [
 - [[I'm a/an … (профессия)]] — не забудьте артикль a/an!
 - [[I like … / I don't like …]]
 - [[I have a … (семья, питомец)]]`,
-    "My name is Olga. I'm from Russia. I live in Kazan. I'm an accountant. I like music and I have a cat."),
+    "My name is {N}. I'm from Russia. I live in Kazan. I'm an accountant. I like music and I have a cat."),
   W("w_a1_family", "A1", "Моя семья", "40–60", "Опишите свою семью: кто в ней, как зовут, сколько лет, чем занимаются.",
     `- [[There are four people in my family.]]
 - [[My father is …. He is a …]]

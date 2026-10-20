@@ -185,14 +185,14 @@ export default {
           h: "Телефонный звонок: шаблон",
           md: `| Этап | Звонящий | Отвечающий |
 |---|---|---|
-| Начало | [[Hello, this is Ivan from ABC.]] (не «I am Ivan»!) | [[Good morning, XYZ Company. How can I help you?]] |
+| Начало | [[Hello, this is {N} from ABC.]] (не «I am {N}»!) | [[Good morning, XYZ Company. How can I help you?]] |
 | Кого нужно | [[Could I speak to Ms Green, please?]] | [[Who's calling, please?]] / [[One moment, please.]] / [[I'll put you through.]] (соединю) |
 | Человека нет | | [[I'm afraid she's not available at the moment.]] / [[She's in a meeting.]] |
 | Сообщение | [[Can I leave a message?]] / [[Could you ask her to call me back?]] | [[Can I take a message?]] |
 | Проблемы | [[Sorry, could you repeat that?]] / [[The line is bad.]] / [[Could you speak up a bit?]] | |
 | Конец | [[Thanks for your help. Bye.]] | [[Thank you for calling.]] |
 
-> По телефону представляются через **This is…**: [[Hi, this is Anna.]] Фраза «I am Anna» по телефону звучит странно. А спросить «Это Том?» — [[Is that Tom?]] (брит.) / [[Is this Tom?]] (амер.).`,
+> По телефону представляются через **This is…**: [[Hi, this is {N}.]] Фраза «I am {N}» по телефону звучит странно. А спросить «Это Том?» — [[Is that Tom?]] (брит.) / [[Is this Tom?]] (амер.).`,
         },
         {
           t: "text",
@@ -213,13 +213,13 @@ export default {
           h: "Диалог: звонок в компанию",
           lines: [
             ["Receptionist", "Good afternoon, Green Tech. How can I help you?", "Добрый день, Green Tech. Чем могу помочь?"],
-            ["Ivan", "Hello, this is Ivan Smirnov from Nord Logistics. Could I speak to Mr Lee, please?", "Здравствуйте, это Иван Смирнов из Nord Logistics. Могу я поговорить с мистером Ли?"],
+            ["{N}", "Hello, this is {N} from Nord Logistics. Could I speak to Mr Lee, please?", "Здравствуйте, это {NR} из Nord Logistics. Могу я поговорить с мистером Ли?"],
             ["Receptionist", "I'm afraid he's in a meeting at the moment. Can I take a message?", "Боюсь, он сейчас на встрече. Передать ему что-нибудь?"],
-            ["Ivan", "Yes, please. Could you ask him to call me back? It's about the delivery on Friday.", "Да, пожалуйста. Попросите его перезвонить мне. Это по поводу поставки в пятницу."],
+            ["{N}", "Yes, please. Could you ask him to call me back? It's about the delivery on Friday.", "Да, пожалуйста. Попросите его перезвонить мне. Это по поводу поставки в пятницу."],
             ["Receptionist", "Of course. What's your number?", "Конечно. Ваш номер?"],
-            ["Ivan", "It's 0044 7700 900 123.", "0044 7700 900 123."],
+            ["{N}", "It's 0044 7700 900 123.", "0044 7700 900 123."],
             ["Receptionist", "Sorry, could you repeat the last part?", "Простите, повторите последнюю часть?"],
-            ["Ivan", "Nine double oh, one two three.", "Девять, два ноля, один два три."],
+            ["{N}", "Nine double oh, one two three.", "Девять, два ноля, один два три."],
             ["Receptionist", "Thank you. I'll give him the message.", "Спасибо. Я передам ему."],
           ],
           qs: [
@@ -231,7 +231,7 @@ export default {
           t: "choice",
           h: "Выберите правильный вариант",
           items: [
-            ["Как представиться по телефону?", ["I am Anna.", "This is Anna.", "Here Anna."], 1, ""],
+            ["Как представиться по телефону?", ["I am {N}.", "This is {N}.", "Here {N}."], 1, ""],
             ["I'm responsible for ___ the team.", ["manage", "managing", "to manage"], 1, "После for — -ing."],
             ["I work ___ a designer.", ["like", "as", "how"], 1, "work as + должность."],
             ["«Соединю вас»", ["I'll connect you.", "I'll put you through.", "I'll give you."], 1, ""],
@@ -242,7 +242,7 @@ export default {
           t: "translate",
           h: "Переведите",
           items: [
-            ["Здравствуйте, это Анна из компании «Альфа».", "Hello, this is Anna from Alpha.|Hello, this is Anna from Alpha company.|Hi, this is Anna from Alpha.|Hello, this is Anna from the Alpha company.", ""],
+            ["Здравствуйте, это {NR} из компании «Альфа».", "Hello, this is {N} from Alpha.|Hello, this is {N} from Alpha company.|Hi, this is {N} from Alpha.|Hello, this is {N} from the Alpha company.", ""],
             ["Я отвечаю за работу с клиентами.", "I'm responsible for working with clients.|I am responsible for working with clients.|I'm responsible for customer relations.|I'm responsible for working with customers.", "responsible for + -ing."],
             ["Не могли бы вы попросить его перезвонить мне?", "Could you ask him to call me back?|Could you ask him to call me back, please?|Can you ask him to call me back?", ""],
             ["Я работаю менеджером по продажам.", "I work as a sales manager.|I'm a sales manager.", "work as a…"],

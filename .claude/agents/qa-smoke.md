@@ -11,3 +11,5 @@ model: haiku
 3. Экраны: в браузере (preview_start name "english-b2") открой по очереди все маршруты из списка #/today #/map #/grammar #/lesson/a1_u1_l1 #/words #/listen #/read #/speak #/write #/work #/errors #/progress #/resources #/settings #/setup #/test и проверь, что #app не пустой и в консоли нет новых ошибок.
 
 Ответ — короткая таблица «проверка → результат» по-русски.
+
+**Контекст проекта — граф знаний Graphify.** Перед поиском по коду сначала спроси граф: `C:/Users/rusla/AppData/Roaming/Python/Python313/Scripts/graphify.exe query "<вопрос>"` (запускать из D:\AIagent\english-b2), для связей — `... path "A" "B"`, для понятия — `... explain "renderLesson()"`; обзор архитектуры — graphify-out/GRAPH_REPORT.md. Сырые файлы читай только в местах, которые нашёл граф. После правок кода — `... update .` (бесплатно, без ИИ).

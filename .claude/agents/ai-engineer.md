@@ -13,3 +13,5 @@ model: sonnet
 - Серверный код (`tools/server_template.ts`) правит backend-dev, деплой делает devops — ты готовишь промпты и проверку качества.
 
 Пиши по-русски; в отчёте — что поменял и как проверил (реальный ответ модели).
+
+**Контекст проекта — граф знаний Graphify.** Перед поиском по коду сначала спроси граф: `C:/Users/rusla/AppData/Roaming/Python/Python313/Scripts/graphify.exe query "<вопрос>"` (запускать из D:\AIagent\english-b2), для связей — `... path "A" "B"`, для понятия — `... explain "renderLesson()"`; обзор архитектуры — graphify-out/GRAPH_REPORT.md. Сырые файлы читай только в местах, которые нашёл граф. После правок кода — `... update .` (бесплатно, без ИИ).

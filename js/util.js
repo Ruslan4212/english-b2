@@ -1,4 +1,5 @@
 // Мелкие помощники: экранирование, разметка, даты, сравнение ответов.
+import { S } from "./store.js";
 
 export const $ = (sel, root = document) => root.querySelector(sel);
 export const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
@@ -157,3 +158,43 @@ export const plural = (n, one, few, many) => {
   if (m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)) return few;
   return many;
 };
+
+/* ---------------- имя ученика ---------------- */
+const TR = { а: "a", б: "b", в: "v", г: "g", д: "d", е: "e", ё: "e", ж: "zh", з: "z", и: "i", й: "y", к: "k", л: "l", м: "m", н: "n", о: "o", п: "p", р: "r", с: "s", т: "t", у: "u", ф: "f", х: "kh", ц: "ts", ч: "ch", ш: "sh", щ: "shch", ъ: "", ы: "y", ь: "", э: "e", ю: "yu", я: "ya" };
+
+/** Транслитерация русского имени в латиницу; латинские буквы остаются как есть. */
+export function translit(ru) {
+  const out = [...String(ru ?? "").trim()].map((ch) => {
+    const low = ch.toLowerCase();
+    if (low in TR) return TR[low];
+    return ch;
+  }).join("");
+  return out.charAt(0).toUpperCase() + out.slice(1);
+}
+
+/** Имя ученика из профиля: { ru, en }; null, если не задано. */
+export function studentName() {
+  const p = S().profile;
+  if (!p || !(p.name || p.nameEn)) return null;
+  const ru = (p.name || "").trim();
+  const en = (p.nameEn || translit(ru)).trim();
+  return { ru: ru || en, en: en || translit(ru) };
+}
+
+/** Подставляет метки {N} (латиница), {NR} (по-русски), {NS} (по буквам). Без имени — заглушки Alex. */
+export function personalize(str) {
+  if (typeof str !== "string" || !str.includes("{N")) return str;
+  const n = studentName();
+  const en = n ? n.en : "Alex";
+  const ru = n ? n.ru : "Алекс";
+  const sp = n ? [...n.en.toUpperCase()].join("-") : "A-L-E-X";
+  return str.replace(/\{NS\}/g, sp).replace(/\{NR\}/g, ru).replace(/\{N\}/g, en);
+}
+
+/** Глубокая подстановка по всем строкам объекта (копия, исходные данные не меняются). */
+export function pz(v) {
+  if (typeof v === "string") return personalize(v);
+  if (Array.isArray(v)) return v.map(pz);
+  if (v && typeof v === "object") return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, pz(x)]));
+  return v;
+}

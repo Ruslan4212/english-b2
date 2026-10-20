@@ -10,6 +10,7 @@ const LEVEL_HINT = {
 };
 
 const cut = (v, n) => String(v ?? "").slice(0, n);
+const nameLine = (b) => (b.studentName ? ` Ученика зовут ${cut(b.studentName, 40)}; иногда обращайся к нему по имени.` : "");
 const lvl = (b) => LEVEL_HINT[b.level] || LEVEL_HINT.A1;
 
 const TUTOR =
@@ -32,7 +33,7 @@ export function buildRequest(mode, b) {
     if (!b.topic || String(b.topic).length > 3000) return null;
     const stuck = cut(b.attempt, 1500).trim();
     return {
-      system: TUTOR,
+      system: TUTOR + nameLine(b),
       json: false,
       maxTokens: 1800,
       messages: [
@@ -62,6 +63,7 @@ export function buildRequest(mode, b) {
     return {
       system:
         TUTOR +
+        nameLine(b) +
         ` Уровень ученика: ${lvl(b)}. Ученик проходит курс английского с нуля до B2 и задаёт вопрос наставнику. ` +
         (b.context ? `Сейчас он на экране: ${cut(b.context, 2000)}. ` : "") +
         "Отвечай по делу и конкретно, с примерами и переводом. Если вопрос не про английский — мягко верни к учёбе. " +
@@ -123,6 +125,7 @@ export function buildRequest(mode, b) {
     return {
       system:
         "You are a friendly English conversation partner and tutor for a Russian-speaking adult. " +
+        (b.studentName ? `The student's name is ${cut(b.studentName, 40)}; occasionally address them by name. ` : "") +
         `Student level: ${b.level || "A1"} (${lvl(b)}). Conversation topic: ${cut(b.topic, 300)}. ` +
         (b.role ? `Role-play: ${cut(b.role, 600)}. Stay in role. ` : "") +
         "Rules: speak ONLY English in `reply`, using vocabulary and grammar of the student's level " +

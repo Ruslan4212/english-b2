@@ -3,7 +3,7 @@
 //  ctx.mistake(wrong, right, why) — записать ошибку в «Мои ошибки»
 //  ctx.explain(topic, context, attempt) — открыть ИИ-наставника с объяснением
 //  ctx.level — уровень ученика для ИИ-проверки
-import { esc, md, inline, matches, closeness, shuffle, norm } from "./util.js";
+import { esc, md, inline, matches, closeness, shuffle, norm, pz } from "./util.js";
 import { speak, hasASR, listen, similarity } from "./speech.js";
 import { checkAnswer } from "./ai.js";
 
@@ -35,6 +35,7 @@ function stepText(step) {
 }
 
 export function renderStep(step, root, ctx) {
+  step = pz(step); // метки {N}/{NR}/{NS} → имя ученика, до рендера и сверки ответов
   const kinds = { text, examples, choice, fill, order, translate, dictation, speakStep, dialog };
   const fn = kinds[step.t === "speak" ? "speakStep" : step.t];
   root.innerHTML = "";

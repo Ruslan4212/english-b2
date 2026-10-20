@@ -1,5 +1,5 @@
 // Плавающая панель ИИ-репетитора Мии: «объясни подробнее» из урока и свободные вопросы.
-import { $, esc } from "./util.js";
+import { $, esc, studentName } from "./util.js";
 import { explain, askTutor, translate, NO_AI } from "./ai.js";
 import { currentLevel } from "./progress.js";
 import { avatar, richText, TUTOR } from "./avatar.js";
@@ -67,7 +67,7 @@ export function openHelper(req) {
   $("#fab").classList.add("hide");
   $("#helperCtx").textContent = ctxText();
   if (!$("#helperBody").children.length) {
-    addMsg("ai", `Hi! Я ${TUTOR.ru}, твой AI-репетитор 😊 Если тема непонятна — спроси, объясню по-другому, с примерами из жизни. Можно писать по-русски. С чем разберёмся?`);
+    addMsg("ai", `Hi${studentName() ? ", " + studentName().en : ""}! Я ${TUTOR.ru}, твой AI-репетитор 😊 Если тема непонятна — спроси, объясню по-другому, с примерами из жизни. Можно писать по-русски. С чем разберёмся?`);
   }
   if (req?.mode === "explain") runExplain(req);
   setTimeout(() => $("#helperInput").focus(), 50);

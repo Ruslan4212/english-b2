@@ -2,7 +2,7 @@
 import { S, update, addError, addCard, logTime } from "./store.js";
 import { LESSONS, lessonById } from "../data/index.js";
 import { renderStep, bindSay } from "./exercises.js";
-import { esc, today, shuffle, md } from "./util.js";
+import { esc, today, shuffle, md, pz } from "./util.js";
 import { openHelper } from "./helper.js";
 import { markToday, currentPhase, currentDay } from "./progress.js";
 import { dayInfo, tasksForDay } from "./plan.js";
@@ -41,7 +41,7 @@ function warmup(lesson) {
   const idx = LESSONS.findIndex((l) => l.id === lesson.id);
   const prev = LESSONS.slice(Math.max(0, idx - 4), idx).filter((l) => S().lessons[l.id]?.done);
   const pool = [];
-  for (const l of prev) for (const s of l.steps) if (DRILLS.includes(s.t) && !s.listen) for (const it of s.items) pool.push({ t: s.t, it });
+  for (const l of prev) for (const s of l.steps) if (DRILLS.includes(s.t) && !s.listen) for (const it of s.items) pool.push({ t: s.t, it: pz(it) });
   if (pool.length < 3) return null;
   const pick = shuffle(pool).slice(0, 4);
   // группируем по типу, чтобы каждый шаг был однородным
@@ -65,7 +65,8 @@ export function reviewLesson() {
 }
 
 export function renderLesson(app, id) {
-  const base = id === "review" ? reviewLesson() : lessonById(id);
+  const base0 = id === "review" ? reviewLesson() : lessonById(id);
+  const base = base0 && pz(base0); // имя ученика в заголовке, целях, шагах и карточках Anki
   if (!base) {
     app.innerHTML = `<div class="card">Урок не найден. <a href="#/grammar">К списку уроков</a></div>`;
     return;

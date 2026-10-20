@@ -1,7 +1,7 @@
 // Экраны практики: слова, слушание, чтение, говорение, письмо, рабочий английский,
 // ошибки, ресурсы, контрольные точки, обзор недели, старт, тест уровня, запись голоса.
 import { S, update, addCard, addError, logTime } from "./store.js";
-import { $$, esc, md, today, toast, shuffle, uid, fmtDate } from "./util.js";
+import { $$, esc, md, today, toast, shuffle, uid, fmtDate, pz } from "./util.js";
 import { queue, grade, preview, stats as srsStats } from "./srs.js";
 import { speak, speakMia, stopSpeak, hasASR, asrError, listen as asr, startRecording, saveRecording, listRecordings, deleteRecording } from "./speech.js";
 import { chatTurn, correctText, generate, story, NO_AI } from "./ai.js";
@@ -183,7 +183,8 @@ export function renderListen(app, arg) {
   }
 }
 
-function listenOne(app, d, aloud) {
+function listenOne(app, d0, aloud) {
+  const d = pz(d0);
   const started = Date.now();
   app.innerHTML = `<a class="btn sm ghost" href="#/listen">← Все диалоги</a><div class="card" data-box></div>
     <div class="card small muted">${aloud ? "Задача: повторить диалог вслух. Нажмите «Shadowing» — после каждой фразы будет пауза, повторите фразу за диктором, копируя мелодию." : "Порядок: ▶ слушать без текста (поставьте «скрыть текст») → ▶ с текстом → 🗣 Shadowing. После третьего прослушивания задача дня закроется."}</div>`;
@@ -242,7 +243,8 @@ export function renderRead(app, id) {
   };
 }
 
-function readOne(app, t) {
+function readOne(app, t0) {
+  const t = pz(t0);
   const started = Date.now();
   app.innerHTML = `<a class="btn sm ghost" href="#/read">← Все тексты</a>
     <div class="card"><h1>${esc(t.title)}</h1><div class="row"><button class="btn sm" data-play>▶ Прослушать текст</button><button class="btn sm ghost" data-stop>■ Стоп</button><span class="pill ${t.level.toLowerCase()}">${t.level}</span></div>
@@ -302,7 +304,8 @@ export function renderSpeak(app, arg) {
     <h2>Все темы</h2><div class="grid">${topics.map((x) => `<a class="card" style="margin:0;text-decoration:none;color:inherit" href="#/speak/${x.id}"><b>${esc(x.title)}</b> <span class="pill ${x.level.toLowerCase()}">${x.level}</span><div class="muted small">${esc(x.ru)}</div></a>`).join("")}</div>`;
 }
 
-function chat(app, topic) {
+function chat(app, topic0) {
+  const topic = pz(topic0);
   const level = currentPhase().level;
   const msgs = [];
   let turns = 0;
@@ -406,7 +409,8 @@ export function renderWrite(app, arg) {
     <h2>Мои тексты</h2>${s.writings.slice().reverse().map((w) => `<details class="card"><summary><b>${esc(w.title || w.task)}</b> · ${w.date}${w.result?.score != null ? ` · ${w.result.score}/10` : ""}</summary><p style="white-space:pre-wrap">${esc(w.text)}</p>${w.result ? `<h4>Исправлено</h4><p style="white-space:pre-wrap">${esc(w.result.corrected)}</p><p class="muted">${esc(w.result.feedback || "")}</p>` : ""}</details>`).join("") || `<p class="muted">Пока нет.</p>`}`;
 }
 
-function writeOne(app, t) {
+function writeOne(app, t0) {
+  const t = pz(t0);
   const draftKey = "english_b2_draft_" + t.id;
   let draft = "";
   try { draft = localStorage.getItem(draftKey) || ""; } catch { /* нет хранилища */ }
@@ -450,7 +454,8 @@ function writeOne(app, t) {
 /* =========================== РАБОЧИЙ АНГЛИЙСКИЙ =========================== */
 export function renderWork(app, id) {
   const month = dayInfo(currentDay()).month;
-  const sc = WORK.find((w) => w.id === id);
+  const sc0 = WORK.find((w) => w.id === id);
+  const sc = sc0 && pz(sc0);
   if (sc) {
     app.innerHTML = `<a class="btn sm ghost" href="#/work">← Сценарии</a><div class="card"><h1>💼 ${esc(sc.title)}</h1><p class="muted">${esc(sc.ru)}</p>
       <h3>Шаблонные фразы (${sc.phrases.length})</h3><p class="muted small">План: подготовьте 10–15 шаблонных фраз для сценария и отработайте их вслух.</p>
@@ -466,7 +471,7 @@ export function renderWork(app, id) {
 - **С месяца 13** — половина говорения: ведение встречи, презентация, переговоры, объяснение сложного простыми словами, ответы на вопросы. 2–3 реальные рабочие ситуации в формате ролевой игры.
 
 Сейчас у вас месяц **${month}**.`)}
-    <div class="grid">${WORK.map((w) => `<a class="card" style="margin:0;text-decoration:none;color:inherit;${w.month > month ? "opacity:.6" : ""}" href="#/work/${w.id}"><b>${esc(w.title)}</b><div class="muted small">${esc(w.ru)}</div><span class="pill">с месяца ${w.month}</span></a>`).join("")}</div>`;
+    <div class="grid">${pz(WORK).map((w) => `<a class="card" style="margin:0;text-decoration:none;color:inherit;${w.month > month ? "opacity:.6" : ""}" href="#/work/${w.id}"><b>${esc(w.title)}</b><div class="muted small">${esc(w.ru)}</div><span class="pill">с месяца ${w.month}</span></a>`).join("")}</div>`;
 }
 
 /* ================================ ОШИБКИ ================================ */
@@ -705,7 +710,8 @@ export function renderLevelTest(app) {
 /* ============================ ЖИВОЙ ЗВОНОК ============================ */
 // Голос ↔ голос по кругу: Мия говорит (TTS) → микрофон включается сам (ASR) →
 // реплика уходит в chatTurn → ответ озвучивается → снова слушаем.
-function liveCall(app, topic) {
+function liveCall(app, topic0) {
+  const topic = pz(topic0);
   const level = currentPhase().level;
   const msgs = [];
   let turns = 0, active = true, muted = false, misses = 0;

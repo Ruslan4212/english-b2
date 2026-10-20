@@ -4,6 +4,7 @@
 //     который хранится только в этом браузере.
 import { buildRequest } from "./prompts.js";
 import { setServerTTS } from "./speech.js";
+import { studentName } from "./util.js";
 
 // Публичный проект Supabase (тот же, что у DevOps-игры). Это publishable-ключ:
 // он по дизайну открыт, защита — белый список Origin и лимиты внутри функции.
@@ -122,6 +123,8 @@ async function viaOwnKey(mode, body, timeoutMs) {
 
 /** Общий вызов: сервер → личный ключ. Возвращает объект ответа или null. */
 export async function ai(mode, body, timeoutMs = 45000) {
+  const n = studentName();
+  if (n) body = { ...body, studentName: `${n.ru} (${n.en})`.slice(0, 40) };
   return (await viaServer(mode, body, timeoutMs)) ?? (await viaOwnKey(mode, body, timeoutMs));
 }
 

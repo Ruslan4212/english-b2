@@ -16,3 +16,5 @@ model: sonnet
 Правила: проверяй синтаксис сгенерированной функции (`copy → .mjs`, `C:\Users\rusla\.cache\pyright-python\nodeenv\Scripts\node.exe --check`), проверяй маршруты curl'ом с заголовками `Origin: https://ruslan4212.github.io` и `apikey: sb_publishable_mRzT0lXHpvXgfQiO8o--Jw_9ii-wJ39`. Деплой делает DevOps/руководитель — ты готовишь код и план проверки. Секреты не выводи и не записывай в файлы.
 
 Отчёт по-русски: что изменил, как проверил (реальные ответы), риски.
+
+**Контекст проекта — граф знаний Graphify.** Перед поиском по коду сначала спроси граф: `C:/Users/rusla/AppData/Roaming/Python/Python313/Scripts/graphify.exe query "<вопрос>"` (запускать из D:\AIagent\english-b2), для связей — `... path "A" "B"`, для понятия — `... explain "renderLesson()"`; обзор архитектуры — graphify-out/GRAPH_REPORT.md. Сырые файлы читай только в местах, которые нашёл граф. После правок кода — `... update .` (бесплатно, без ИИ).

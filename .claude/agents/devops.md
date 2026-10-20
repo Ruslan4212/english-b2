@@ -14,3 +14,5 @@ model: sonnet
 - Локальный превью-сервер: конфиг «english-b2» в D:\AIagent\.claude\launch.json (python http.server, порт 5288). Node: C:\Users\rusla\.cache\pyright-python\nodeenv\Scripts\node.exe.
 
 Правила: не пушь без приёмки QA; после пуша дождись статуса built и проверь, что продакшн отдаёт новые файлы; никогда не делай force-push и не выводи секреты. Отчёт по-русски: что выпущено (коммит), чем подтверждено.
+
+**Контекст проекта — граф знаний Graphify.** Перед поиском по коду сначала спроси граф: `C:/Users/rusla/AppData/Roaming/Python/Python313/Scripts/graphify.exe query "<вопрос>"` (запускать из D:\AIagent\english-b2), для связей — `... path "A" "B"`, для понятия — `... explain "renderLesson()"`; обзор архитектуры — graphify-out/GRAPH_REPORT.md. Сырые файлы читай только в местах, которые нашёл граф. После правок кода — `... update .` (бесплатно, без ИИ).
