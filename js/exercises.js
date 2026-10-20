@@ -82,7 +82,8 @@ function drill(step, root, ctx, renderItem) {
   let queue = [...items];
   const firstWrong = new Set();
   const total = items.length;
-  root.innerHTML = head(step) + `<div class="muted small" data-count></div><div data-item></div><div class="row" style="margin-top:10px">${helpBtn}</div>`;
+  // вложенный блок (вопросы к диалогу) не дублирует кнопку помощи родительского шага
+  root.innerHTML = head(step) + `<div class="muted small" data-count></div><div data-item></div>${step.noHelp ? "" : `<div class="row" style="margin-top:10px">${helpBtn}</div>`}`;
   const box = root.querySelector("[data-item]");
   const count = root.querySelector("[data-count]");
 
@@ -353,6 +354,6 @@ export function dialog(step, root, ctx) {
   if (step.qs?.length) {
     const sub = document.createElement("div");
     qsBox.append(sub);
-    choice({ h: "Вопросы к диалогу", items: step.qs }, sub, { ...ctx, done: (s) => ctx.done(s) });
+    choice({ h: "Вопросы к диалогу", items: step.qs, noHelp: true }, sub, { ...ctx, done: (s) => ctx.done(s) });
   } else ctx.done({ total: 0, firstTry: 0 });
 }
