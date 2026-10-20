@@ -3,12 +3,12 @@
 import { S, update, addCard, addError, logTime } from "./store.js";
 import { $$, esc, md, today, toast, shuffle, uid, fmtDate } from "./util.js";
 import { queue, grade, preview, stats as srsStats } from "./srs.js";
-import { speak, hasASR, listen as asr, startRecording, saveRecording, listRecordings, deleteRecording } from "./speech.js";
+import { speak, stopSpeak, hasASR, listen as asr, startRecording, saveRecording, listRecordings, deleteRecording } from "./speech.js";
 import { chatTurn, correctText, generate, story, NO_AI } from "./ai.js";
 import { markToday, currentPhase, currentLevel, currentDay } from "./progress.js";
 import { dialog, renderStep, bindSay } from "./exercises.js";
 import { openHelper, renderMsg } from "./helper.js";
-import { avatar, TUTOR } from "./avatar.js";
+import { avatar, TUTOR, richText } from "./avatar.js";
 import { extraPractice } from "./lesson.js";
 import { LESSONS } from "../data/index.js";
 import { dayInfo, PHASES } from "./plan.js";
@@ -280,6 +280,12 @@ export function renderSpeak(app, arg) {
   const week = curWeek();
   const weekTopic = topics.filter((t) => t.level === ph.level)[week % Math.max(1, topics.filter((t) => t.level === ph.level).length)] || topics[0];
   if (arg === "week") return chat(app, weekTopic);
+  if (arg?.startsWith("call_")) {
+    const id = arg.slice(5);
+    const w = WORK.find((x) => "work_" + x.id === id);
+    const tp = id === "week" ? weekTopic : w ? { id, level: ph.level, title: w.title, ru: w.ru, prompt: w.title, role: w.role, useful: w.phrases } : topics.find((x) => x.id === id) || weekTopic;
+    return liveCall(app, tp);
+  }
   if (arg?.startsWith("work_")) {
     const w = WORK.find((x) => x.id === arg.slice(5));
     if (w) return chat(app, { id: arg, level: ph.level, title: w.title, ru: w.ru, prompt: w.title, role: w.role, useful: w.phrases });
@@ -294,7 +300,8 @@ export function renderSpeak(app, arg) {
 >i Страх говорить, пока не выучена грамматика, — частая проблема. План советует: говорите на упрощённом английском с первых недель, ошибки разбирайте после.
 
 **Фаза ${ph.level}:** ${ph.speak}`)}
-    <div class="row"><a class="btn primary" href="#/speak/week">▶ Тема этой недели: ${esc(weekTopic.title)}</a><a class="btn" href="#/record">🎙 Ежемесячная запись голоса</a><a class="btn" href="#/work">💼 Рабочие сценарии</a></div>
+    <div class="card" style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">${avatar("ava")}<div style="flex:1;min-width:200px"><b style="color:var(--head)">Живой разговор с ${TUTOR.ru}</b><div class="muted small">Как видеозвонок: она говорит голосом, вы отвечаете вслух — без кнопок. Исправления — субтитрами.</div></div><a class="btn primary" href="#/speak/call_week">📞 Позвонить: ${esc(weekTopic.title)}</a></div>
+    <div class="row"><a class="btn" href="#/speak/week">💬 Текстовый чат: ${esc(weekTopic.title)}</a><a class="btn" href="#/record">🎙 Ежемесячная запись голоса</a><a class="btn" href="#/work">💼 Рабочие сценарии</a></div>
     <div class="card"><label class="row"><input type="checkbox" data-real> Сегодня был урок с <b>живым репетитором</b> — отметить задачу дня</label><textarea data-notes rows="3" placeholder="Ошибки, которые исправил репетитор (по одной на строку: неправильно -> правильно)" style="margin-top:8px"></textarea><button class="btn sm" data-savereal style="margin-top:6px">Сохранить</button></div>
     <h2>Все темы</h2><div class="grid">${topics.map((x) => `<a class="card" style="margin:0;text-decoration:none;color:inherit" href="#/speak/${x.id}"><b>${esc(x.title)}</b> <span class="pill ${x.level.toLowerCase()}">${x.level}</span><div class="muted small">${esc(x.ru)}</div></a>`).join("")}</div>`;
   app.querySelector("[data-savereal]").onclick = () => {
@@ -317,7 +324,7 @@ function chat(app, topic) {
   window.__ctx = { lesson: "Разговорная практика", step: topic.title, level };
   app.innerHTML = `<a class="btn sm ghost" href="#/speak">← Темы</a>
     <div class="card"><span class="pill">Разговорная практика</span><h1>${esc(topic.title)}</h1><p class="muted">${esc(topic.ru)}</p>
-      <div class="tutor-card">${avatar()}<div class="who"><b>${TUTOR.ru} · ${TUTOR.role}</b><span class="live">в разговоре</span></div></div>
+      <div class="tutor-card">${avatar()}<div class="who"><b>${TUTOR.ru} · ${TUTOR.role}</b><span class="live">в разговоре</span></div><span class="spacer"></span><a class="btn primary sm" href="#/speak/call_${esc(topic.id || "week")}">📞 Голосом</a></div>
       ${topic.useful?.length ? `<details><summary>Полезные фразы для этой темы</summary>${topic.useful.map(([en, ru]) => `<div class="ex-line"><button class="say" data-say="${esc(en)}">🔊</button><div><span class="en">${esc(en)}</span> — <span class="ru">${esc(ru)}</span></div></div>`).join("")}</details>` : ""}
       <div class="chat" data-chat style="margin-top:10px"></div>
       <div class="row" style="margin-top:10px"><textarea data-in rows="2" style="flex:1" placeholder="Ответьте по-английски. Не знаете слово — напишите его по-русски, партнёр подскажет."></textarea>
@@ -645,4 +652,104 @@ export function renderLevelTest(app) {
     logTime("course", 40, "Тест уровня");
     toast("Записано");
   };
+}
+
+/* ============================ ЖИВОЙ ЗВОНОК ============================ */
+// Голос ↔ голос по кругу: Мия говорит (TTS) → микрофон включается сам (ASR) →
+// реплика уходит в chatTurn → ответ озвучивается → снова слушаем.
+function liveCall(app, topic) {
+  const level = currentPhase().level;
+  const msgs = [];
+  let turns = 0, active = true, muted = false, misses = 0;
+  const started = Date.now();
+  window.__ctx = { lesson: "Живой разговор", step: topic.title, level };
+  if (!hasASR()) {
+    app.innerHTML = `<div class="card">${md("Живой разговор работает в **Google Chrome** или **Microsoft Edge** — там есть распознавание речи. Откройте сайт в одном из них или используйте текстовый чат.")}<a class="btn primary" href="#/speak/week">💬 Текстовый чат</a></div>`;
+    return;
+  }
+  app.innerHTML = `<a class="btn sm ghost" href="#/speak">← Говорение</a>
+    <div class="call card">
+      <div class="call-stage"><div class="call-ava" data-ava>${avatar("ava")}</div>
+        <div class="call-name">${TUTOR.ru} · ${esc(topic.title)}</div><div class="call-state" data-state>Соединяем…</div><div class="call-timer" data-timer>00:00</div></div>
+      <div class="call-subs" data-subs></div>
+      <div class="call-ctrl">
+        <button class="cbtn" data-mute title="Пауза микрофона">🎤</button>
+        <button class="cbtn" data-repeat title="Повторить последнюю фразу">🔁</button>
+        <button class="cbtn" data-slow title="Медленнее">🐢</button>
+        <button class="cbtn end" data-end title="Завершить">📞</button>
+      </div>
+      <p class="muted small" style="text-align:center">Говорите после сигнала «Слушаю…». Если нужно подумать — нажмите 🎤 (пауза). Можно отвечать по-русски — ${TUTOR.ru} подскажет, как сказать по-английски.</p>
+    </div>`;
+  const subs = app.querySelector("[data-subs]");
+  const stateEl = app.querySelector("[data-state]");
+  const ava = app.querySelector("[data-ava]");
+  let last = "", slow = false;
+  const timer = setInterval(() => {
+    if (!app.querySelector("[data-timer]")) return clearInterval(timer);
+    const s = Math.floor((Date.now() - started) / 1000);
+    app.querySelector("[data-timer]").textContent = String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0");
+  }, 1000);
+  const state = (t, mode) => { stateEl.textContent = t; ava.dataset.mode = mode || ""; };
+  const line = (cls, html) => { const d = document.createElement("div"); d.className = "sub " + cls; d.innerHTML = html; subs.append(d); subs.scrollTop = subs.scrollHeight; };
+  const alive = () => active && app.contains(subs);
+
+  const say = async (text) => {
+    last = text;
+    state(`${TUTOR.ru} говорит…`, "talk");
+    await speak(text.replace(/==/g, ""), slow ? { slow: true } : {});
+  };
+
+  const listenLoop = async () => {
+    while (alive()) {
+      if (muted) { state("Микрофон на паузе — нажмите 🎤", "pause"); await new Promise((r) => setTimeout(r, 400)); continue; }
+      state("Слушаю… говорите", "listen");
+      const alts = await asr({ timeoutMs: 15000 });
+      if (!alive()) return;
+      if (!alts?.[0]) {
+        if (++misses >= 2) { misses = 0; await say("Take your time. Are you still there? You can answer in Russian if it's easier."); }
+        continue;
+      }
+      misses = 0;
+      const text = alts[0];
+      line("me", esc(text));
+      msgs.push({ role: "user", content: text });
+      turns++;
+      await reply();
+    }
+  };
+
+  const reply = async () => {
+    state(`${TUTOR.ru} думает…`, "think");
+    const r = await chatTurn(topic.prompt, level, msgs, topic.role);
+    if (!alive()) return;
+    if (!r) { line("sys", esc(NO_AI)); state("Нет связи с репетитором", ""); active = false; return; }
+    msgs.push({ role: "assistant", content: r.reply });
+    if (r.corrections?.length) {
+      line("fix", "✏️ " + r.corrections.map((c) => `<s>${esc(c.wrong)}</s> → <b>${esc(c.right)}</b> <span class="muted">— ${esc(c.why)}</span>`).join("<br>"));
+      for (const c of r.corrections) addError(`Живой разговор: ${topic.title}`, c.wrong, c.right, c.why);
+    }
+    line("ai", richText(r.reply, esc));
+    await say(r.reply);
+  };
+
+  const finish = () => {
+    if (!active && !app.contains(subs)) return;
+    active = false;
+    clearInterval(timer);
+    stopSpeak();
+    const min = Math.round((Date.now() - started) / 60000);
+    update((s) => s.speaking.push({ date: today(), topic: topic.title, turns, voice: true }));
+    if (turns >= 8) { logTime("speak", Math.max(10, min), `Живой разговор: ${topic.title}`); markToday("speak"); toast("Разговор засчитан. Исправления — в «Мои ошибки»."); }
+    else if (min > 0) logTime("speak", min, `Живой разговор: ${topic.title}`);
+  };
+  app.querySelector("[data-end]").onclick = () => { finish(); location.hash = "#/errors"; };
+  app.querySelector("[data-mute]").onclick = (e) => { muted = !muted; e.currentTarget.classList.toggle("off", muted); };
+  app.querySelector("[data-repeat]").onclick = () => last && speak(last.replace(/==/g, ""), { slow: true });
+  app.querySelector("[data-slow]").onclick = (e) => { slow = !slow; e.currentTarget.classList.toggle("on", slow); };
+  window.addEventListener("hashchange", finish, { once: true });
+
+  (async () => {
+    await reply(); // Мия начинает разговор
+    listenLoop();
+  })();
 }

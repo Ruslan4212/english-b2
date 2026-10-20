@@ -37,7 +37,9 @@ export function speak(text, { slow = false, rate } = {}) {
     if (v) u.voice = v;
     u.lang = v?.lang || (p.accent === "gb" ? "en-GB" : "en-US");
     u.rate = rate ?? (slow ? 0.7 : p.rate || 0.92);
-    u.onend = u.onerror = () => resolve();
+    // Chrome иногда не присылает onend — страхуемся по оценке длительности фразы
+    const guard = setTimeout(resolve, 2500 + String(text).length * (u.rate < 0.8 ? 110 : 85));
+    u.onend = u.onerror = () => { clearTimeout(guard); resolve(); };
     speechSynthesis.speak(u);
   });
 }
