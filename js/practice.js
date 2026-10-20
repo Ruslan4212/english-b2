@@ -3,7 +3,7 @@
 import { S, update, addCard, addError, logTime } from "./store.js";
 import { $$, esc, md, today, toast, shuffle, uid, fmtDate } from "./util.js";
 import { queue, grade, preview, stats as srsStats } from "./srs.js";
-import { speak, stopSpeak, hasASR, listen as asr, startRecording, saveRecording, listRecordings, deleteRecording } from "./speech.js";
+import { speak, stopSpeak, hasASR, asrError, listen as asr, startRecording, saveRecording, listRecordings, deleteRecording } from "./speech.js";
 import { chatTurn, correctText, generate, story, NO_AI } from "./ai.js";
 import { markToday, currentPhase, currentLevel, currentDay } from "./progress.js";
 import { dialog, renderStep, bindSay } from "./exercises.js";
@@ -706,7 +706,22 @@ function liveCall(app, topic) {
       const alts = await asr({ timeoutMs: 15000 });
       if (!alive()) return;
       if (!alts?.[0]) {
-        if (++misses >= 2) { misses = 0; await say("Take your time. Are you still there? You can answer in Russian if it's easier."); }
+        const err = asrError;
+        if (err === "not-allowed" || err === "service-not-allowed" || err === "audio-capture") {
+          line("sys", "🎤 Нет доступа к микрофону. Разрешите микрофон для сайта (значок 🔒 слева от адреса → Микрофон → Разрешить) и нажмите 🎤.");
+          muted = true; app.querySelector("[data-mute]").classList.add("off");
+          continue;
+        }
+        if (err === "network") { line("sys", "Распознавание речи недоступно (нет связи с сервисом браузера). Попробуйте Chrome или текстовый чат."); muted = true; app.querySelector("[data-mute]").classList.add("off"); continue; }
+        misses++;
+        if (misses === 2) await say("Take your time. You can answer in Russian if it's easier.");
+        if (misses >= 3) {
+          misses = 0;
+          line("sys", "Микрофон на паузе — я вас не слышу. Нажмите 🎤, когда будете готовы ответить.");
+          muted = true; app.querySelector("[data-mute]").classList.add("off");
+        }
+        // короткая пауза, чтобы пустые результаты не крутились в быстром цикле
+        await new Promise((r) => setTimeout(r, 600));
         continue;
       }
       misses = 0;

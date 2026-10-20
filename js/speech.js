@@ -51,6 +51,9 @@ export function stopSpeak() {
 const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
 export const hasASR = () => !!Rec;
 
+/** Причина последней неудачи распознавания: not-allowed, no-speech, audio-capture, network… */
+export let asrError = "";
+
 /** Слушает микрофон и возвращает распознанный английский текст (или null). */
 export function listen({ lang = "en-US", timeoutMs = 12000 } = {}) {
   return new Promise((resolve) => {
@@ -60,6 +63,7 @@ export function listen({ lang = "en-US", timeoutMs = 12000 } = {}) {
     r.interimResults = false;
     r.maxAlternatives = 3;
     let done = false;
+    asrError = "";
     const finish = (v) => {
       if (done) return;
       done = true;
@@ -70,10 +74,10 @@ export function listen({ lang = "en-US", timeoutMs = 12000 } = {}) {
       const alts = [...e.results[0]].map((a) => a.transcript);
       finish(alts);
     };
-    r.onerror = () => finish(null);
+    r.onerror = (e) => { asrError = e.error || "error"; finish(null); };
     r.onend = () => finish(null);
     setTimeout(() => finish(null), timeoutMs);
-    r.start();
+    try { r.start(); } catch { asrError = "busy"; finish(null); }
   });
 }
 
