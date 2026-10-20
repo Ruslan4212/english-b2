@@ -8,6 +8,8 @@ import { speak, hasASR, listen, similarity } from "./speech.js";
 import { checkAnswer } from "./ai.js";
 
 const sayBtn = (text, slow = false) => `<button class="say" data-say="${esc(text)}" ${slow ? 'data-slow="1"' : ""} title="Послушать">🔊</button>`;
+/** 🔊 обычная скорость + 🐢 очень медленно, по словам. */
+const sayBoth = (text) => `<span class="say-pair">${sayBtn(text)}<button class="say slow" data-say="${esc(text)}" data-slow="1" title="Очень медленно, по словам">🐢</button></span>`;
 
 /** Любая кнопка data-say внутри root озвучивает свой текст. */
 export function bindSay(root) {
@@ -60,7 +62,7 @@ function examples(step, root, ctx) {
     step.items
       .map(
         ([en, ru, note]) =>
-          `<div class="ex-line">${sayBtn(en.replace(/ — /g, ", "))}<div><div class="en">${esc(en)}</div><div class="ru">${esc(ru || "")}</div>${note ? `<div class="note">${esc(note)}</div>` : ""}</div></div>`,
+          `<div class="ex-line">${sayBoth(en.replace(/ — /g, ", "))}<div><div class="en">${esc(en)}</div><div class="ru">${esc(ru || "")}</div>${note ? `<div class="note">${esc(note)}</div>` : ""}</div></div>`,
       )
       .join("") +
     `<div class="row" style="margin-top:12px">${helpBtn}</div>`;
@@ -124,7 +126,7 @@ function choice(step, root, ctx) {
   drill(step, root, ctx, ([q, opts, a, why], box, answer) => {
     const order = shuffle(opts.map((o, i) => i));
     box.innerHTML =
-      `<div class="ex-item"><div class="ex-q">${step.listen ? `${sayBtn(q)} <span class="muted">Нажмите 🔊 и выберите, что услышали</span>` : inline(q || "Какой вариант правильный?")}</div>` +
+      `<div class="ex-item"><div class="ex-q">${step.listen ? `${sayBoth(q)} <span class="muted">Нажмите 🔊 и выберите, что услышали</span>` : inline(q || "Какой вариант правильный?")}</div>` +
       `<div class="opts">${order.map((i) => `<button class="opt" data-i="${i}">${inline(opts[i])}</button>`).join("")}</div></div>`;
     if (step.listen) speak(q);
     box.querySelectorAll(".opt").forEach((b) =>
@@ -254,7 +256,7 @@ function translate(step, root, ctx) {
 /* ------------------------------ диктант ------------------------------ */
 function dictation(step, root, ctx) {
   drill(step, root, ctx, ([en, ru], box, answer) => {
-    box.innerHTML = `<div class="ex-item"><div class="ex-q row"><button class="btn sm" data-play>▶ Слушать</button><button class="btn sm ghost" data-slow>🐢 Медленно</button><span class="muted small">Напишите, что услышали</span></div><input type="text" data-in autocomplete="off" autocapitalize="off" spellcheck="false"><div class="row" style="margin-top:8px"><button class="btn primary sm" data-check>Проверить</button></div></div>`;
+    box.innerHTML = `<div class="ex-item"><div class="ex-q row"><button class="btn sm" data-play>▶ Слушать</button><button class="btn sm ghost" data-slow>🐢 Очень медленно</button><span class="muted small">Напишите, что услышали</span></div><input type="text" data-in autocomplete="off" autocapitalize="off" spellcheck="false"><div class="row" style="margin-top:8px"><button class="btn primary sm" data-check>Проверить</button></div></div>`;
     const input = box.querySelector("[data-in]");
     box.querySelector("[data-play]").onclick = () => speak(en);
     box.querySelector("[data-slow]").onclick = () => speak(en, { slow: true });
@@ -286,7 +288,7 @@ function speakStep(step, root, ctx) {
       return;
     }
     const [en, ru] = step.items[i];
-    box.innerHTML = `<div class="ex-item"><div class="ex-q">${sayBtn(en)} <b>${esc(en)}</b></div><div class="muted">${esc(ru)}</div><div class="row" style="margin-top:8px">${hasASR() ? `<button class="btn primary sm" data-mic>🎤 Сказать</button>` : ""}<button class="btn sm" data-ok>Сказал(а) вслух →</button></div><div data-res></div></div>`;
+    box.innerHTML = `<div class="ex-item"><div class="ex-q">${sayBoth(en)} <b>${esc(en)}</b></div><div class="muted">${esc(ru)}</div><div class="row" style="margin-top:8px">${hasASR() ? `<button class="btn primary sm" data-mic>🎤 Сказать</button>` : ""}<button class="btn sm" data-ok>Сказал(а) вслух →</button></div><div data-res></div></div>`;
     speak(en);
     box.querySelector("[data-ok]").onclick = () => { i++; draw(); };
     const mic = box.querySelector("[data-mic]");
@@ -317,7 +319,7 @@ export function dialog(step, root, ctx) {
     head(step) +
     `<div class="row" style="margin-bottom:10px"><button class="btn primary sm" data-play>▶ Слушать диалог</button><button class="btn sm" data-shadow>🗣 Shadowing по фразам</button><label class="small"><input type="checkbox" data-blur> скрыть текст</label><span class="muted small" data-plays></span></div>` +
     `<div class="dlg" data-dlg>${step.lines
-      .map(([who, en, ru], k) => `<div class="dlg-line" data-k="${k}"><div class="who">${esc(who)}</div><div><div class="en hideable">${esc(en)}</div><div class="ru">${esc(ru)}</div></div>${sayBtn(en)}</div>`)
+      .map(([who, en, ru], k) => `<div class="dlg-line" data-k="${k}"><div class="who">${esc(who)}</div><div><div class="en hideable">${esc(en)}</div><div class="ru">${esc(ru)}</div></div>${sayBoth(en)}</div>`)
       .join("")}</div><div data-qs style="margin-top:12px"></div><div class="row" style="margin-top:10px">${helpBtn}</div>`;
   const dlg = root.querySelector("[data-dlg]");
   const playsEl = root.querySelector("[data-plays]");

@@ -306,3 +306,7 @@ mark.k { background: var(--hl-ai); color: inherit; padding: 0 3px; border-radius
 .cbtn { width: 56px; height: 56px; border-radius: 50%; border: 1px solid var(--line); background: var(--panel); font-size: 1.35rem; cursor: pointer; box-shadow: 0 3px 0 var(--line); }
 .cbtn.off, .cbtn.on { background: var(--soft); border-color: var(--accent); }
 .cbtn.end { background: var(--bad); border-color: var(--bad); box-shadow: 0 3px 0 #d63c41; transform: rotate(135deg); }
+.say-pair { display: inline-flex; gap: 4px; flex-shrink: 0; }
+.say.slow { font-size: .8rem; background: var(--panel2); }
+.md .say { width: 26px; height: 26px; font-size: .8rem; vertical-align: middle; }
+.md .say.slow { margin-left: 2px; }

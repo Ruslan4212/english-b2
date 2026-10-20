@@ -38,19 +38,37 @@ export function hasTTS() {
   return !!window.speechSynthesis;
 }
 
-/** Произнести текст. slow — для первого прослушивания и диктантов. */
-export function speak(text, { slow = false, rate } = {}) {
+let slowToken = 0; // новая озвучка прерывает идущее медленное чтение
+
+/**
+ * Произнести текст. slow — очень медленно: фраза читается по одному слову
+ * с паузами, каждое слово растянуто, одиночное слово — ещё медленнее.
+ */
+export async function speak(text, { slow = false, rate } = {}) {
+  const t = String(text).replace(/[_]{2,}/g, "blank").trim();
+  const my = ++slowToken;
+  if (!slow || rate) return speakOnce(t, rate);
+  const words = t.split(/\s+/).filter(Boolean);
+  if (words.length <= 1) return speakOnce(t, 0.4);
+  for (const w of words) {
+    if (my !== slowToken) return;
+    await speakOnce(w, 0.5);
+    await new Promise((r) => setTimeout(r, /[.,!?;:]$/.test(w) ? 650 : 380));
+  }
+}
+
+function speakOnce(text, rate) {
   return new Promise((resolve) => {
     if (!window.speechSynthesis) return resolve();
     speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(String(text).replace(/[_]{2,}/g, "blank"));
+    const u = new SpeechSynthesisUtterance(text);
     const p = S().profile || {};
     const v = pickVoice(p.accent || "us");
     if (v) u.voice = v;
     u.lang = v?.lang || (p.accent === "gb" ? "en-GB" : "en-US");
-    u.rate = rate ?? (slow ? 0.7 : p.rate || 0.92);
+    u.rate = rate ?? (p.rate || 0.92);
     // Chrome иногда не присылает onend — страхуемся по оценке длительности фразы
-    const guard = setTimeout(resolve, 2500 + String(text).length * (u.rate < 0.8 ? 110 : 85));
+    const guard = setTimeout(resolve, 2500 + (String(text).length * 80) / u.rate);
     u.onend = u.onerror = () => { clearTimeout(guard); resolve(); };
     speechSynthesis.speak(u);
   });
@@ -58,6 +76,7 @@ export function speak(text, { slow = false, rate } = {}) {
 
 let audioEl = null;
 export function stopSpeak() {
+  slowToken++;
   window.speechSynthesis?.cancel();
   if (audioEl) { audioEl.pause(); audioEl = null; }
 }
@@ -80,7 +99,8 @@ export async function speakMia(text, { slow = false } = {}) {
     if (url) {
       const played = await new Promise((resolve) => {
         audioEl = new Audio(url);
-        audioEl.playbackRate = slow ? 0.85 : 1;
+        audioEl.preservesPitch = true;
+        audioEl.playbackRate = slow ? 0.6 : 1;
         audioEl.onended = () => resolve(true);
         audioEl.onerror = () => resolve(false);
         // автовоспроизведение может быть запрещено до первого клика — тогда говорит браузер

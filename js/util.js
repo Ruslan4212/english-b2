@@ -10,7 +10,7 @@ export function esc(s) {
 /** Строчная разметка: **жирный**, *курсив*, `код`, [[англ. фраза]] — с кнопкой озвучки. */
 export function inline(s) {
   return esc(s)
-    .replace(/\[\[(.+?)\]\]/g, (_, t) => `<span class="en">${t}</span> <button class="say" data-say="${t.replace(/<[^>]+>/g, "")}" title="Послушать">🔊</button>`)
+    .replace(/\[\[(.+?)\]\]/g, (_, t) => `<span class="en">${t}</span> <button class="say" data-say="${t.replace(/<[^>]+>/g, "")}" title="Послушать">🔊</button><button class="say slow" data-say="${t.replace(/<[^>]+>/g, "")}" data-slow="1" title="Очень медленно">🐢</button>`)
     .replace(/\*\*(.+?)\*\*/g, "<b>$1</b>")
     .replace(/(^|[^*])\*(?!\s)(.+?)\*/g, "$1<i>$2</i>")
     .replace(/`(.+?)`/g, "<code>$1</code>");
