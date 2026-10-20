@@ -172,7 +172,7 @@ function fill(step, root, ctx) {
     };
     box.querySelector("[data-check]").onclick = () => check();
     box.querySelector("[data-show]").onclick = () => check(true);
-    input.onkeydown = (e) => { if (e.key === "Enter") check(); };
+    input.onkeydown = (e) => { if (e.key === "Enter") { e.preventDefault(); check(); } };
   });
 }
 
@@ -247,7 +247,7 @@ function translate(step, root, ctx) {
     };
     box.querySelector("[data-check]").onclick = () => check();
     box.querySelector("[data-show]").onclick = () => check(true);
-    input.onkeydown = (e) => { if (e.key === "Enter") check(); };
+    input.onkeydown = (e) => { if (e.key === "Enter") { e.preventDefault(); check(); } };
   });
 }
 
@@ -270,7 +270,7 @@ function dictation(step, root, ctx) {
       answer(ok, { okMsg: `${esc(en)} — ${esc(ru)}`, badMsg: `${typo ? "Почти! " : ""}Было: <b>${esc(en)}</b> — ${esc(ru)}`, wrong: v, right: en, task: "Диктант", attempt: `написал «${v}», звучало «${en}»` });
     };
     box.querySelector("[data-check]").onclick = check;
-    input.onkeydown = (e) => { if (e.key === "Enter") check(); };
+    input.onkeydown = (e) => { if (e.key === "Enter") { e.preventDefault(); check(); } };
   });
 }
 
