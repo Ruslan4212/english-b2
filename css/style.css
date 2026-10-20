@@ -152,9 +152,14 @@ th { background: var(--panel2); font-weight: 600; }
 .say { border: none; background: var(--accent-soft); color: var(--accent); border-radius: 50%; width: 30px; height: 30px; cursor: pointer; flex-shrink: 0; font-size: 0.9rem; }
 .say:hover { filter: brightness(0.95); }
 .dlg { display: grid; gap: 6px; }
-.dlg-line { display: grid; grid-template-columns: 70px 1fr auto; gap: 8px; align-items: start; padding: 8px 10px; border-radius: 9px; background: var(--panel2); }
+.dlg-line { display: grid; grid-template-columns: 7rem minmax(0, 1fr) auto; gap: 8px; align-items: start; padding: 8px 10px; border-radius: 9px; background: var(--panel2); }
 .dlg-line.cur { outline: 2px solid var(--accent); }
-.dlg-line .who { font-weight: 700; color: var(--muted); font-size: 0.88rem; }
+.dlg-line .who { font-weight: 700; color: var(--muted); font-size: 0.88rem; min-width: 0; overflow-wrap: anywhere; }
+.dlg-line > div:nth-child(2) { min-width: 0; overflow-wrap: anywhere; }
+@media (max-width: 600px) {
+  .dlg-line { grid-template-columns: minmax(0, 1fr) auto; }
+  .dlg-line .who { grid-column: 1 / -1; }
+}
 .dlg-line .ru { color: var(--muted); font-size: 0.9rem; }
 .blur .ru, .blur .en.hideable { filter: blur(5px); }
 .blur .ru:hover, .blur .en.hideable:hover { filter: none; }

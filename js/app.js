@@ -255,7 +255,7 @@ function renderMap() {
           .map((w) => `<a class="wk ${weekDone(w) ? "done" : ""} ${w === cur.week ? "cur" : ""} ${CHECKPOINT_WEEKS[w] ? "cp" : ""}" href="#/day/${(w - 1) * 7}" title="Неделя ${w}, месяц ${monthOfWeek(w)}">${w}</a>`).join("")}</div>
         <details style="margin-top:10px"><summary>Что делать в фазе по блокам</summary>
           <div class="tbl-wrap"><table>
-          ${[["Основной курс", p.course], ["Слова", p.words], ["Слушание", p.listen], ["Чтение", p.read], ["Говорение", p.speak], ["Письмо", p.write]].map(([a, b]) => `<tr><th style="width:150px">${a}</th><td>${esc(b)}</td></tr>`).join("")}
+          ${[["Основной курс", p.course], ["Слова", p.words], ["Слушание", p.listen], ["Чтение", p.read], ["Говорение", p.speak], ["Письмо", p.write]].map(([a, b]) => `<tr><th style="width:150px;max-width:40%">${a}</th><td>${esc(b)}</td></tr>`).join("")}
           </table></div>
           <p><b>Юниты:</b> ${units.map((u) => esc(u.title)).join(" · ") || "—"}</p>
         </details>
@@ -302,7 +302,7 @@ function renderProgress() {
       <div class="bar"><i style="width:${Math.min(100, (h / 550) * 100)}%"></i></div>
       <div class="levels">${marks.map(([l, m]) => `<div>${h >= m ? "✅" : "⬜"} ${l} ≈ ${m} ч</div>`).join("")}</div></div>
     <div class="card"><h3>Часы по блокам</h3><p class="muted small">План: раз в неделю смотрите итоги по блокам — так видно, какой навык «недоедает».</p>
-      ${Object.entries(BLOCKS).map(([k, n]) => `<div class="row" style="margin:6px 0"><span style="width:170px">${n}</span><div class="bar" style="flex:1"><i style="width:${((byBlock[k] || 0) / maxBlock) * 100}%"></i></div><span class="small" style="width:60px;text-align:right">${((byBlock[k] || 0) / 60).toFixed(1)} ч</span></div>`).join("")}
+      ${Object.entries(BLOCKS).map(([k, n]) => `<div class="row" style="margin:6px 0"><span style="width:170px;max-width:100%">${n}</span><div class="bar" style="flex:1"><i style="width:${((byBlock[k] || 0) / maxBlock) * 100}%"></i></div><span class="small" style="width:60px;text-align:right">${((byBlock[k] || 0) / 60).toFixed(1)} ч</span></div>`).join("")}
     </div>
     <div class="card"><h3>Добавить занятие вручную</h3><p class="muted small">Урок с репетитором, сериал, книга — всё осознанное считается.</p>
       <div class="row"><input type="number" data-min placeholder="минуты" style="width:110px" min="1"><select data-block style="width:auto">${Object.entries(BLOCKS).map(([k, n]) => `<option value="${k}">${n}</option>`).join("")}</select><input type="text" data-note placeholder="заметка" style="flex:1;min-width:150px"><button class="btn primary" data-add>Добавить</button></div></div>
