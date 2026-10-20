@@ -22,5 +22,7 @@ export function richText(text, esc) {
   return esc(text)
     .replace(/==(.+?)==/g, '<mark class="k">$1</mark>')
     .replace(/\*\*(.+?)\*\*/g, "<b>$1</b>")
+    .replace(/(^|[^*])\*(?!\s)([^*\n]+?)\*/g, "$1<i>$2</i>")
+    .replace(/(^|<br>|\n)- /g, "$1• ")
     .replace(/\n/g, "<br>");
 }
