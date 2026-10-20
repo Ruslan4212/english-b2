@@ -188,7 +188,7 @@ Continuous значит «длительный, продолжающийся». 
         {
           t: "text",
           h: "Описание картинки — частое задание экзаменов",
-          md: `На экзаменах (Cambridge A2 Key, B1, IELTS) и в жизни часто нужно описать, что происходит. Схема:
+          md: `На экзаменах и в жизни часто нужно описать, что происходит. Схема:
 
 1. **Общее:** [[In this picture I can see…]] — На этой картинке я вижу… / [[This is a photo of…]]
 2. **Где:** [[It's in a park / in an office.]] [[In the background there's…]] (на заднем плане), [[in the foreground]] (на переднем), [[on the left / on the right]], [[in the middle]].

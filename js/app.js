@@ -95,13 +95,13 @@ function renderOnboarding() {
 - Каждое правило объяснено **по-русски, подробно, с примерами и озвучкой**. Если что-то непонятно — кнопка **🤖 «Непонятно — объясни подробнее»** вызывает ИИ-наставника.
 - Фразы с уроков сами попадают в карточки (как Anki), ошибки — в ваш личный список для отработки.
 
->i План честно говорит: приложение не заменяет живого собеседника. С первого месяца нужен репетитор или языковой партнёр хотя бы раз в неделю. Здесь есть ИИ-партнёр для разговора, но лучше — и то, и другое.`)}
+>i Говорить нужно с первого месяца. Ваш собеседник — AI-репетитор **Мия**: живой звонок голосом, исправления и объяснения. Всё обучение — внутри приложения, ничего искать не нужно.`)}
   </div>
   <div class="card">
     <h2>1. Ваш уровень сейчас</h2>
-    <p class="muted">План советует: если осталась школьная база — пройдите бесплатный тест <a href="https://www.efset.org/" target="_blank" rel="noopener">EF SET</a> и начните с подходящей фазы. Пропускать лучше целые фазы, а не отдельные навыки.</p>
+    <p class="muted">Если осталась школьная база — выберите свой уровень или пройдите встроенный тест в первый день курса: он предложит, с какой фазы начать. Пропускать лучше целые фазы, а не отдельные навыки.</p>
     <div class="grid">
-      ${[["1", "С полного нуля", "Неделя 1: звуки и чтение"], ["14", "У меня A1 (EF SET A1)", "Начать с фазы A2, месяц 4"], ["27", "У меня A2", "Начать с фазы B1, месяц 7"], ["53", "У меня B1", "Начать с фазы B2, месяц 13"]]
+      ${[["1", "С полного нуля", "Неделя 1: звуки и чтение"], ["14", "У меня A1", "Начать с фазы A2, месяц 4"], ["27", "У меня A2", "Начать с фазы B1, месяц 7"], ["53", "У меня B1", "Начать с фазы B2, месяц 13"]]
         .map(([w, t, d], i) => `<label class="card" style="cursor:pointer;margin:0"><input type="radio" name="start" value="${w}" ${i === 0 ? "checked" : ""}> <b>${t}</b><div class="muted small">${d}</div></label>`).join("")}
     </div>
     <h2>2. Сколько часов в неделю готовы заниматься?</h2>
@@ -156,10 +156,10 @@ function taskLink(t) {
       return { href: "#/words", label: `${q.due.length} к повторению, ${q.fresh.length} новых`, sub: "" };
     }
     case "listen": return { href: t.aloud ? "#/listen/aloud" : "#/listen/next", label: "", sub: "" };
-    case "speak": return { href: t.work ? "#/work" : "#/speak/week", label: "", sub: "" };
+    case "speak": return { href: t.work ? "#/speak/call_work_colleagues" : "#/speak/call_week", label: "📞 Позвонить Мии", sub: "" };
     case "write": return { href: "#/write/week", label: "", sub: "" };
     case "errors": return { href: "#/errors", label: "", sub: "" };
-    case "free": return { href: "#/resources", label: "", sub: "" };
+    case "free": return { href: "#/read", label: "", sub: "" };
     case "phrases": return { href: "#/words", label: "", sub: "" };
     case "weekly": return { href: "#/weekly", label: "", sub: "" };
     case "checkpoint": return { href: `#/checkpoint/${t.cp}`, label: "", sub: "" };

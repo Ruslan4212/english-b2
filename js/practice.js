@@ -19,7 +19,6 @@ import SPEAKING from "../data/speaking.js";
 import WRITING from "../data/writing.js";
 import WORK from "../data/work.js";
 import CHECKPOINTS from "../data/checkpoints.js";
-import RESOURCES from "../data/resources.js";
 
 const lvlOrder = ["A1", "A2", "B1", "B2"];
 const upTo = (lvl) => lvlOrder.slice(0, lvlOrder.indexOf(lvl) + 1);
@@ -172,8 +171,8 @@ export function renderListen(app, arg) {
   app.innerHTML = `<h1>🎧 Слушание</h1>
     ${md(`**Как слушать по плану:** каждый диалог — **3 раза**: 1) просто слушать, 2) следить по тексту, 3) повторять за диктором (**shadowing**). Слушайте то, что понимаете на **90–95%**: меньше — слишком сложно, полностью — слишком легко.
 
-**Внешние материалы фазы ${ph.level}:** ${ph.listen}`)}
-    <div class="row"><a class="btn primary" href="#/listen/next">▶ Следующий диалог по плану</a><a class="btn" href="#/resources">🔗 Подкасты и каналы</a></div>
+**Фаза ${ph.level}:** ${ph.listen}`)}
+    <div class="row"><a class="btn primary" href="#/listen/next">▶ Следующий диалог по плану</a><a class="btn" href="#/read">🤖 История от Мии на слух</a></div>
     <h2>Диалоги из пройденных уроков</h2>
     ${fromLessons.length ? fromLessons.map((d) => row(d)).join("") : `<p class="muted">Появятся после первых уроков.</p>`}
     <h2>Библиотека аудио-диалогов</h2>
@@ -222,7 +221,7 @@ export function renderRead(app, id) {
   app.innerHTML = `<h1>📖 Чтение</h1>
     ${md(`**План фазы ${lvl}:** ${ph.read}
 
-Здесь — короткие тексты уровня с озвучкой, глоссарием и вопросами. Книги (Graded Readers) читайте отдельно и отмечайте время в «Прогрессе».
+Здесь — тексты уровня с озвучкой, глоссарием и вопросами, а ниже Мия напишет новый текст на любую интересную вам тему. Это и есть ваша «книга уровня».
 
 >i Как читать: 1) прочитайте целиком, не останавливаясь на незнакомых словах; 2) ответьте на вопросы; 3) прослушайте текст; 4) выпишите 3–5 полезных фраз в «Мои фразы».`)}
     ${texts.map((x) => `<div class="ex-line"><span>${s.read[x.id] ? "✅" : "📄"}</span><div style="flex:1"><a href="#/read/${x.id}">${esc(x.title)}</a> <span class="pill ${x.level.toLowerCase()}">${x.level}</span></div></div>`).join("")}
@@ -293,27 +292,14 @@ export function renderSpeak(app, arg) {
   const t = topics.find((x) => x.id === arg);
   if (t) return chat(app, t);
   app.innerHTML = `<h1>🗣️ Говорение</h1>
-    ${md(`**Говорить — с первого месяца.** Даже на A1 нужен живой собеседник: репетитор исправляет ошибки, которых не видит приложение. Ищите преподавателя, который **исправляет и объясняет причину**.
+    ${md(`**Говорить — с первого месяца.** Ваш собеседник — ${TUTOR.ru}: в живом звонке она говорит голосом на вашем уровне, задаёт вопросы, а после каждой реплики показывает ошибки с объяснением. Звоните из Chrome или Edge.
 
-Когда репетитора нет, тренируйтесь с ИИ-партнёром: он говорит на вашем уровне, задаёт вопросы и после каждой вашей реплики показывает ошибки с объяснением. Можно говорить голосом (🎤) — в Chrome/Edge.
-
->i Страх говорить, пока не выучена грамматика, — частая проблема. План советует: говорите на упрощённом английском с первых недель, ошибки разбирайте после.
+>i Страх говорить, пока не выучена грамматика, — частая проблема. План советует: говорите на упрощённом английском с первых недель, ошибки разбирайте после. Мия не осуждает и всегда подскажет, как сказать правильно.
 
 **Фаза ${ph.level}:** ${ph.speak}`)}
-    <div class="card" style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">${avatar("ava")}<div style="flex:1;min-width:200px"><b style="color:var(--head)">Живой разговор с ${TUTOR.ru}</b><div class="muted small">Как видеозвонок: она говорит голосом, вы отвечаете вслух — без кнопок. Исправления — субтитрами.</div></div><a class="btn primary" href="#/speak/call_week">📞 Позвонить: ${esc(weekTopic.title)}</a></div>
+    <div class="card" style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">${avatar("ava")}<div style="flex:1;min-width:200px"><b style="color:var(--head)">Живой разговор с Мией</b><div class="muted small">Как видеозвонок: она говорит голосом, вы отвечаете вслух — без кнопок. Исправления — субтитрами.</div></div><a class="btn primary" href="#/speak/call_week">📞 Позвонить: ${esc(weekTopic.title)}</a></div>
     <div class="row"><a class="btn" href="#/speak/week">💬 Текстовый чат: ${esc(weekTopic.title)}</a><a class="btn" href="#/record">🎙 Ежемесячная запись голоса</a><a class="btn" href="#/work">💼 Рабочие сценарии</a></div>
-    <div class="card"><label class="row"><input type="checkbox" data-real> Сегодня был урок с <b>живым репетитором</b> — отметить задачу дня</label><textarea data-notes rows="3" placeholder="Ошибки, которые исправил репетитор (по одной на строку: неправильно -> правильно)" style="margin-top:8px"></textarea><button class="btn sm" data-savereal style="margin-top:6px">Сохранить</button></div>
     <h2>Все темы</h2><div class="grid">${topics.map((x) => `<a class="card" style="margin:0;text-decoration:none;color:inherit" href="#/speak/${x.id}"><b>${esc(x.title)}</b> <span class="pill ${x.level.toLowerCase()}">${x.level}</span><div class="muted small">${esc(x.ru)}</div></a>`).join("")}</div>`;
-  app.querySelector("[data-savereal]").onclick = () => {
-    const lines = app.querySelector("[data-notes]").value.split("\n").map((l) => l.trim()).filter(Boolean);
-    for (const l of lines) {
-      const [w, r] = l.split(/->|→|—/).map((x) => x?.trim());
-      addError("Урок с репетитором", w || l, r || "", "");
-    }
-    if (app.querySelector("[data-real]").checked && (markToday("speak", "tutor") || markToday("speak"))) logTime("speak", 50, "Урок с репетитором");
-    if (lines.length) markToday("errors");
-    toast("Сохранено");
-  };
 }
 
 function chat(app, topic) {
@@ -504,23 +490,35 @@ export function renderErrors(app) {
   };
 }
 
-/* =============================== РЕСУРСЫ =============================== */
+/* ============================ КАК УЧИТЬСЯ ============================ */
 export function renderResources(app) {
-  const ph = currentPhase();
-  app.innerHTML = `<h1>🔗 Ресурсы по навыкам</h1>${md("Не берите всё сразу: достаточно **одного ресурса на каждую строку**. Названия приведены по общему знанию и могли измениться — проверьте актуальность перед покупкой.")}
-    <div class="card"><div class="tbl-wrap"><table><tr><th>Навык</th><th>Основной ресурс</th><th>Дополнительно</th></tr>${RESOURCES.table.map((r) => `<tr><th>${esc(r[0])}</th><td>${md(r[1])}</td><td>${md(r[2])}</td></tr>`).join("")}</table></div></div>
-    <div class="card"><h2>Для фазы ${ph.level}</h2>${md(RESOURCES.byLevel[ph.level])}</div>
-    <div class="card"><h2>Сегодня: свободное слушание и чтение</h2>${md("Выберите материал по интересам, который понимаете на 90–95%. После занятия отметьте время — и выпишите 3–7 фраз в «Мои фразы».")}
-      <div class="row"><input type="number" data-min value="60" style="width:100px"><select data-b style="width:auto"><option value="listen">Слушание</option><option value="read">Чтение</option></select><input type="text" data-note placeholder="что слушали/читали" style="flex:1"><button class="btn primary" data-log>Записать и отметить задачу</button></div></div>
-    <div class="card"><h2>Как выбирать репетитора</h2>${md(RESOURCES.tutor)}</div>
-    <div class="card"><h2>Типичные проблемы и что делать при застое</h2><div class="tbl-wrap"><table><tr><th>Проблема</th><th>Что делать</th></tr>${RESOURCES.problems.map(([a, b]) => `<tr><td>${esc(a)}</td><td>${esc(b)}</td></tr>`).join("")}</table></div>
-      ${md("Если за 2–3 месяца заметного прогресса нет, проверьте три вещи: **сколько часов вы реально занимались**, **сколько из них говорили и писали** (а не только слушали и читали) и **разбираете ли ошибки** после занятий. Всё это видно в «📊 Прогресс».")}</div>`;
+  app.innerHTML = `<span class="pill">Советы</span><h1>Как учиться <span class="hl-blue">эффективно</span></h1>
+    <div class="card"><h2>Правила, которые держат план в рабочем состоянии</h2>${md(`- **Регулярность важнее длительности.** Пропуск дня не страшен, пропуск двух подряд закройте в тот же день хотя бы 15 минутами.
+- **Слова только во фразах.** Добавляйте в «Слова» целые предложения.
+- **Говорить с первого месяца** — звоните Мии хотя бы раз в неделю.
+- **Ошибки записывайте** — они сами попадают в «Мои ошибки»; раз в неделю делайте по ним упражнения.
+- **Слушайте то, что понимаете на 90–95%.** Меньше — слишком сложно, полностью — слишком легко.
+- **Выбирайте темы по интересам** — ${TUTOR.ru} напишет текст или поговорит на любую тему.`)}</div>
+    <div class="card"><h2>Отметить занятие</h2>${md("Слушали или читали что-то по-английски сверх плана? Запишите время — оно считается в 550 часов до B2.")}
+      <div class="row"><input type="number" data-min value="30" style="width:100px"><select data-b style="width:auto"><option value="listen">Слушание</option><option value="read">Чтение</option><option value="speak">Говорение</option></select><input type="text" data-note placeholder="что делали" style="flex:1"><button class="btn primary" data-log>Записать</button></div></div>
+    <div class="card"><h2>Типичные проблемы и что делать при застое</h2><div class="tbl-wrap"><table><tr><th>Проблема</th><th>Что делать</th></tr>${PROBLEMS.map(([x, y]) => `<tr><td>${esc(x)}</td><td>${esc(y)}</td></tr>`).join("")}</table></div>
+      ${md("Если за 2–3 месяца заметного прогресса нет, проверьте три вещи: **сколько часов вы реально занимались**, **сколько из них говорили и писали** (а не только слушали и читали) и **разбираете ли ошибки**. Всё это видно в «📊 Прогресс».")}</div>`;
   app.querySelector("[data-log]").onclick = () => {
     logTime(app.querySelector("[data-b]").value, +app.querySelector("[data-min]").value, app.querySelector("[data-note]").value);
     markToday("free");
     toast("Записано");
   };
 }
+
+const PROBLEMS = [
+  ["Только упражнения без живого говорения", "Звоните Мии с первого месяца: упражнения плохо тренируют свободную речь."],
+  ["Много слушания, но слова не откладываются", "Добавляйте фразы в «Слова» и пересказывайте услышанное вслух."],
+  ["Страх говорить, пока не выучу грамматику", "Говорите на упрощённом английском с первых недель, ошибки разбирайте после."],
+  ["Застой на уровне B1", "Больше слушания (+30–40%), один звонок в неделю — дебаты и мнения, письмо с подробной правкой."],
+  ["Пропуски занятий 3 дня подряд", "Неделю — минимальный режим 15–20 минут в день, затем наращивайте нагрузку."],
+  ["Скучно и пропала мотивация", "Попросите Мию текст или разговор на тему, которая вам интересна: хобби, сериал, профессия."],
+  ["Уроки идут, но разговор не получается", "Раз в неделю вместо урока — длинный звонок Мии, где говорите вы 70% времени."],
+];
 
 /* ============================ КОНТРОЛЬНЫЕ ТОЧКИ ============================ */
 export function renderCheckpoint(app, id) {
@@ -620,38 +618,88 @@ export function renderWeekly(app) {
 /* ================================ СТАРТ ================================ */
 export function renderSetup(app) {
   const s = S();
-  const v = (k) => esc(s.setup[k] || "");
-  app.innerHTML = `<h1>🚀 Старт: неделя подготовки</h1>
-    <div class="card"><h2>1. Тест уровня</h2>${md("Если школьная база осталась — пройдите бесплатный тест **EF SET** (efset.org, ~50 минут) и запишите результат. Если начинаете с нуля — просто отметьте «с нуля»: тест пригодится через 3 месяца.")}
-      <div class="row"><a class="btn" href="https://www.efset.org/" target="_blank" rel="noopener">Открыть EF SET ↗</a><input type="text" data-test placeholder="результат, например A1 / 35 баллов / с нуля" value="${v("efset")}" style="flex:1"></div></div>
-    <div class="card"><h2>2. Основной учебник</h2>${md("Выберите один: **English File Beginner** или **Headway Beginner**. Уроки в приложении покрывают те же темы и объясняют их подробнее — учебник даёт дополнительные упражнения и аудио.")}
-      <input type="text" data-book placeholder="какой учебник выбрали" value="${v("book")}"></div>
-    <div class="card"><h2>3. Репетитор</h2>${md(RESOURCES.tutor)}<input type="text" data-tutor placeholder="имя/ссылка репетитора, день и время урока" value="${v("tutor")}"></div>
-    <div class="card"><h2>4. Колоды «Основа» и «Мои фразы»</h2>${md("Уже созданы во вкладке **🃏 Слова** — это встроенная замена Anki с тем же алгоритмом. Если хотите, можно параллельно поставить и сам Anki.")}</div>
-    <div class="card"><h2>5. Звуки</h2>${md("Дальше на неделе — 4 урока фонетики: транскрипция и звуки, которых нет в русском (th, w, ɪ/iː, ʊ/uː). Видео по постановке звуков — канал **Rachel's English**, словарь с озвучкой — **Cambridge Dictionary**.")}</div>
-    <button class="btn primary" data-save>Сохранить и отметить задачу ✓</button>`;
-  app.querySelector("[data-save]").onclick = () => {
-    update((s) => Object.assign(s.setup, { efset: app.querySelector("[data-test]").value, book: app.querySelector("[data-book]").value, tutor: app.querySelector("[data-tutor]").value }));
-    if (s.setup.efset) update((s) => s.tests.push({ date: today(), kind: "EF SET (старт)", result: s.setup.efset }));
+  const done = s.tests.some((t) => /Тест уровня/.test(t.kind));
+  app.innerHTML = `<span class="pill">Неделя подготовки</span><h1>Всё нужное — <span class="hl-blue">уже здесь</span></h1>
+    <div class="card"><h2>Как устроен курс</h2>${md(`- **Учебник** — раздел «📘 Уроки»: каждое правило подробно по-русски, с озвучкой и упражнениями.
+- **Репетитор** — ${TUTOR.ru}: живой звонок голосом в «🗣️ Говорение», исправляет ошибки и объясняет причину. Кнопка «Спросить Мию» есть на каждом экране.
+- **Карточки (Anki)** — раздел «🃏 Слова»: колоды «Основа» и «Мои фразы» уже созданы, фразы с уроков попадают туда сами.
+- **Слушание и чтение** — диалоги, тексты и истории от Мии на интересные вам темы, всё с озвучкой.
+- **Каждый день** открывайте «📅 Сегодня» и делайте то, что там написано. Больше ничего искать не нужно.`)}</div>
+    <div class="card"><h2>Тест уровня</h2>${md("Если начинаете с нуля — пропустите, тест пригодится через 3 месяца. Если школьная база осталась — пройдите встроенный тест (≈10 минут, задания от A1 до B2): он покажет уровень и с какой фазы лучше начать.")}
+      ${done ? `<div class="banner ok">Тест уже пройден: ${esc(s.tests.filter((t) => /Тест уровня/.test(t.kind)).slice(-1)[0].result)}</div>` : ""}
+      <div class="row"><button class="btn primary" data-test>Пройти тест уровня</button><button class="btn" data-zero>Я начинаю с нуля</button></div><div data-box></div></div>
+    <div class="card" style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">${avatar()}<div style="flex:1;min-width:200px"><b style="color:var(--head)">Познакомьтесь с Мией</b><div class="muted small">В субботу по плану — первый звонок. Можно уже сейчас: скажите «Hello! My name is…».</div></div><a class="btn" href="#/speak/call_a1_intro">📞 Позвонить</a></div>`;
+  const finish = (note) => {
+    if (note) update((st) => st.tests.push({ date: today(), kind: "Старт", result: note }));
     markToday("setup");
-    logTime("course", 30, "Подготовка");
-    location.hash = "#/today";
+    logTime("course", 20, "Подготовка");
   };
+  app.querySelector("[data-zero]").onclick = () => { finish("с нуля"); toast("Отлично! Начинаем со звуков и чтения."); location.hash = "#/today"; };
+  app.querySelector("[data-test]").onclick = () =>
+    placementTest(app.querySelector("[data-box]"), (lvl) => {
+      finish();
+      const ph = PHASES.find((p) => p.level === lvl);
+      const box = app.querySelector("[data-box]");
+      box.insertAdjacentHTML("beforeend", lvl === "A0" ? `<div class="banner info">Начинаем с нуля — так надёжнее. <a class="btn primary sm" href="#/today">К плану</a></div>`
+        : `<div class="banner info">Похоже, ваш уровень — <b>${lvl}</b>. План советует пропускать фазы целиком: можно перейти к фазе <b>${PHASES[Math.min(3, ph.n)].level}</b>.
+          <div class="row" style="margin-top:8px"><button class="btn primary sm" data-jump>Начать с фазы ${PHASES[Math.min(3, ph.n)].level}</button><a class="btn sm" href="#/today">Остаться с начала</a></div></div>`);
+      const jump = box.querySelector("[data-jump]");
+      if (jump) jump.onclick = () => {
+        const target = PHASES[Math.min(3, ph.n)];
+        update((st) => {
+          st.day = (target.from - 1) * 7;
+          st.profile.startWeek = target.from;
+          for (const l of LESSONS) if (l.phase < target.n && !st.lessons[l.id]) st.lessons[l.id] = { done: true, skipped: true, date: today() };
+        });
+        toast(`Переходим к фазе ${target.level}`);
+        location.hash = "#/today";
+      };
+    });
 }
+
+/**
+ * Встроенный тест уровня: по 8 заданий A1, A2, B1, B2 из уроков. Уровень —
+ * самый высокий, на котором ≥ 70% верных (и все предыдущие тоже пройдены).
+ */
+export function placementTest(box, onDone) {
+  const byLevel = { A1: [], A2: [], B1: [], B2: [] };
+  for (const l of LESSONS) {
+    if (!byLevel[l.level] || l.unit.id === "u_ph") continue;
+    for (const st of l.steps) if (st.t === "choice" && !st.listen) for (const it of st.items) if (it[0]) byLevel[l.level].push(it);
+  }
+  const plan = Object.entries(byLevel).flatMap(([lvl, items]) => shuffle(items).slice(0, 8).map((it) => ({ lvl, it })));
+  let i = 0;
+  const score = { A1: 0, A2: 0, B1: 0, B2: 0 };
+  const run = () => {
+    if (i >= plan.length) {
+      let lvl = "A0";
+      for (const L of ["A1", "A2", "B1", "B2"]) { if (score[L] / 8 >= 0.7) lvl = L; else break; }
+      const res = `${lvl === "A0" ? "ниже A1" : lvl} (A1 ${score.A1}/8, A2 ${score.A2}/8, B1 ${score.B1}/8, B2 ${score.B2}/8)`;
+      update((st) => st.tests.push({ date: today(), kind: "Тест уровня (встроенный)", result: res }));
+      box.innerHTML = `<div class="banner ok">Результат: <b>${res}</b></div>`;
+      onDone?.(lvl);
+      return;
+    }
+    const { lvl, it } = plan[i];
+    const [q, opts, a] = it;
+    const order = shuffle(opts.map((_, k) => k));
+    box.innerHTML = `<div class="muted small" style="margin-top:10px">Вопрос ${i + 1} из ${plan.length} · уровень ${lvl}</div>
+      <div class="ex-q">${inlineQ(q)}</div><div class="opts">${order.map((k) => `<button class="opt" data-k="${k}">${esc(opts[k])}</button>`).join("")}<button class="opt" data-k="-1">Не знаю</button></div>`;
+    $$(".opt", box).forEach((b) => (b.onclick = () => { if (+b.dataset.k === a) score[lvl]++; i++; run(); }));
+  };
+  run();
+}
+const inlineQ = (q) => esc(q).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
 
 /* ============================== ТЕСТ УРОВНЯ ============================== */
 export function renderLevelTest(app) {
-  app.innerHTML = `<h1>📝 Тест уровня (раз в 3 месяца)</h1>${md("План: раз в 3 месяца — тест уровня (**EF SET** или пробный **Cambridge**). Результат должен расти, иначе пересмотрите план. Запишите результат внешнего теста и пройдите встроенный тест по грамматике.")}
-    <div class="card"><div class="row"><a class="btn" href="https://www.efset.org/" target="_blank" rel="noopener">EF SET ↗</a><a class="btn" href="https://www.cambridgeenglish.org/test-your-english/" target="_blank" rel="noopener">Cambridge: Test your English ↗</a></div>
-      <div class="row" style="margin-top:8px"><input type="text" data-res placeholder="результат внешнего теста" style="flex:1"><button class="btn primary" data-save>Записать</button></div></div>
-    <div class="card"><h2>Встроенный тест</h2><div data-t></div></div>`;
-  phaseTest(app.querySelector("[data-t]"), currentPhase().n, "Тест уровня (встроенный)");
-  app.querySelector("[data-save]").onclick = () => {
-    update((s) => s.tests.push({ date: today(), kind: "Внешний тест уровня", result: app.querySelector("[data-res]").value }));
-    markToday("test");
-    logTime("course", 40, "Тест уровня");
-    toast("Записано");
-  };
+  const prev = S().tests.filter((t) => /Тест уровня/.test(t.kind));
+  app.innerHTML = `<span class="pill">Раз в 3 месяца</span><h1>Тест <span class="hl-blue">уровня</span></h1>${md("Результат должен расти от теста к тесту — так видно прогресс по фактам. Если он не растёт, план советует добавить 1–2 месяца на фазе и усилить слабый навык.")}
+    ${prev.length ? `<div class="card"><h3>Прошлые результаты</h3>${prev.map((t) => `<div class="small">${t.date}: ${esc(t.result)}</div>`).join("")}</div>` : ""}
+    <div class="card"><h2>Тест: A1 → B2</h2><div data-t></div></div>
+    <div class="card"><h2>Тест по грамматике текущей фазы</h2><button class="btn" data-phase>Начать</button><div data-p></div></div>`;
+  placementTest(app.querySelector("[data-t]"), () => { markToday("test"); logTime("course", 15, "Тест уровня"); });
+  app.querySelector("[data-phase]").onclick = () => phaseTest(app.querySelector("[data-p]"), currentPhase().n, "Тест фазы");
 }
 
 /* ============================ ЖИВОЙ ЗВОНОК ============================ */

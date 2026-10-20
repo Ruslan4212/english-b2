@@ -99,7 +99,7 @@ async function send(text) {
 }
 
 export function initHelper() {
-  $("#fab").innerHTML = `${avatar()}<span>Спросить ${TUTOR.ru}</span>`;
+  $("#fab").innerHTML = `${avatar()}<span>Спросить Мию</span>`;
   $("#helperAva").innerHTML = avatar();
   $("#fab").onclick = () => openHelper();
   $("#helperClose").onclick = () => {
