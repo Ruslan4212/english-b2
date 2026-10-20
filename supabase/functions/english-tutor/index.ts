@@ -356,6 +356,40 @@ async function run(req: { system: string; messages: { role: string; content: str
   return (await call()) ?? (await call());
 }
 
+/* ------------------------------ голос Мии ------------------------------ */
+// Нейроозвучка женским голосом. Модели TTS у Groq меняются, поэтому пробуем
+// пары «модель + голос» по порядку и запоминаем первую рабочую.
+const TTS_CANDIDATES: [string, string][] = [
+  ["canopylabs/orpheus-v1-english", "hannah"],
+  ["canopylabs/orpheus-v1-english", "diana"],
+  ["canopylabs/orpheus-v1-english", "autumn"],
+  ["playai-tts", "Celeste-PlayAI"],
+  ["playai-tts", "Arista-PlayAI"],
+];
+let ttsPick: [string, string] | null = null;
+let ttsLastError = "";
+
+async function tts(b: Record<string, unknown>, origin: string | null): Promise<Response> {
+  const text = String(b.text ?? "").replace(/==/g, "").trim().slice(0, 600);
+  const key = env("GROQ_API_KEY");
+  if (!text || !key) return json({ error: "нет текста или ключа" }, 400, origin);
+  const list = ttsPick ? [ttsPick, ...TTS_CANDIDATES] : TTS_CANDIDATES;
+  for (const [model, voice] of list) {
+    const res = await fetch("https://api.groq.com/openai/v1/audio/speech", {
+      method: "POST",
+      headers: { "content-type": "application/json", authorization: "Bearer " + key },
+      body: JSON.stringify({ model, voice, input: text, response_format: "wav" }),
+    });
+    if (res.ok) {
+      ttsPick = [model, voice];
+      return new Response(res.body, { status: 200, headers: { "content-type": "audio/wav", "cache-control": "public, max-age=86400", ...cors(origin) } });
+    }
+    ttsLastError = `${model}/${voice} ${res.status}: ${(await res.text()).slice(0, 200)}`;
+    console.error("tts", ttsLastError);
+  }
+  return json({ error: "озвучка недоступна", detail: ttsLastError }, 502, origin);
+}
+
 Deno.serve(async (r) => {
   const origin = r.headers.get("origin");
   if (r.method === "OPTIONS") return new Response(null, { status: 204, headers: cors(origin) });
@@ -367,6 +401,7 @@ Deno.serve(async (r) => {
   let body: Record<string, unknown>;
   try { body = await r.json(); } catch { return json({ error: "нужен JSON" }, 400, origin); }
   const mode = new URL(r.url).pathname.split("/").pop() ?? "";
+  if (mode === "tts") return tts(body, origin);
   const req = buildRequest(mode, body);
   if (!req) return json({ error: "неизвестный режим или неверные поля" }, 400, origin);
   try {
