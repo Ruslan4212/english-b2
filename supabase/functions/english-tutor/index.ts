@@ -34,11 +34,14 @@ const cut = (v, n) => String(v ?? "").slice(0, n);
 const lvl = (b) => LEVEL_HINT[b.level] || LEVEL_HINT.A1;
 
 const TUTOR =
-  "Ты — терпеливый и очень понятный преподаватель английского для русскоговорящего взрослого. " +
-  "Объясняешь по-русски, простыми словами, как живой репетитор рядом: без канцелярита, на «ты», " +
-  "с короткими абзацами. Английские примеры всегда даёшь с переводом. Учитываешь типичные трудности " +
-  "русскоговорящих: артикли, времена, порядок слов, вспомогательные глаголы, произношение. " +
-  "Никогда не выдумываешь правила: если есть исключения или варианты — так и говоришь.";
+  "Ты — Мия (Mia), дружелюбный AI-репетитор английского для русскоговорящего взрослого. " +
+  "Манера общения как у живого репетитора в видеозвонке: тепло, бодро, коротко. Начинай с короткой живой реакции " +
+  "(«Отличный вопрос!», «Great question!», «Почти! Смотри…», «Kind of! Но есть нюанс…»), затем объясняй простыми словами, " +
+  "короткими абзацами по 1–3 предложения, на «ты». Ключевые английские слова и конструкции выделяй как ==term== " +
+  "(двойные знаки равенства), каждый пример — с переводом. Учитывай трудности русскоговорящих: артикли, времена, " +
+  "порядок слов, вспомогательные глаголы, произношение. Можно одно уместное эмодзи (😊, 👍, ✨), не больше. " +
+  "Заканчивай коротким вопросом, который проверяет понимание или продолжает разговор. " +
+  "Никогда не выдумываешь правила: если есть исключения или варианты — так и говоришь. Без markdown-заголовков и списков со звёздочками.";
 
 /**
  * Собирает запрос к модели. Возвращает { system, messages, json, maxTokens } или null,
@@ -68,7 +71,7 @@ function buildRequest(mode, b) {
             "3. Приведи 4–5 РАЗНЫХ примеров из жизни с переводом.\n" +
             "4. Назови типичную ошибку русскоговорящих по этой теме и как её избежать.\n" +
             "5. В конце дай 2 мини-задания для самопроверки и ответы к ним после строки «Ответы:».\n" +
-            "Пиши чистым текстом без markdown-разметки (без #, без **), абзацы разделяй пустой строкой.",
+            "Пиши без markdown-заголовков, ключевые термины — ==так==, абзацы разделяй пустой строкой. В конце — короткий вопрос ученику.",
         },
       ],
     };
@@ -83,7 +86,7 @@ function buildRequest(mode, b) {
         ` Уровень ученика: ${lvl(b)}. Ученик проходит курс английского с нуля до B2 и задаёт вопрос наставнику. ` +
         (b.context ? `Сейчас он на экране: ${cut(b.context, 2000)}. ` : "") +
         "Отвечай по делу и конкретно, с примерами и переводом. Если вопрос не про английский — мягко верни к учёбе. " +
-        "Чистый текст без markdown-разметки.",
+        "Ответ короткий, как реплика в чате: 3–8 предложений.",
       json: false,
       maxTokens: 1500,
       messages: msgs.map((m) => ({ role: m.role === "assistant" ? "assistant" : "user", content: cut(m.content, 2000) })),
@@ -146,7 +149,10 @@ function buildRequest(mode, b) {
         "Rules: speak ONLY English in `reply`, using vocabulary and grammar of the student's level " +
         "(A1: very short simple sentences, present simple, max 2 sentences; A2: simple past and future, max 3 sentences; " +
         "B1/B2: natural speech). Always end your reply with ONE question to keep the student talking. " +
-        "Be warm and encouraging. If the student writes in Russian, help them say it in English. " +
+        "Your name is Mia. Be warm and encouraging, like a friendly tutor on a video call: start with a short natural reaction " +
+        "(\"Great question!\", \"Nice!\", \"Kind of!\", \"Oh, interesting!\"), keep it light, at most one emoji. " +
+        "In `reply`, wrap 1–2 useful words or phrases the student should learn in ==double equals==. " +
+        "If the student writes in Russian, help them say it in English. " +
         "Separately, look at the student's LAST message and list every real mistake (grammar, articles, word order, " +
         "wrong word) in `corrections`, explaining each in Russian. If there are no mistakes, return an empty list. " +
         "If the student's message is the conversation start (empty), just greet and ask the first question. " +
@@ -221,6 +227,16 @@ function buildRequest(mode, b) {
             '"glossary": [{"en": "...", "ru": "..."}]}',
         },
       ],
+    };
+  }
+
+  if (mode === "translate") {
+    if (!b.text || String(b.text).length > 3000) return null;
+    return {
+      system: "Ты переводчик. Переводи естественно, без пояснений.",
+      json: false,
+      maxTokens: 1200,
+      messages: [{ role: "user", content: "Переведи на русский язык (английские фрагменты переведи, русские оставь как есть, разметку ==…== сохрани):\n\n" + cut(b.text, 3000) }],
     };
   }
 

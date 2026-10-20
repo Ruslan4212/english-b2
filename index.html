@@ -6,12 +6,14 @@
 <title>English B2 Path</title>
 <meta name="description" content="Пошаговый курс английского с нуля до B2 по 18-месячному плану, с ИИ-наставником">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <header class="top">
   <button class="burger" id="burger" aria-label="Меню">☰</button>
-  <a class="brand" href="#/today">🎓 <b>English</b> B2 Path</a>
+  <a class="brand" href="#/today">English <span class="hl-blue">B2</span> Path</a>
   <div class="top-stats" id="topStats"></div>
   <button class="icon-btn" id="themeBtn" title="Тема">🌓</button>
 </header>
@@ -34,11 +36,13 @@
   <main id="app" class="main"></main>
 </div>
 
-<button class="fab" id="fab" title="ИИ-наставник">🤖 <span>Спросить наставника</span></button>
+<button class="fab" id="fab" title="AI-репетитор Мия"></button>
 <aside class="helper hide" id="helper">
   <div class="helper-head">
-    <b>🤖 ИИ-наставник</b>
-    <span class="muted small" id="helperCtx"></span>
+    <div class="tutor-card" style="background:none;padding:0;flex:1;min-width:0">
+      <span id="helperAva"></span>
+      <div class="who" style="min-width:0"><b>Мия · AI-репетитор</b><span class="live">онлайн</span> <span class="muted small" id="helperCtx"></span></div>
+    </div>
     <button class="icon-btn" id="helperClose">✕</button>
   </div>
   <div class="helper-body" id="helperBody"></div>

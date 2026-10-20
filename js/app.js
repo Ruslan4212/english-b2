@@ -191,7 +191,8 @@ function renderToday(viewDay) {
   if (CHECKPOINT_WEEKS[info.week]) banners += `<div class="banner info">🏁 Это последняя неделя фазы ${ph.level}. В воскресенье — контрольная точка.</div>`;
 
   app.innerHTML = `
-    <div class="row"><h1 style="margin:0">${isCur ? "📅 Сегодня" : "📅 День плана"}</h1><span class="spacer"></span>
+    <span class="pill">Персональный план · день ${i + 1}</span>
+    <div class="row"><h1 style="margin:6px 0 0">${isCur ? 'Твой план <span class="hl-blue">на сегодня</span>' : 'День <span class="hl-blue">плана</span>'}</h1><span class="spacer"></span>
       ${i > 0 ? `<a class="btn sm ghost" href="#/day/${i - 1}">←</a>` : ""}<a class="btn sm ghost" href="#/day/${i + 1}">→</a>${!isCur ? `<a class="btn sm" href="#/today">К текущему дню</a>` : ""}</div>
     <p class="muted" style="margin-top:4px">Неделя <b>${info.week}</b> · ${DOW[info.dow]} по плану · месяц ${info.month} · <span class="pill ${ph.level.toLowerCase()}">Фаза ${ph.n}: ${ph.level} «${ph.title}»</span> · ≈${totalMin} мин</p>
     ${banners}
@@ -241,7 +242,7 @@ function renderMap() {
     for (let d = (w - 1) * 7; d < w * 7; d++) if (!s.days[d]?.finished) return false;
     return true;
   };
-  app.innerHTML = `<h1>🗺️ Карта курса: 18 месяцев, 78 недель</h1>
+  app.innerHTML = `<span class="pill">Путь к B2</span><h1><span class="hl-blue">18 месяцев</span>, 78 недель</h1>
     <p class="muted">Нажмите на неделю, чтобы посмотреть её дни. Жёлтая рамка — контрольная точка фазы.</p>
     ${PHASES.map((p) => {
       const units = UNITS.filter((u) => u.phase === p.n);
@@ -266,7 +267,7 @@ function renderMap() {
 function renderGrammar() {
   const s = S();
   const nl = nextLesson();
-  app.innerHTML = `<h1>📘 Уроки основного курса</h1>
+  app.innerHTML = `<span class="pill">Основной курс</span><h1>Уроки <span class="hl-blue">шаг за шагом</span></h1>
     <p class="muted">Уроки идут по порядку — каждый опирается на предыдущие. Любой пройденный урок можно открыть снова.</p>
     ${nl ? `<div class="banner info">Следующий урок: <b>${esc(nl.title)}</b> <a class="btn primary sm" href="#/lesson/${nl.id}">Открыть</a></div>` : `<div class="banner ok">Все уроки пройдены! 🎉</div>`}
     ${PHASES.map((p) => `<h2>Фаза ${p.n}: ${p.level} «${p.title}»</h2>` +

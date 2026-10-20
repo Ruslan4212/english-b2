@@ -165,6 +165,11 @@ export async function generate(kind, payload) {
   return Array.isArray(r?.items) ? r.items : null;
 }
 
+export async function translate(text) {
+  const r = await ai("translate", { text }, 30000);
+  return r?.text || null;
+}
+
 export async function story(topic, level) {
   const r = await ai("story", { topic, level }, 90000);
   return r && typeof r.text === "string" ? r : null;

@@ -7,7 +7,8 @@ import { speak, hasASR, listen as asr, startRecording, saveRecording, listRecord
 import { chatTurn, correctText, generate, story, NO_AI } from "./ai.js";
 import { markToday, currentPhase, currentLevel, currentDay } from "./progress.js";
 import { dialog, renderStep, bindSay } from "./exercises.js";
-import { openHelper } from "./helper.js";
+import { openHelper, renderMsg } from "./helper.js";
+import { avatar, TUTOR } from "./avatar.js";
 import { extraPractice } from "./lesson.js";
 import { LESSONS } from "../data/index.js";
 import { dayInfo, PHASES } from "./plan.js";
@@ -315,7 +316,8 @@ function chat(app, topic) {
   const started = Date.now();
   window.__ctx = { lesson: "Разговорная практика", step: topic.title, level };
   app.innerHTML = `<a class="btn sm ghost" href="#/speak">← Темы</a>
-    <div class="card"><h1>🗣️ ${esc(topic.title)}</h1><p class="muted">${esc(topic.ru)}</p>
+    <div class="card"><span class="pill">Разговорная практика</span><h1>${esc(topic.title)}</h1><p class="muted">${esc(topic.ru)}</p>
+      <div class="tutor-card">${avatar()}<div class="who"><b>${TUTOR.ru} · ${TUTOR.role}</b><span class="live">в разговоре</span></div></div>
       ${topic.useful?.length ? `<details><summary>Полезные фразы для этой темы</summary>${topic.useful.map(([en, ru]) => `<div class="ex-line"><button class="say" data-say="${esc(en)}">🔊</button><div><span class="en">${esc(en)}</span> — <span class="ru">${esc(ru)}</span></div></div>`).join("")}</details>` : ""}
       <div class="chat" data-chat style="margin-top:10px"></div>
       <div class="row" style="margin-top:10px"><textarea data-in rows="2" style="flex:1" placeholder="Ответьте по-английски. Не знаете слово — напишите его по-русски, партнёр подскажет."></textarea>
@@ -327,7 +329,7 @@ function chat(app, topic) {
   const add = (cls, html) => { const d = document.createElement("div"); d.className = "msg " + cls; d.innerHTML = html; box.append(d); box.scrollTop = box.scrollHeight; return d; };
   const turn = async (text) => {
     if (text) { msgs.push({ role: "user", content: text }); add("me", esc(text)); turns++; }
-    const w = add("ai typing", "…");
+    const w = add("ai typing", `${TUTOR.ru} печатает`);
     const r = await chatTurn(topic.prompt, level, msgs, topic.role);
     w.remove();
     if (!r) return add("sys", esc(NO_AI));
@@ -336,7 +338,7 @@ function chat(app, topic) {
       add("fix", "✏️ <b>Исправления:</b><br>" + (r.corrections || []).map((c) => `<s>${esc(c.wrong)}</s> → <b>${esc(c.right)}</b> — ${esc(c.why)}`).join("<br>") + (r.better ? `<br>💡 Естественнее: <i>${esc(r.better)}</i>` : ""));
       for (const c of r.corrections || []) addError(`Разговор: ${topic.title}`, c.wrong, c.right, c.why);
     }
-    add("ai", `${esc(r.reply)} <button class="say" data-say="${esc(r.reply)}">🔊</button>`);
+    renderMsg(box, "ai", r.reply);
     if (app.querySelector("[data-voice]").checked) speak(r.reply);
     app.querySelector("[data-turns]").textContent = `реплик: ${turns} (для зачёта занятия — от 8)`;
   };
