@@ -288,9 +288,9 @@
     "semantic_hash": ""
   },
   "js/app.js": {
-    "mtime": 1792902765.585682,
-    "seen": 1792902789.3628485,
-    "ast_hash": "eda38972e86e9fe0051ae2e4cc558c29",
+    "mtime": 1792903345.3588564,
+    "seen": 1792903495.1062052,
+    "ast_hash": "16375430765eeaed591ba94abf119c85",
     "semantic_hash": ""
   },
   "js/avatar.js": {
@@ -324,9 +324,9 @@
     "semantic_hash": ""
   },
   "js/practice.js": {
-    "mtime": 1792902765.6638734,
-    "seen": 1792902789.3628602,
-    "ast_hash": "f72edff06fc28fea052bff2f2af7ad01",
+    "mtime": 1792903493.5275812,
+    "seen": 1792903495.1062193,
+    "ast_hash": "6976848b522dc80d1be7799d7181dd29",
     "semantic_hash": ""
   },
   "js/progress.js": {
@@ -513,6 +513,12 @@
     "mtime": 1792503347.832298,
     "seen": 1792901395.8685129,
     "ast_hash": "ac043e3c0fec33c071d8f364aee874f3",
+    "semantic_hash": ""
+  },
+  "js/placement.js": {
+    "mtime": 1792903456.9750242,
+    "seen": 1792903495.1062162,
+    "ast_hash": "78319a0aaf47310f43d2d80323b8b5aa",
     "semantic_hash": ""
   }
 }

@@ -432,6 +432,7 @@ function renderSettings() {
     <p class="muted small">Голос: ${esc(voiceName())}. Лучше всего звучат «Natural»/«Online» голоса в браузере Microsoft Edge.</p>
     <div class="row"><button class="btn primary" data-save2>Сохранить</button><button class="btn sm" data-voice>🔊 Проверить голос</button></div>
   </div>
+  <div class="card"><h2>🎯 Стартовый тест</h2><p class="muted small">Уже занимаетесь, но кажется, что курс слишком лёгкий или трудный? Тест проверит темы по порядку и перенесёт вас к первому незнакомому уроку. Пройденные уроки останутся пройденными.</p><a class="btn" href="#/placement">Пройти стартовый тест</a></div>
   <div class="card"><h2>☁️ Аккаунт и синхронизация</h2><p class="muted small">Войдите по email, чтобы прогресс хранился в облаке и был на всех устройствах. ${syncStatus().user ? `Вы вошли как <b>${esc(syncStatus().user.email || "")}</b>.` : "Без входа прогресс хранится только в этом браузере."}</p><a class="btn" href="#/account">${syncStatus().user ? "Открыть аккаунт" : "Войти или зарегистрироваться"}</a></div>
   <div class="card"><h2>Данные</h2><p class="muted small">Прогресс хранится в этом браузере. Сделайте резервную копию файлом, чтобы перенести на другое устройство.</p>
     <div class="row"><button class="btn" data-exp>⬇ Скачать копию прогресса</button><label class="btn">⬆ Загрузить копию<input type="file" accept=".json" data-imp hidden></label><span class="spacer"></span><button class="btn" data-reset style="color:var(--bad)">Сбросить всё</button></div></div>`;
