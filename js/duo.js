@@ -1,9 +1,9 @@
 // Тренажёр «Фразы» в духе Duolingo: путь по темам, сессии из заданий разных типов, повторения по силе фразы.
-import { S, update, logTime } from "./store.js?v=20261026a";
-import { esc, shuffle, today, addDays, toast, lev, norm } from "./util.js?v=20261026a";
-import { speak } from "./speech.js?v=20261026a";
-import { sayBoth } from "./exercises.js?v=20261026a";
-import { markToday } from "./progress.js?v=20261026a";
+import { S, update, logTime } from "./store.js?v=20261026b";
+import { esc, shuffle, today, addDays, toast, lev, norm } from "./util.js?v=20261026b";
+import { speak } from "./speech.js?v=20261026b";
+import { sayBoth } from "./exercises.js?v=20261026b";
+import { markToday } from "./progress.js?v=20261026b";
 import { TOPICS, PHRASES } from "../data/phrases/index.js";
 
 const INTERVALS = [1, 2, 4, 8, 16, 32]; // дней до следующего показа для силы 1..5 (индекс s-1)

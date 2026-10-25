@@ -114,7 +114,7 @@ export function mergeState(a, b) {
   out.v = 1;
   out.epoch = ea;
   out.meta = { ...clone(a.meta || {}), ...clone(b.meta || {}) };
-  for (const k of ["editedAt", "profileAt", "setupAt", "duoGoalAt"]) {
+  for (const k of ["editedAt", "profileAt", "setupAt", "duoGoalAt", "planAt"]) {
     const t = Math.max(num(a.meta?.[k]), num(b.meta?.[k]));
     if (t > 0) out.meta[k] = t;
     else delete out.meta[k];
@@ -125,6 +125,17 @@ export function mergeState(a, b) {
   out.lastActive = mx(a.lastActive ?? null, b.lastActive ?? null) ?? null;
   out.days = mapUnion(a.days, b.days, mergeDay);
   out.lessons = mapUnion(a.lessons, b.lessons, mergeLesson);
+  // переход к неделе / стартовый тест (meta.planAt) на одной стороне: её день, задачи и уроки главнее;
+  // со старой стороны остаются только уроки, реально пройденные ПОСЛЕ перехода
+  const qa = num(a.meta?.planAt), qb = num(b.meta?.planAt);
+  if (qa !== qb) {
+    const W = qa > qb ? a : b, L = qa > qb ? b : a, at = Math.max(qa, qb);
+    out.day = num(W.day);
+    out.days = clone(isObj(W.days) ? W.days : {});
+    out.lessons = clone(isObj(W.lessons) ? W.lessons : {});
+    for (const [id, l] of Object.entries(isObj(L.lessons) ? L.lessons : {}))
+      if (l && l.done && !l.skipped && num(l.at) > at) out.lessons[id] = out.lessons[id] ? mergeLesson(out.lessons[id], l) : clone(l);
+  }
   out.deletedCards = maxMap(a.deletedCards, b.deletedCards);
   out.cards = mapUnion(a.cards, b.cards, mergeCard);
   // надгробие побеждает, если новее последнего изменения карточки (card.mod); повторное добавление/повторение воскрешает

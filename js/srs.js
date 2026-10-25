@@ -1,8 +1,8 @@
 // Интервальное повторение как в Anki (упрощённый SM-2).
 // Карточка без due — «новая»: она ещё не показывалась. В день вводится ограниченное
 // число новых (план: 8–10 в фазе A1), остальное — повторение тех, чей срок настал.
-import { S, update } from "./store.js?v=20261026a";
-import { today, addDays } from "./util.js?v=20261026a";
+import { S, update } from "./store.js?v=20261026b";
+import { today, addDays } from "./util.js?v=20261026b";
 
 export function newLimit(phase) {
   return phase <= 1 ? 10 : phase === 2 ? 12 : 15;

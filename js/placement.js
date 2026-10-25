@@ -2,11 +2,11 @@
 // по 4 вопроса на тему: 2 с вводом ответа (угадать нельзя) и 2 с выбором из ≥3 вариантов.
 // Тема «знакома», если верно ≥ 3 из 4 и хотя бы один ответ вписан правильно. Две незнакомые темы подряд — конец.
 // Старт — первый урок первой незнакомой темы; всё до неё отмечается как пропущенное (skipped).
-import { S, update, logTime } from "./store.js?v=20261026a";
-import { $$, esc, today, shuffle, pz, toast } from "./util.js?v=20261026a";
-import { PHASES, dayInfo, tasksForDay } from "./plan.js?v=20261026a";
+import { S, update, logTime } from "./store.js?v=20261026b";
+import { $$, esc, today, shuffle, pz, toast } from "./util.js?v=20261026b";
+import { PHASES, dayInfo, tasksForDay } from "./plan.js?v=20261026b";
 import { UNITS, LESSONS } from "../data/index.js";
-import { markToday } from "./progress.js?v=20261026a";
+import { markToday } from "./progress.js?v=20261026b";
 
 const PER_UNIT = 4;
 const PASS = 3;
@@ -48,6 +48,7 @@ export function applyStart(unitId) {
     // повторный тест на более низкий уровень: снимаем прежние «пропущено» (настоящие прохождения не трогаем)
     for (const u of UNITS.slice(idx)) for (const l of u.lessons) if (s.lessons[l.id]?.skipped) delete s.lessons[l.id];
     s.day = day;
+    (s.meta ||= {}).planAt = Date.now(); // при слиянии с облаком этот план главнее старого дня
     if (s.profile) s.profile.startWeek = day >= 7 ? dayInfo(day).week : 0;
   });
   markToday("setup"); // тест и есть задача «Старт» первого дня
@@ -151,6 +152,7 @@ export function goToWeek(week, wipe = false) {
     });
     if (wipe) for (const d of Object.keys(s.days)) if (+d >= day) delete s.days[d];
     s.day = day;
+    (s.meta ||= {}).planAt = Date.now(); // при слиянии с облаком этот план главнее старого дня
     if (s.profile) s.profile.startWeek = week > 1 ? week : 0;
   });
 }

@@ -1,13 +1,13 @@
 // Плеер урока: шаги по одному, прогресс-бар, мини-повтор в начале, итог в конце.
-import { S, update, addError, addCard, logTime } from "./store.js?v=20261026a";
+import { S, update, addError, addCard, logTime } from "./store.js?v=20261026b";
 import { LESSONS, lessonById } from "../data/index.js";
-import { renderStep, bindSay } from "./exercises.js?v=20261026a";
-import { esc, today, shuffle, md, pz } from "./util.js?v=20261026a";
-import { openHelper } from "./helper.js?v=20261026a";
-import { markToday, currentPhase, currentDay } from "./progress.js?v=20261026a";
-import { dayInfo, tasksForDay } from "./plan.js?v=20261026a";
-import { generate } from "./ai.js?v=20261026a";
-import { stopSpeak } from "./speech.js?v=20261026a";
+import { renderStep, bindSay } from "./exercises.js?v=20261026b";
+import { esc, today, shuffle, md, pz } from "./util.js?v=20261026b";
+import { openHelper } from "./helper.js?v=20261026b";
+import { markToday, currentPhase, currentDay } from "./progress.js?v=20261026b";
+import { dayInfo, tasksForDay } from "./plan.js?v=20261026b";
+import { generate } from "./ai.js?v=20261026b";
+import { stopSpeak } from "./speech.js?v=20261026b";
 
 const DRILLS = ["choice", "fill", "order", "translate"];
 
@@ -160,7 +160,7 @@ export function renderLesson(app, id) {
         if (s.t === "dialog") for (const [, en, ru] of s.lines) if (en.split(" ").length >= 3 && en.length < 80) phrases.push([en, ru]);
       }
       for (const [en, ru] of (base0.cards || phrases).slice(0, 14)) if (addCard(en, ru, "base", base.id)) added++;
-      update((s) => (s.lessons[base.id] = { done: true, score: pct, date: today() }));
+      update((s) => (s.lessons[base.id] = { done: true, score: pct, date: today(), at: Date.now() }));
     }
     logTime("course", min, base.title);
     markToday("lesson");

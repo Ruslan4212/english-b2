@@ -179,5 +179,20 @@ eq(r.duo, { p: {}, xp: {}, goal: 30 }, "duo: по умолчанию пусто�
 ok(!isEmptyState(base({ duo: { p: { a: ph(1, 1) }, xp: {}, goal: 30 } })), "isEmptyState: фразы — не пусто");
 ok(isEmptyState(base({ duo: { p: {}, xp: {}, goal: 30 } })), "isEmptyState: пустое duo — пусто");
 
+// переход к неделе (meta.planAt): облако со старым большим днём не возвращает ученика назад
+{
+  const cloud = { day: 39, lessons: { a1_u1_l1: { done: true, date: "2026-10-20", at: 100 }, a1_u3_l1: { done: true, skipped: true, date: "2026-10-21" } }, days: { 30: { tasks: { lesson: "x" } } }, meta: { editedAt: 200 } };
+  const local = { day: 0, lessons: {}, days: {}, meta: { editedAt: 1000, planAt: 1000 } };
+  const r1 = prop(cloud, local, "planAt");
+  eq(r1.day, 0, "planAt: день берётся со стороны перехода, а не максимум");
+  eq(r1.lessons, {}, "planAt: старые отметки уроков отброшены");
+  eq(r1.days, {}, "planAt: старые задачи дней отброшены");
+  const other = { day: 0, lessons: { ph1: { done: true, date: "2026-10-26", at: 2000 } }, days: {}, meta: { editedAt: 2000 } };
+  const r2 = m(local, other);
+  ok(r2.lessons.ph1?.done, "planAt: урок, пройденный на другом устройстве ПОСЛЕ перехода, сохраняется");
+  const r3 = m({ ...local, day: 7 }, { ...local, day: 14 });
+  eq(r3.day, 14, "planAt: одинаковые метки — обычный максимум дня");
+}
+
 console.log(fail ? `\nПРОВАЛЕНО: ${fail} из ${n}` : `\nВсе проверки зелёные: ${n}`);
 process.exit(fail ? 1 : 0);

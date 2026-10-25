@@ -1,5 +1,5 @@
 // Озвучка (speechSynthesis) и распознавание речи (Web Speech API, есть в Chrome/Edge).
-import { S } from "./store.js?v=20261026a";
+import { S } from "./store.js?v=20261026b";
 
 let voices = [];
 function loadVoices() {

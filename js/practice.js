@@ -1,17 +1,17 @@
 // Экраны практики: слова, слушание, чтение, говорение, письмо, рабочий английский,
 // ошибки, ресурсы, контрольные точки, обзор недели, старт, тест уровня, запись голоса.
-import { S, update, addCard, addError, logTime, deleteCard } from "./store.js?v=20261026a";
-import { $$, esc, md, today, toast, shuffle, uid, fmtDate, pz } from "./util.js?v=20261026a";
-import { queue, grade, preview, stats as srsStats } from "./srs.js?v=20261026a";
-import { speak, speakMia, stopSpeak, hasASR, asrError, listen as asr, startRecording, saveRecording, listRecordings, deleteRecording } from "./speech.js?v=20261026a";
-import { chatTurn, correctText, generate, story, NO_AI } from "./ai.js?v=20261026a";
-import { markToday, currentPhase, currentLevel, currentDay } from "./progress.js?v=20261026a";
-import { dialog, renderStep, bindSay } from "./exercises.js?v=20261026a";
-import { openHelper, renderMsg } from "./helper.js?v=20261026a";
-import { avatar, TUTOR, richText } from "./avatar.js?v=20261026a";
-import { extraPractice } from "./lesson.js?v=20261026a";
+import { S, update, addCard, addError, logTime, deleteCard } from "./store.js?v=20261026b";
+import { $$, esc, md, today, toast, shuffle, uid, fmtDate, pz } from "./util.js?v=20261026b";
+import { queue, grade, preview, stats as srsStats } from "./srs.js?v=20261026b";
+import { speak, speakMia, stopSpeak, hasASR, asrError, listen as asr, startRecording, saveRecording, listRecordings, deleteRecording } from "./speech.js?v=20261026b";
+import { chatTurn, correctText, generate, story, NO_AI } from "./ai.js?v=20261026b";
+import { markToday, currentPhase, currentLevel, currentDay } from "./progress.js?v=20261026b";
+import { dialog, renderStep, bindSay } from "./exercises.js?v=20261026b";
+import { openHelper, renderMsg } from "./helper.js?v=20261026b";
+import { avatar, TUTOR, richText } from "./avatar.js?v=20261026b";
+import { extraPractice } from "./lesson.js?v=20261026b";
 import { LESSONS } from "../data/index.js";
-import { dayInfo, PHASES } from "./plan.js?v=20261026a";
+import { dayInfo, PHASES } from "./plan.js?v=20261026b";
 import VOCAB from "../data/vocab.js";
 import LIBRARY from "../data/listening.js";
 import READING from "../data/reading.js";
