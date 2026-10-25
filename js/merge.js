@@ -109,12 +109,12 @@ export function mergeState(a, b) {
   a = a || {};
   b = b || {};
   const ea = num(a.epoch), eb = num(b.epoch);
-  if (ea !== eb) return clone(ea > eb ? a : b); // сброс/импорт на одной стороне: старая история отбрасывается целиком
+  if (ea !== eb) return mergeState({ epoch: ea > eb ? ea : eb }, ea > eb ? a : b); // сброс/импорт на одной стороне: старая история отбрасывается целиком
     const out = { ...clone(a), ...clone(b) };
   out.v = 1;
   out.epoch = ea;
   out.meta = { ...clone(a.meta || {}), ...clone(b.meta || {}) };
-  for (const k of ["editedAt", "profileAt", "setupAt"]) {
+  for (const k of ["editedAt", "profileAt", "setupAt", "duoGoalAt"]) {
     const t = Math.max(num(a.meta?.[k]), num(b.meta?.[k]));
     if (t > 0) out.meta[k] = t;
     else delete out.meta[k];
@@ -150,6 +150,14 @@ export function mergeState(a, b) {
     if (sc != null) o.score = sc;
     return o;
   });
+  // «Фразы»: запись фразы — с большим mod; XP — максимум по датам; цель — по метке duoGoalAt (при равенстве — b)
+  const da = a.duo || {}, db = b.duo || {};
+  const goalA = Number(da.goal) > 0 ? da.goal : null, goalB = Number(db.goal) > 0 ? db.goal : null;
+  out.duo = {
+    p: mapUnion(da.p, db.p, (x, y) => (num(x.mod) !== num(y.mod) ? clone(num(x.mod) > num(y.mod) ? x : y) : clone(pickBigger(x, y)))),
+    xp: maxMap(da.xp, db.xp),
+    goal: (num(a.meta?.duoGoalAt) > num(b.meta?.duoGoalAt) ? goalA ?? goalB : goalB ?? goalA) ?? 30,
+  };
   out.profile = mergeByMeta(a.profile ?? null, b.profile ?? null, pa, pb);
   out.setup = mergeByMeta(a.setup ?? {}, b.setup ?? {}, sa, sb);
   if (a.profile == null && b.profile == null) out.profile = null;
@@ -162,6 +170,7 @@ export function isEmptyState(s) {
   const empty = (x) => !x || (Array.isArray(x) ? x.length === 0 : Object.keys(x).length === 0);
   return (
     !s.profile && !num(s.day) &&
-    ["days", "lessons", "cards", "newLog", "reviewDays", "log", "errors", "writings", "speaking", "checks", "tests", "listened", "read", "setup", "deletedCards"].every((k) => empty(s[k]))
+    ["days", "lessons", "cards", "newLog", "reviewDays", "log", "errors", "writings", "speaking", "checks", "tests", "listened", "read", "setup", "deletedCards"].every((k) => empty(s[k])) &&
+    empty(s.duo?.p) && empty(s.duo?.xp)
   );
 }

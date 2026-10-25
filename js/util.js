@@ -1,5 +1,5 @@
 // Мелкие помощники: экранирование, разметка, даты, сравнение ответов.
-import { S } from "./store.js?v=20261025a";
+import { S } from "./store.js?v=20261026a";
 
 export const $ = (sel, root = document) => root.querySelector(sel);
 export const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];

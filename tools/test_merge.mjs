@@ -163,5 +163,21 @@ for (let i = 0; i < 200; i++) {
 }
 eq(propFail, 0, "200 случайных троек: коммутативность, идемпотентность, ассоциативность");
 
+// duo («Фразы»)
+const ph = (s, mod, due = "2026-10-10") => ({ s, due, n: 1, w: 0, mod });
+r = prop(
+  { duo: { p: { x_0: ph(2, 100), x_1: ph(1, 50) }, xp: { "2026-10-01": 10, "2026-10-02": 5 }, goal: 20 }, meta: { duoGoalAt: 10 } },
+  { duo: { p: { x_0: ph(4, 200), x_2: ph(3, 5) }, xp: { "2026-10-01": 30 }, goal: 50 }, meta: { duoGoalAt: 20 } }, "duo");
+eq(r.duo.p.x_0, ph(4, 200), "duo.p: запись с большим mod");
+ok(r.duo.p.x_1 && r.duo.p.x_2, "duo.p: односторонние фразы сохранены");
+eq(r.duo.xp, { "2026-10-01": 30, "2026-10-02": 5 }, "duo.xp: максимум по датам");
+eq(r.duo.goal, 50, "duo.goal: побеждает более новая метка duoGoalAt");
+r = m({ duo: { p: {}, xp: {}, goal: 10 }, meta: { duoGoalAt: 99 } }, {});
+eq(r.duo.goal, 10, "duo.goal: у второй стороны нет duo — берётся цель первой");
+r = m({}, {});
+eq(r.duo, { p: {}, xp: {}, goal: 30 }, "duo: по умолчанию пустой, goal 30");
+ok(!isEmptyState(base({ duo: { p: { a: ph(1, 1) }, xp: {}, goal: 30 } })), "isEmptyState: фразы — не пусто");
+ok(isEmptyState(base({ duo: { p: {}, xp: {}, goal: 30 } })), "isEmptyState: пустое duo — пусто");
+
 console.log(fail ? `\nПРОВАЛЕНО: ${fail} из ${n}` : `\nВсе проверки зелёные: ${n}`);
 process.exit(fail ? 1 : 0);

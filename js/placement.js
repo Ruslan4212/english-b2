@@ -2,11 +2,11 @@
 // по 4 вопроса на тему: 2 с вводом ответа (угадать нельзя) и 2 с выбором из ≥3 вариантов.
 // Тема «знакома», если верно ≥ 3 из 4 и хотя бы один ответ вписан правильно. Две незнакомые темы подряд — конец.
 // Старт — первый урок первой незнакомой темы; всё до неё отмечается как пропущенное (skipped).
-import { S, update, logTime } from "./store.js?v=20261025a";
-import { $$, esc, today, shuffle, pz, toast } from "./util.js?v=20261025a";
-import { PHASES, dayInfo, tasksForDay } from "./plan.js?v=20261025a";
+import { S, update, logTime } from "./store.js?v=20261026a";
+import { $$, esc, today, shuffle, pz, toast } from "./util.js?v=20261026a";
+import { PHASES, dayInfo, tasksForDay } from "./plan.js?v=20261026a";
 import { UNITS, LESSONS } from "../data/index.js";
-import { markToday } from "./progress.js?v=20261025a";
+import { markToday } from "./progress.js?v=20261026a";
 
 const PER_UNIT = 4;
 const PASS = 3;

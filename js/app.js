@@ -1,21 +1,22 @@
 // Точка входа: роутер по hash, шапка, онбординг, «Сегодня», карта, уроки, прогресс, настройки.
-import { S, update, save, exportJson, importJson, reset, BLOCKS, logTime, totalHours } from "./store.js?v=20261025a";
-import { $, $$, esc, md, today, fmtDate, daysBetween, toast, plural, translit, studentName } from "./util.js?v=20261025a";
-import { PHASES, DOW, TOTAL_WEEKS, dayInfo, tasksForDay, projectedFinish, CHECKPOINT_WEEKS, monthOfWeek } from "./plan.js?v=20261025a";
+import { S, update, save, exportJson, importJson, reset, BLOCKS, logTime, totalHours } from "./store.js?v=20261026a";
+import { $, $$, esc, md, today, fmtDate, daysBetween, toast, plural, translit, studentName } from "./util.js?v=20261026a";
+import { PHASES, DOW, TOTAL_WEEKS, dayInfo, tasksForDay, projectedFinish, CHECKPOINT_WEEKS, monthOfWeek } from "./plan.js?v=20261026a";
 import { UNITS, LESSONS, lessonById } from "../data/index.js";
-import { renderLesson, nextLesson, lessonForToday } from "./lesson.js?v=20261025a";
-import { initHelper } from "./helper.js?v=20261025a";
-import { currentDay, currentPhase, dayState, toggleTask, dayComplete, finishDay } from "./progress.js?v=20261025a";
-import { queue, stats as srsStats } from "./srs.js?v=20261025a";
-import { aiConfig, saveAiConfig, providerList, aiPing } from "./ai.js?v=20261025a";
-import { voiceName, speak } from "./speech.js?v=20261025a";
-import * as P from "./practice.js?v=20261025a";
-import { bindSay } from "./exercises.js?v=20261025a";
-import { renderAccount, initAccount, statusChanged, authNag, bindAuthNag } from "./account.js?v=20261025a";
-import { hasStoredSession, currentUser, onAuth } from "./auth.js?v=20261025a";
-import { startSync, stopSync, onApplied, onStatus, syncStatus } from "./sync.js?v=20261025a";
-import { switchUser } from "./store.js?v=20261025a";
-import { renderPlacement } from "./placement.js?v=20261025a";
+import { renderLesson, nextLesson, lessonForToday } from "./lesson.js?v=20261026a";
+import { initHelper } from "./helper.js?v=20261026a";
+import { currentDay, currentPhase, dayState, toggleTask, dayComplete, finishDay } from "./progress.js?v=20261026a";
+import { queue, stats as srsStats } from "./srs.js?v=20261026a";
+import { aiConfig, saveAiConfig, providerList, aiPing } from "./ai.js?v=20261026a";
+import { voiceName, speak } from "./speech.js?v=20261026a";
+import * as P from "./practice.js?v=20261026a";
+import { bindSay } from "./exercises.js?v=20261026a";
+import { renderAccount, initAccount, statusChanged, authNag, bindAuthNag } from "./account.js?v=20261026a";
+import { hasStoredSession, currentUser, onAuth } from "./auth.js?v=20261026a";
+import { startSync, stopSync, onApplied, onStatus, syncStatus } from "./sync.js?v=20261026a";
+import { switchUser } from "./store.js?v=20261026a";
+import { renderDuo } from "./duo.js?v=20261026a";
+import { renderPlacement } from "./placement.js?v=20261026a";
 
 const app = $("#app");
 bindSay(app);
@@ -52,6 +53,7 @@ const routes = {
   grammar: renderGrammar,
   lesson: (id) => renderLesson(app, id),
   words: () => P.renderWords(app),
+  duo: (id) => renderDuo(app, id),
   listen: (id) => P.renderListen(app, id),
   read: (id) => P.renderRead(app, id),
   speak: (id) => P.renderSpeak(app, id),
@@ -239,6 +241,7 @@ function taskLink(t) {
     case "errors": return { href: "#/errors", label: "", sub: "" };
     case "free": return { href: "#/read", label: "", sub: "" };
     case "phrases": return { href: "#/words", label: "", sub: "" };
+    case "duo": return { href: "#/duo", label: "", sub: "" };
     case "weekly": return { href: "#/weekly", label: "", sub: "" };
     case "checkpoint": return { href: `#/checkpoint/${t.cp}`, label: "", sub: "" };
     case "record": return { href: "#/record", label: "", sub: "" };

@@ -3,13 +3,13 @@
 //  ctx.mistake(wrong, right, why) — записать ошибку в «Мои ошибки»
 //  ctx.explain(topic, context, attempt) — открыть ИИ-наставника с объяснением
 //  ctx.level — уровень ученика для ИИ-проверки
-import { esc, md, inline, matches, closeness, shuffle, norm, pz } from "./util.js?v=20261025a";
-import { speak, hasASR, listen, similarity } from "./speech.js?v=20261025a";
-import { checkAnswer } from "./ai.js?v=20261025a";
+import { esc, md, inline, matches, closeness, shuffle, norm, pz } from "./util.js?v=20261026a";
+import { speak, hasASR, listen, similarity } from "./speech.js?v=20261026a";
+import { checkAnswer } from "./ai.js?v=20261026a";
 
 const sayBtn = (text, slow = false) => `<button class="say" data-say="${esc(text)}" ${slow ? 'data-slow="1"' : ""} title="Послушать">🔊</button>`;
 /** 🔊 обычная скорость + 🐢 очень медленно, по словам. */
-const sayBoth = (text) => `<span class="say-pair">${sayBtn(text)}<button class="say slow" data-say="${esc(text)}" data-slow="1" title="Очень медленно, по словам">🐢</button></span>`;
+export const sayBoth = (text) => `<span class="say-pair">${sayBtn(text)}<button class="say slow" data-say="${esc(text)}" data-slow="1" title="Очень медленно, по словам">🐢</button></span>`;
 
 /** Любая кнопка data-say внутри root озвучивает свой текст. */
 export function bindSay(root) {

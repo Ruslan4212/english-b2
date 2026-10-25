@@ -1,6 +1,6 @@
 // Весь прогресс ученика — один объект в localStorage. Можно выгрузить/загрузить файлом.
-import { today, uid } from "./util.js?v=20261025a";
-import { stable } from "./merge.js?v=20261025a";
+import { today, uid } from "./util.js?v=20261026a";
+import { stable } from "./merge.js?v=20261026a";
 
 export const GUEST_KEY = "english_b2_path_v1";
 let KEY = GUEST_KEY; // ключ текущего пользователя: гость — общий, вошедший — english_b2_path_u_<uid>
@@ -23,6 +23,7 @@ export const fresh = () => ({
   listened: {}, // { [dialogId]: { plays, shadowed, date } }
   read: {}, // { [textId]: { date, score } }
   setup: {}, // выбор учебника, репетитора и т.п.
+  duo: { p: {}, xp: {}, goal: 30 }, // тренажёр «Фразы»: p[phraseId] = { s сила 0..5, due, n показов, w ошибок, mod }, xp[date], goal — цель XP в день
   lastActive: null,
   deletedCards: {}, // { [cardId]: ts } — надгробия удалённых карточек (чтобы удаление не «воскресало» при слиянии)
   epoch: 0, // метка сброса/импорта: сторона с меньшим epoch при слиянии отбрасывается целиком
@@ -99,6 +100,7 @@ export function save() {
 export function update(fn) {
   const before = LISTS.map((k) => (state[k] || []).length);
   const pBefore = JSON.stringify(state.profile ?? null), sBefore = JSON.stringify(state.setup ?? {});
+  const gBefore = state.duo?.goal;
   fn(state);
   // новым записям (добавленным в конец) выдаём id — по нему записи сливаются между устройствами
   LISTS.forEach((k, i) => {
@@ -111,6 +113,7 @@ export function update(fn) {
   state.meta.editedAt = now;
   if (JSON.stringify(state.profile ?? null) !== pBefore) state.meta.profileAt = now;
   if (JSON.stringify(state.setup ?? {}) !== sBefore) state.meta.setupAt = now;
+  if (state.duo?.goal !== gBefore) state.meta.duoGoalAt = now;
   save();
   notify("update");
 }

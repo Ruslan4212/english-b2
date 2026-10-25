@@ -1,10 +1,10 @@
 // Облачная синхронизация прогресса: таблица public.eb2_progress + RPC eb2_push (оптимистичная блокировка по rev).
 // Принцип: локальное состояние всегда главное для работы (офлайн ничего не ломается),
 // облако — копия. Любое расхождение разрешается слиянием mergeState (js/merge.js).
-import { S, fresh, GUEST_KEY, switchUser, replaceState, onChange, readState, removeKey } from "./store.js?v=20261025a";
-import { mergeState, isEmptyState, stable } from "./merge.js?v=20261025a";
-import { client, ruError } from "./auth.js?v=20261025a";
-import { toast } from "./util.js?v=20261025a";
+import { S, fresh, GUEST_KEY, switchUser, replaceState, onChange, readState, removeKey } from "./store.js?v=20261026a";
+import { mergeState, isEmptyState, stable } from "./merge.js?v=20261026a";
+import { client, ruError } from "./auth.js?v=20261026a";
+import { toast } from "./util.js?v=20261026a";
 
 const MAX_BYTES = 900 * 1024;
 const BACKUP_PREFIX = "english_b2_backup_";

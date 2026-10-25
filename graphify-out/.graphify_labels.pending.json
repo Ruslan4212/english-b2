@@ -29,10 +29,10 @@
   "27": "test_merge.mjs",
   "28": "auth.js",
   "29": "merge.js",
-  "30": "account.js",
+  "30": "duo.js",
   "31": "plan.js",
-  "32": "b2.js",
-  "33": "progress.js",
+  "32": "data/a2.js",
+  "33": "account.js",
   "36": "avatar.js",
   "37": "config.js"
 }
