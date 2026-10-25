@@ -282,15 +282,15 @@
     "semantic_hash": ""
   },
   "js/ai.js": {
-    "mtime": 1792503449.7817795,
-    "seen": 1792503579.6057413,
-    "ast_hash": "31726998cfed087dafc6e55c35dd5d4d",
+    "mtime": 1792902765.5743413,
+    "seen": 1792902789.3628466,
+    "ast_hash": "50a85c2ecd884c541491468c6a00df3b",
     "semantic_hash": ""
   },
   "js/app.js": {
-    "mtime": 1792504013.4715207,
-    "seen": 1792901395.8684785,
-    "ast_hash": "4de647f65ae9b51ba0a8a18c98abf921",
+    "mtime": 1792902765.585682,
+    "seen": 1792902789.3628485,
+    "ast_hash": "eda38972e86e9fe0051ae2e4cc558c29",
     "semantic_hash": ""
   },
   "js/avatar.js": {
@@ -300,39 +300,39 @@
     "semantic_hash": ""
   },
   "js/exercises.js": {
-    "mtime": 1792503449.9704218,
-    "seen": 1792503579.6057565,
-    "ast_hash": "0836dbb35e7093771b948f03b298a29d",
+    "mtime": 1792902765.6232505,
+    "seen": 1792902789.362854,
+    "ast_hash": "090888626394db2bc3fe80679df101ec",
     "semantic_hash": ""
   },
   "js/helper.js": {
-    "mtime": 1792503450.0185833,
-    "seen": 1792503579.6057584,
-    "ast_hash": "d40c81212668b9e835e075553c08de6a",
+    "mtime": 1792902765.6362185,
+    "seen": 1792902789.3628552,
+    "ast_hash": "518f60fc927fde7a6333e2ae3e4fa6e6",
     "semantic_hash": ""
   },
   "js/lesson.js": {
-    "mtime": 1792902230.590953,
-    "seen": 1792902253.3925397,
-    "ast_hash": "8fea00c63eaf9d1759ef9988d6d5c283",
+    "mtime": 1792902765.6480827,
+    "seen": 1792902789.3628564,
+    "ast_hash": "ddff089ad6ccf4983a57a0a14065923e",
     "semantic_hash": ""
   },
   "js/plan.js": {
-    "mtime": 1792503450.160767,
-    "seen": 1792503579.6057646,
-    "ast_hash": "3223e39a5988f6389f187c20db825e37",
+    "mtime": 1792902765.6480827,
+    "seen": 1792902789.362859,
+    "ast_hash": "205eed5efed9a2326176830aed8511b9",
     "semantic_hash": ""
   },
   "js/practice.js": {
-    "mtime": 1792902230.614655,
-    "seen": 1792902253.3925445,
-    "ast_hash": "0d87fa0b41d778861a136f5a1971be70",
+    "mtime": 1792902765.6638734,
+    "seen": 1792902789.3628602,
+    "ast_hash": "f72edff06fc28fea052bff2f2af7ad01",
     "semantic_hash": ""
   },
   "js/progress.js": {
-    "mtime": 1792503450.250855,
-    "seen": 1792503579.6057699,
-    "ast_hash": "6ab95a7275bc65c4d17270fbb90675e5",
+    "mtime": 1792902765.6797538,
+    "seen": 1792902789.3628616,
+    "ast_hash": "ed104c17d0d70e499701a4ed98f9aa77",
     "semantic_hash": ""
   },
   "js/prompts.js": {
@@ -342,27 +342,27 @@
     "semantic_hash": ""
   },
   "js/speech.js": {
-    "mtime": 1792503450.3254652,
-    "seen": 1792503579.6057742,
-    "ast_hash": "916134fafe872cc867b6ac0837764d57",
+    "mtime": 1792902765.6956975,
+    "seen": 1792902789.3628647,
+    "ast_hash": "94e75935bd0e3d7b7778431bb230aa89",
     "semantic_hash": ""
   },
   "js/srs.js": {
-    "mtime": 1792503898.3464198,
-    "seen": 1792901395.8685048,
-    "ast_hash": "400be33142e9c305cb57c54d63f47464",
+    "mtime": 1792902765.7077928,
+    "seen": 1792902789.362866,
+    "ast_hash": "466706f49b86e5aa0ae643de0c3811e0",
     "semantic_hash": ""
   },
   "js/store.js": {
-    "mtime": 1792503898.3464198,
-    "seen": 1792901395.8685067,
-    "ast_hash": "5003fe89e75b3700e3e379066839364e",
+    "mtime": 1792902765.711537,
+    "seen": 1792902789.3628666,
+    "ast_hash": "259501254f9f2d9f2c3001c963857aab",
     "semantic_hash": ""
   },
   "js/util.js": {
-    "mtime": 1792902230.6241665,
-    "seen": 1792902253.3925529,
-    "ast_hash": "9dfdbb995a48db2966cfe6167795767c",
+    "mtime": 1792902765.7433019,
+    "seen": 1792902789.3628693,
+    "ast_hash": "24a8c4a5b4bc148f05c7347ecf185db3",
     "semantic_hash": ""
   },
   "supabase/functions/english-tutor/index.ts": {
@@ -456,9 +456,9 @@
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1792503440.198563,
-    "seen": 1792503579.6070857,
-    "ast_hash": "3edcfb96651b8a5929d124906a318a20",
+    "mtime": 1792902765.5380318,
+    "seen": 1792902789.362896,
+    "ast_hash": "cc42a71e00c2b51344225506366edc97",
     "semantic_hash": ""
   },
   ".claude/settings.json": {
@@ -474,9 +474,9 @@
     "semantic_hash": ""
   },
   "js/auth.js": {
-    "mtime": 1792504004.352958,
-    "seen": 1792901395.8684804,
-    "ast_hash": "13ae9d2d6e1dd845f0870115e1efbd06",
+    "mtime": 1792902765.6049592,
+    "seen": 1792902789.3628497,
+    "ast_hash": "d3bfe018a04320dfd2660a817da45bfd",
     "semantic_hash": ""
   },
   "js/config.js": {
@@ -498,15 +498,15 @@
     "semantic_hash": ""
   },
   "js/account.js": {
-    "mtime": 1792504004.352958,
-    "seen": 1792901395.8684728,
-    "ast_hash": "aef5693f697ee52d3be6fed2fba361c4",
+    "mtime": 1792902765.5580032,
+    "seen": 1792902789.362845,
+    "ast_hash": "cebf1e6828b46d1b1eefaa5c22824a57",
     "semantic_hash": ""
   },
   "js/sync.js": {
-    "mtime": 1792503987.3714082,
-    "seen": 1792901395.868508,
-    "ast_hash": "38e5062875f6dbbabf5b1ecf692166d0",
+    "mtime": 1792902765.731986,
+    "seen": 1792902789.3628683,
+    "ast_hash": "f7c89b01704fb9f7c63c145514098ad8",
     "semantic_hash": ""
   },
   "supabase/eb2_progress.sql": {

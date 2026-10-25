@@ -15,6 +15,7 @@ import { renderAccount, initAccount, statusChanged, authNag, bindAuthNag } from 
 import { hasStoredSession, currentUser, onAuth } from "./auth.js?v=20261025a";
 import { startSync, stopSync, onApplied, onStatus, syncStatus } from "./sync.js?v=20261025a";
 import { switchUser } from "./store.js?v=20261025a";
+import { renderPlacement } from "./placement.js?v=20261025a";
 
 const app = $("#app");
 bindSay(app);
@@ -67,6 +68,7 @@ const routes = {
   record: () => P.renderRecord(app),
   day: (i) => renderToday(+i),
   account: () => renderAccount(app),
+  placement: () => renderPlacement(app),
 };
 
 function route() {
@@ -167,9 +169,9 @@ function renderOnboarding() {
   </div>
   <div class="card">
     <h2>2. Ваш уровень сейчас</h2>
-    <p class="muted">Если осталась школьная база — выберите свой уровень или пройдите встроенный тест в первый день курса: он предложит, с какой фазы начать. Пропускать лучше целые фазы, а не отдельные навыки.</p>
+    <p class="muted">Не уверены? Выберите «Определить тестом»: после настройки будет короткий тест, и приложение само подберёт урок, с которого начать.</p>
     <div class="grid">
-      ${[["1", "С полного нуля", "Неделя 1: звуки и чтение"], ["14", "У меня A1", "Начать с фазы A2, месяц 4"], ["27", "У меня A2", "Начать с фазы B1, месяц 7"], ["53", "У меня B1", "Начать с фазы B2, месяц 13"]]
+      ${[["test", "Определить тестом", "5–15 минут, подберём стартовый урок"], ["1", "С полного нуля", "Неделя 1: звуки и чтение"], ["14", "У меня A1", "Начать с фазы A2, месяц 4"], ["27", "У меня A2", "Начать с фазы B1, месяц 7"], ["53", "У меня B1", "Начать с фазы B2, месяц 13"]]
         .map(([w, t, d], i) => `<label class="card" style="cursor:pointer;margin:0"><input type="radio" name="start" value="${w}" ${i === 0 ? "checked" : ""}> <b>${t}</b><div class="muted small">${d}</div></label>`).join("")}
     </div>
     <h2>3. Сколько часов в неделю готовы заниматься?</h2>
@@ -194,7 +196,8 @@ function renderOnboarding() {
   goBtn.onclick = () => {
     const nm = getName();
     if (!nm.name) return toast("Сначала напишите, как вас зовут");
-    const startWeek = +app.querySelector("[name=start]:checked").value;
+    const startRaw = app.querySelector("[name=start]:checked").value;
+    const startWeek = startRaw === "test" ? 1 : +startRaw;
     update((s) => {
       s.profile = {
         started: today(),
@@ -212,7 +215,7 @@ function renderOnboarding() {
         for (const l of LESSONS) if (l.phase < ph) s.lessons[l.id] = { done: true, skipped: true, date: today() };
       }
     });
-    location.hash = "#/today";
+    location.hash = startRaw === "test" ? "#/placement" : "#/today";
     route();
   };
 }

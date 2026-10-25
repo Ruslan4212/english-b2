@@ -631,7 +631,7 @@ export function renderSetup(app) {
 - **Карточки (Anki)** — раздел «🃏 Слова»: колоды «Основа» и «Мои фразы» уже созданы, фразы с уроков попадают туда сами.
 - **Слушание и чтение** — диалоги, тексты и истории от Мии на интересные вам темы, всё с озвучкой.
 - **Каждый день** открывайте «📅 Сегодня» и делайте то, что там написано. Больше ничего искать не нужно.`)}</div>
-    <div class="card"><h2>Тест уровня</h2>${md("Если начинаете с нуля — пропустите, тест пригодится через 3 месяца. Если школьная база осталась — пройдите встроенный тест (≈10 минут, задания от A1 до B2): он покажет уровень и с какой фазы лучше начать.")}
+    <div class="card"><h2>Тест уровня</h2>${md("Если начинаете с нуля — пропустите, тест пригодится через 3 месяца. Если школьная база осталась — пройдите встроенный тест (≈10 минут, задания от A1 до B2): он подберёт урок, с которого начать.")}
       ${done ? `<div class="banner ok">Тест уже пройден: ${esc(s.tests.filter((t) => /Тест уровня/.test(t.kind)).slice(-1)[0].result)}</div>` : ""}
       <div class="row"><button class="btn primary" data-test>Пройти тест уровня</button><button class="btn" data-zero>Я начинаю с нуля</button></div><div data-box></div></div>
     <div class="card" style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">${avatar()}<div style="flex:1;min-width:200px"><b style="color:var(--head)">Познакомьтесь с Мией</b><div class="muted small">В субботу по плану — первый звонок. Можно уже сейчас: скажите «Hello! My name is…».</div></div><a class="btn" href="#/speak/call_a1_intro">📞 Позвонить</a></div>`;
@@ -641,26 +641,7 @@ export function renderSetup(app) {
     logTime("course", 20, "Подготовка");
   };
   app.querySelector("[data-zero]").onclick = () => { finish("с нуля"); toast("Отлично! Начинаем со звуков и чтения."); location.hash = "#/today"; };
-  app.querySelector("[data-test]").onclick = () =>
-    placementTest(app.querySelector("[data-box]"), (lvl) => {
-      finish();
-      const ph = PHASES.find((p) => p.level === lvl);
-      const box = app.querySelector("[data-box]");
-      box.insertAdjacentHTML("beforeend", lvl === "A0" ? `<div class="banner info">Начинаем с нуля — так надёжнее. <a class="btn primary sm" href="#/today">К плану</a></div>`
-        : `<div class="banner info">Похоже, ваш уровень — <b>${lvl}</b>. План советует пропускать фазы целиком: можно перейти к фазе <b>${PHASES[Math.min(3, ph.n)].level}</b>.
-          <div class="row" style="margin-top:8px"><button class="btn primary sm" data-jump>Начать с фазы ${PHASES[Math.min(3, ph.n)].level}</button><a class="btn sm" href="#/today">Остаться с начала</a></div></div>`);
-      const jump = box.querySelector("[data-jump]");
-      if (jump) jump.onclick = () => {
-        const target = PHASES[Math.min(3, ph.n)];
-        update((st) => {
-          st.day = (target.from - 1) * 7;
-          st.profile.startWeek = target.from;
-          for (const l of LESSONS) if (l.phase < target.n && !st.lessons[l.id]) st.lessons[l.id] = { done: true, skipped: true, date: today() };
-        });
-        toast(`Переходим к фазе ${target.level}`);
-        location.hash = "#/today";
-      };
-    });
+  app.querySelector("[data-test]").onclick = () => { finish(); location.hash = "#/placement"; };
 }
 
 /**
@@ -702,6 +683,7 @@ export function renderLevelTest(app) {
   const prev = S().tests.filter((t) => /Тест уровня/.test(t.kind));
   app.innerHTML = `<span class="pill">Раз в 3 месяца</span><h1>Тест <span class="hl-blue">уровня</span></h1>${md("Результат должен расти от теста к тесту — так видно прогресс по фактам. Если он не растёт, план советует добавить 1–2 месяца на фазе и усилить слабый навык.")}
     ${prev.length ? `<div class="card"><h3>Прошлые результаты</h3>${prev.map((t) => `<div class="small">${t.date}: ${esc(t.result)}</div>`).join("")}</div>` : ""}
+    <div class="card"><h2>С какого урока продолжать?</h2><p class="muted small">Стартовый тест проверит темы по порядку и перенесёт вас к первому незнакомому уроку.</p><a class="btn" href="#/placement">Пройти стартовый тест</a></div>
     <div class="card"><h2>Тест: A1 → B2</h2><div data-t></div></div>
     <div class="card"><h2>Тест по грамматике текущей фазы</h2><button class="btn" data-phase>Начать</button><div data-p></div></div>`;
   placementTest(app.querySelector("[data-t]"), () => { markToday("test"); logTime("course", 15, "Тест уровня"); });
