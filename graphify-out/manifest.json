@@ -312,9 +312,9 @@
     "semantic_hash": ""
   },
   "js/lesson.js": {
-    "mtime": 1792503450.0674994,
-    "seen": 1792503579.6057608,
-    "ast_hash": "ef0627cb563738bfae6368a03f77e9ea",
+    "mtime": 1792902230.590953,
+    "seen": 1792902253.3925397,
+    "ast_hash": "8fea00c63eaf9d1759ef9988d6d5c283",
     "semantic_hash": ""
   },
   "js/plan.js": {
@@ -324,9 +324,9 @@
     "semantic_hash": ""
   },
   "js/practice.js": {
-    "mtime": 1792503898.3518255,
-    "seen": 1792901395.868497,
-    "ast_hash": "8da9fa992f22ceb717047ca9f2eef738",
+    "mtime": 1792902230.614655,
+    "seen": 1792902253.3925445,
+    "ast_hash": "0d87fa0b41d778861a136f5a1971be70",
     "semantic_hash": ""
   },
   "js/progress.js": {
@@ -336,9 +336,9 @@
     "semantic_hash": ""
   },
   "js/prompts.js": {
-    "mtime": 1792503450.2729905,
-    "seen": 1792503579.6057715,
-    "ast_hash": "218d189b414f7508bfc8b5ea982dc39b",
+    "mtime": 1792902230.6241665,
+    "seen": 1792902253.392547,
+    "ast_hash": "5662160dd3c3a3e584195e9756f9502b",
     "semantic_hash": ""
   },
   "js/speech.js": {
@@ -360,15 +360,15 @@
     "semantic_hash": ""
   },
   "js/util.js": {
-    "mtime": 1792503450.5173104,
-    "seen": 1792503579.6057892,
-    "ast_hash": "2a9bc7904f3c8e7d6de4e866bd6e12b6",
+    "mtime": 1792902230.6241665,
+    "seen": 1792902253.3925529,
+    "ast_hash": "9dfdbb995a48db2966cfe6167795767c",
     "semantic_hash": ""
   },
   "supabase/functions/english-tutor/index.ts": {
-    "mtime": 1792502929.943443,
-    "seen": 1792502932.2802665,
-    "ast_hash": "5615889eff2f53e3af384503ef4ac3f6",
+    "mtime": 1792902250.727419,
+    "seen": 1792902253.3925557,
+    "ast_hash": "f61a68f85e1e8d383dba16357142cfb3",
     "semantic_hash": ""
   },
   "tools/build_function.py": {

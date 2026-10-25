@@ -1,6 +1,6 @@
 // Весь прогресс ученика — один объект в localStorage. Можно выгрузить/загрузить файлом.
-import { today, uid } from "./util.js?v=20261020a";
-import { stable } from "./merge.js?v=20261020a";
+import { today, uid } from "./util.js?v=20261025a";
+import { stable } from "./merge.js?v=20261025a";
 
 export const GUEST_KEY = "english_b2_path_v1";
 let KEY = GUEST_KEY; // ключ текущего пользователя: гость — общий, вошедший — english_b2_path_u_<uid>

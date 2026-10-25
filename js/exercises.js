@@ -3,9 +3,9 @@
 //  ctx.mistake(wrong, right, why) — записать ошибку в «Мои ошибки»
 //  ctx.explain(topic, context, attempt) — открыть ИИ-наставника с объяснением
 //  ctx.level — уровень ученика для ИИ-проверки
-import { esc, md, inline, matches, closeness, shuffle, norm, pz } from "./util.js?v=20261020a";
-import { speak, hasASR, listen, similarity } from "./speech.js?v=20261020a";
-import { checkAnswer } from "./ai.js?v=20261020a";
+import { esc, md, inline, matches, closeness, shuffle, norm, pz } from "./util.js?v=20261025a";
+import { speak, hasASR, listen, similarity } from "./speech.js?v=20261025a";
+import { checkAnswer } from "./ai.js?v=20261025a";
 
 const sayBtn = (text, slow = false) => `<button class="say" data-say="${esc(text)}" ${slow ? 'data-slow="1"' : ""} title="Послушать">🔊</button>`;
 /** 🔊 обычная скорость + 🐢 очень медленно, по словам. */
@@ -309,6 +309,7 @@ function speakStep(step, root, ctx) {
         const best = alts.map((a) => ({ a, s: similarity(a, en) })).sort((x, y) => y.s - x.s)[0];
         const pct = Math.round(best.s * 100);
         res.innerHTML = `<div class="feedback ${pct >= 80 ? "ok" : "bad"}">Распознано: «${esc(best.a)}» — совпадение ${pct}%.${pct >= 80 ? " Отлично!" : " Послушайте образец ещё раз и повторите медленнее, чётко произнося каждое слово."}</div>`;
+        if (pct >= 80) { const cur = i; setTimeout(() => { if (i === cur) { i++; draw(); } }, 1200); } // засчитано — сами идём к следующей фразе
       };
   };
   draw();

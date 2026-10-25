@@ -1,20 +1,20 @@
 // Точка входа: роутер по hash, шапка, онбординг, «Сегодня», карта, уроки, прогресс, настройки.
-import { S, update, save, exportJson, importJson, reset, BLOCKS, logTime, totalHours } from "./store.js?v=20261020a";
-import { $, $$, esc, md, today, fmtDate, daysBetween, toast, plural, translit, studentName } from "./util.js?v=20261020a";
-import { PHASES, DOW, TOTAL_WEEKS, dayInfo, tasksForDay, projectedFinish, CHECKPOINT_WEEKS, monthOfWeek } from "./plan.js?v=20261020a";
+import { S, update, save, exportJson, importJson, reset, BLOCKS, logTime, totalHours } from "./store.js?v=20261025a";
+import { $, $$, esc, md, today, fmtDate, daysBetween, toast, plural, translit, studentName } from "./util.js?v=20261025a";
+import { PHASES, DOW, TOTAL_WEEKS, dayInfo, tasksForDay, projectedFinish, CHECKPOINT_WEEKS, monthOfWeek } from "./plan.js?v=20261025a";
 import { UNITS, LESSONS, lessonById } from "../data/index.js";
-import { renderLesson, nextLesson, lessonForToday } from "./lesson.js?v=20261020a";
-import { initHelper } from "./helper.js?v=20261020a";
-import { currentDay, currentPhase, dayState, toggleTask, dayComplete, finishDay } from "./progress.js?v=20261020a";
-import { queue, stats as srsStats } from "./srs.js?v=20261020a";
-import { aiConfig, saveAiConfig, providerList, aiPing } from "./ai.js?v=20261020a";
-import { voiceName, speak } from "./speech.js?v=20261020a";
-import * as P from "./practice.js?v=20261020a";
-import { bindSay } from "./exercises.js?v=20261020a";
-import { renderAccount, initAccount, statusChanged, authNag, bindAuthNag } from "./account.js?v=20261020a";
-import { hasStoredSession, currentUser, onAuth } from "./auth.js?v=20261020a";
-import { startSync, stopSync, onApplied, onStatus, syncStatus } from "./sync.js?v=20261020a";
-import { switchUser } from "./store.js?v=20261020a";
+import { renderLesson, nextLesson, lessonForToday } from "./lesson.js?v=20261025a";
+import { initHelper } from "./helper.js?v=20261025a";
+import { currentDay, currentPhase, dayState, toggleTask, dayComplete, finishDay } from "./progress.js?v=20261025a";
+import { queue, stats as srsStats } from "./srs.js?v=20261025a";
+import { aiConfig, saveAiConfig, providerList, aiPing } from "./ai.js?v=20261025a";
+import { voiceName, speak } from "./speech.js?v=20261025a";
+import * as P from "./practice.js?v=20261025a";
+import { bindSay } from "./exercises.js?v=20261025a";
+import { renderAccount, initAccount, statusChanged, authNag, bindAuthNag } from "./account.js?v=20261025a";
+import { hasStoredSession, currentUser, onAuth } from "./auth.js?v=20261025a";
+import { startSync, stopSync, onApplied, onStatus, syncStatus } from "./sync.js?v=20261025a";
+import { switchUser } from "./store.js?v=20261025a";
 
 const app = $("#app");
 bindSay(app);

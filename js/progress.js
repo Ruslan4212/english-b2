@@ -1,7 +1,7 @@
 // Где ученик в плане и как закрываются задачи дня.
-import { S, update } from "./store.js?v=20261020a";
-import { dayInfo, tasksForDay } from "./plan.js?v=20261020a";
-import { today } from "./util.js?v=20261020a";
+import { S, update } from "./store.js?v=20261025a";
+import { dayInfo, tasksForDay } from "./plan.js?v=20261025a";
+import { today } from "./util.js?v=20261025a";
 
 export const currentDay = () => S().day || 0;
 export const currentPhase = () => dayInfo(currentDay()).phase;

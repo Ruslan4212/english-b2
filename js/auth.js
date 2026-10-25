@@ -1,6 +1,6 @@
 // Вход по email (Supabase Auth). Библиотека supabase-js грузится ТОЛЬКО динамическим import():
 // гость её не скачивает, пока сам не откроет «Аккаунт» или пока не найдена сохранённая сессия.
-import { DEFAULT_URL, DEFAULT_KEY } from "./config.js?v=20261020a";
+import { DEFAULT_URL, DEFAULT_KEY } from "./config.js?v=20261025a";
 
 const LIB = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 export const AUTH_KEY = "eb2_auth";
