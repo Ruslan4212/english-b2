@@ -169,7 +169,7 @@ export function translit(ru) {
     if (low in TR) return TR[low];
     return ch;
   }).join("");
-  return out.charAt(0).toUpperCase() + out.slice(1);
+  return out.replace(/(^|[\s-])(\p{L})/gu, (m, p, ch) => p + ch.toUpperCase()); // Anna-Mariya, Ivan Petrov
 }
 
 /** Имя ученика из профиля: { ru, en }; null, если не задано. */

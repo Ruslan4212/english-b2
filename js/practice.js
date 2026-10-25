@@ -54,7 +54,7 @@ export function renderWords(app) {
     <div class="card"><h2>🤖 Сгенерировать фразы по своей теме</h2><p class="muted small">Например: «моя работа — бухгалтер», «путешествие в Турцию», «футбол». План A2: добавьте 100–150 слов вашей рабочей области.</p>
       <div class="row"><input type="text" data-topic placeholder="Тема" style="flex:1;min-width:180px"><button class="btn" data-gen>Сгенерировать 10 фраз</button></div><div data-genbox></div></div>
     <div class="card"><h2>Все карточки</h2><details><summary>Показать список (${st.total})</summary><div class="tbl-wrap"><table><tr><th>Фраза</th><th>Перевод</th><th>Колода</th><th>Следующий показ</th><th></th></tr>
-      ${Object.entries(s.cards).slice(-300).reverse().map(([id, c]) => `<tr><td>${esc(c.en)}</td><td>${esc(c.ru)}</td><td>${c.deck === "mine" ? "Мои" : "Основа"}</td><td>${c.due || "новая"}</td><td><button class="icon-btn" data-delc="${id}">🗑</button></td></tr>`).join("")}
+      ${Object.entries(s.cards).slice(-300).reverse().map(([id, c]) => `<tr><td>${esc(pz(c.en))}</td><td>${esc(pz(c.ru))}</td><td>${c.deck === "mine" ? "Мои" : "Основа"}</td><td>${c.due || "новая"}</td><td><button class="icon-btn" data-delc="${id}">🗑</button></td></tr>`).join("")}
     </table></div></details></div>`;
 
   app.querySelector("[data-start]").onclick = () => review(app.querySelector("[data-review]"), ph);
@@ -110,7 +110,8 @@ function review(box, ph) {
       markToday("srs");
       return;
     }
-    const [id, c] = list[0];
+    const [id, c0] = list[0];
+    const c = pz(c0);
     // направление: новые и молодые — с английского; зрелые чередуем с русского (активный словарь)
     const reverse = c.reps >= 2 && Math.random() < 0.5;
     box.innerHTML = `<div class="card flash">

@@ -1,23 +1,24 @@
-# Graph Report - english-b2  (2026-10-20)
+# Graph Report - english-b2  (2026-10-25)
 
 ## Corpus Check
-- 85 files · ~126,872 words
+- 85 files · ~127,617 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 5 file(s) not represented in the graph (top: (none) 3, .css 1, .toml 1)
 
 ## Summary
-- 452 nodes · 779 edges · 38 communities (19 shown, 19 thin omitted)
+- 458 nodes · 786 edges · 35 communities (19 shown, 16 thin omitted)
 - Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 25 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `7575f88e`
+- Built from commit: `dee8f146`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - app.js
 - practice.js
+- index.js
 - esc
 - helper.js
 - index.ts
@@ -41,36 +42,36 @@
 
 ## God Nodes (most connected - your core abstractions)
 1. `$$` - 22 edges
-2. `S()` - 13 edges
-3. `mergeState()` - 13 edges
-4. `ai()` - 12 edges
-5. `run()` - 12 edges
+2. `mergeState()` - 13 edges
+3. `run()` - 13 edges
+4. `S()` - 13 edges
+5. `ai()` - 12 edges
 6. `renderStep()` - 11 edges
 7. `startSync()` - 11 edges
-8. `client()` - 9 edges
-9. `clone()` - 9 edges
-10. `setStatus()` - 9 edges
+8. `clone()` - 9 edges
+9. `setStatus()` - 9 edges
+10. `renderLesson()` - 8 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `renderWeekly()` --calls--> `S()`  [EXTRACTED]
   js/practice.js → data/work.js
 - `taskLink()` --calls--> `lessonById()`  [EXTRACTED]
   js/app.js → data/index.js
+- `renderMsg()` --indirect_call--> `esc()`  [INFERRED]
+  js/helper.js → js/util.js
 - `renderLesson()` --calls--> `lessonById()`  [EXTRACTED]
   js/lesson.js → data/index.js
-- `allDialogs()` --calls--> `S()`  [EXTRACTED]
-  js/practice.js → data/work.js
-- `autoCheck()` --calls--> `S()`  [EXTRACTED]
+- `renderWords()` --calls--> `S()`  [EXTRACTED]
   js/practice.js → data/work.js
 
 ## Import Cycles
 - None detected.
 
-## Communities (38 total, 19 thin omitted)
+## Communities (35 total, 16 thin omitted)
 
 ### Community 0 - "app.js"
 Cohesion: 0.10
-Nodes (26): lessonById(), LESSONS, UNITS, app, bindNameAsk(), enterUser(), nameAsk(), nameFields() (+18 more)
+Nodes (25): lessonById(), app, bindNameAsk(), enterUser(), nameAsk(), nameFields(), nameFieldsHtml(), refreshAfterRemote() (+17 more)
 
 ### Community 1 - "practice.js"
 Cohesion: 0.08
@@ -81,8 +82,8 @@ Cohesion: 0.31
 Nodes (15): choice(), dialog(), dictation(), drill(), examples(), fill(), head(), order() (+7 more)
 
 ### Community 4 - "helper.js"
-Cohesion: 0.15
-Nodes (11): addMsg(), ctxText(), history, initHelper(), openHelper(), quick(), renderMsg(), runExplain() (+3 more)
+Cohesion: 0.26
+Nodes (9): addMsg(), ctxText(), history, initHelper(), openHelper(), quick(), renderMsg(), runExplain() (+1 more)
 
 ### Community 5 - "index.ts"
 Cohesion: 0.17
@@ -109,31 +110,31 @@ Cohesion: 0.60
 Nodes (5): buildRequest(), cut(), LEVEL_HINT, lvl(), nameLine()
 
 ### Community 13 - "sync.js"
-Cohesion: 0.14
-Nodes (27): answerChoice(), appliedSubs, askReplace(), choiceSubs, cycle(), deviceId(), flush(), loadMeta() (+19 more)
+Cohesion: 0.13
+Nodes (31): ABORT, answerChoice(), appliedSubs, askChoice(), backupGuest(), check(), choiceSubs, cycle() (+23 more)
 
 ### Community 14 - "store.js"
-Cohesion: 0.14
-Nodes (17): addCard(), addError(), BLOCKS, fresh(), GUEST_KEY, importJson(), LISTS, logTime() (+9 more)
+Cohesion: 0.13
+Nodes (20): addCard(), addError(), BLOCKS, deleteCard(), ensureIds(), fnv(), fresh(), GUEST_KEY (+12 more)
 
 ### Community 15 - "ai.js"
-Cohesion: 0.17
+Cohesion: 0.18
 Nodes (17): ai(), aiConfig(), aiPing(), askTutor(), chatTurn(), checkAnswer(), correctText(), explain() (+9 more)
 
 ### Community 27 - "test_merge.mjs"
-Cohesion: 0.14
-Nodes (16): base(), c(), e1, eq(), gen(), L(), m(), neu (+8 more)
+Cohesion: 0.12
+Nodes (19): base(), c(), changed, e1, eq(), gen(), L(), m() (+11 more)
 
 ### Community 28 - "auth.js"
-Cohesion: 0.24
-Nodes (14): AUTH_KEY, cleanUrl(), client(), currentUser(), listeners, redirectBase(), requestReset(), resendConfirm() (+6 more)
+Cohesion: 0.21
+Nodes (10): AUTH_KEY, cleanUrl(), client(), currentUser(), listeners, redirectBase(), signIn(), signOut() (+2 more)
 
 ### Community 29 - "merge.js"
 Cohesion: 0.33
 Nodes (17): clone(), isEmptyState(), isObj(), mapUnion(), maxMap(), mergeByMeta(), mergeCard(), mergeDay() (+9 more)
 
 ### Community 30 - "account.js"
-Cohesion: 0.17
+Cohesion: 0.18
 Nodes (11): doSignOut(), hhmm(), hooks, initAccount(), LABEL, paintBadge(), renderAccount(), renderProfile() (+3 more)
 
 ### Community 31 - "plan.js"
@@ -141,26 +142,26 @@ Cohesion: 0.22
 Nodes (13): CHECKPOINT_WEEKS, dayInfo(), DOW, isLastWeekOfMonth(), levelTestWeek(), monthOfWeek(), pace(), phaseOfWeek() (+5 more)
 
 ### Community 33 - "progress.js"
-Cohesion: 0.36
-Nodes (7): currentDay(), currentLevel(), currentPhase(), dayComplete(), dayState(), markToday(), toggleTask()
+Cohesion: 0.18
+Nodes (9): currentDay(), currentLevel(), currentPhase(), dayComplete(), dayState(), markToday(), toggleTask(), newLimit() (+1 more)
 
 ## Knowledge Gaps
-- **19 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **16 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `$$` connect `$$` to `plan.js`?**
-  _High betweenness centrality (0.065) - this node is a cross-community bridge._
+  _High betweenness centrality (0.064) - this node is a cross-community bridge._
 - **Are the 4 inferred relationships involving `mergeState()` (e.g. with `mergeCard()` and `mergeDay()`) actually correct?**
   _`mergeState()` has 4 INFERRED edges - model-reasoned connections that need verification._
 - **Should `app.js` be split into smaller, more focused modules?**
-  _Cohesion score 0.10099573257467995 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.0990990990990991 - nodes in this community are weakly interconnected._
 - **Why does `esc()` connect `$$` to `helper.js`?**
   _High betweenness centrality (0.003) - this node is a cross-community bridge._
 - **Should `practice.js` be split into smaller, more focused modules?**
-  _Cohesion score 0.07822410147991543 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.08362369337979095 - nodes in this community are weakly interconnected._
+- **Should `index.js` be split into smaller, more focused modules?**
+  _Cohesion score 0.047619047619047616 - nodes in this community are weakly interconnected._
 - **Should `$$` be split into smaller, more focused modules?**
   _Cohesion score 0.11857707509881422 - nodes in this community are weakly interconnected._
-- **Should `speech.js` be split into smaller, more focused modules?**
-  _Cohesion score 0.13333333333333333 - nodes in this community are weakly interconnected._

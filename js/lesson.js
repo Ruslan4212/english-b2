@@ -155,11 +155,11 @@ export function renderLesson(app, id) {
     if (!base.review) {
       // фразы урока → колода «Основа» (план: слова только во фразах)
       const phrases = [];
-      for (const s of base.steps) {
+      for (const s of base0.steps) { // сырые данные: карточки хранят метку {N}, имя подставляется при показе
         if (s.t === "examples") for (const [en, ru] of s.items) if (/\s/.test(en) && !/ — /.test(en) && en.length < 90) phrases.push([en, ru]);
         if (s.t === "dialog") for (const [, en, ru] of s.lines) if (en.split(" ").length >= 3 && en.length < 80) phrases.push([en, ru]);
       }
-      for (const [en, ru] of (base.cards || phrases).slice(0, 14)) if (addCard(en, ru, "base", base.id)) added++;
+      for (const [en, ru] of (base0.cards || phrases).slice(0, 14)) if (addCard(en, ru, "base", base.id)) added++;
       update((s) => (s.lessons[base.id] = { done: true, score: pct, date: today() }));
     }
     logTime("course", min, base.title);

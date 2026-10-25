@@ -1,7 +1,7 @@
 {
   "0": "app.js",
   "1": "practice.js",
-  "2": "b1.js",
+  "2": "index.js",
   "3": "esc",
   "4": "helper.js",
   "5": "index.ts",
@@ -31,10 +31,7 @@
   "29": "merge.js",
   "30": "account.js",
   "31": "plan.js",
-  "32": "b2.js",
   "33": "progress.js",
-  "34": "a1.js",
-  "35": "a2.js",
   "36": "avatar.js",
   "37": "config.js"
 }

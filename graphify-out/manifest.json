@@ -288,9 +288,9 @@
     "semantic_hash": ""
   },
   "js/app.js": {
-    "mtime": 1792503449.8307805,
-    "seen": 1792503579.6057441,
-    "ast_hash": "c175a7db91fe7e8b1075aad47e5ac12b",
+    "mtime": 1792504013.4715207,
+    "seen": 1792901395.8684785,
+    "ast_hash": "4de647f65ae9b51ba0a8a18c98abf921",
     "semantic_hash": ""
   },
   "js/avatar.js": {
@@ -324,9 +324,9 @@
     "semantic_hash": ""
   },
   "js/practice.js": {
-    "mtime": 1792503450.1908257,
-    "seen": 1792503579.6057675,
-    "ast_hash": "b29d688ef47be616a8209692836a28c5",
+    "mtime": 1792503898.3518255,
+    "seen": 1792901395.868497,
+    "ast_hash": "8da9fa992f22ceb717047ca9f2eef738",
     "semantic_hash": ""
   },
   "js/progress.js": {
@@ -348,15 +348,15 @@
     "semantic_hash": ""
   },
   "js/srs.js": {
-    "mtime": 1792503450.3758886,
-    "seen": 1792503579.605783,
-    "ast_hash": "3f5cdfeee59b8a4af784ca3e2abec87b",
+    "mtime": 1792503898.3464198,
+    "seen": 1792901395.8685048,
+    "ast_hash": "400be33142e9c305cb57c54d63f47464",
     "semantic_hash": ""
   },
   "js/store.js": {
-    "mtime": 1792503450.4249403,
-    "seen": 1792503579.6057851,
-    "ast_hash": "b316d1653bef0fb12032ded59994a9b0",
+    "mtime": 1792503898.3464198,
+    "seen": 1792901395.8685067,
+    "ast_hash": "5003fe89e75b3700e3e379066839364e",
     "semantic_hash": ""
   },
   "js/util.js": {
@@ -474,9 +474,9 @@
     "semantic_hash": ""
   },
   "js/auth.js": {
-    "mtime": 1792503449.8760624,
-    "seen": 1792503579.605747,
-    "ast_hash": "6133cc6fd639f39099879a22ba23b747",
+    "mtime": 1792504004.352958,
+    "seen": 1792901395.8684804,
+    "ast_hash": "13ae9d2d6e1dd845f0870115e1efbd06",
     "semantic_hash": ""
   },
   "js/config.js": {
@@ -486,27 +486,33 @@
     "semantic_hash": ""
   },
   "js/merge.js": {
-    "mtime": 1792503450.1091673,
-    "seen": 1792503579.6057625,
-    "ast_hash": "2028dcba39d63b6819d874dcd364ec5b",
+    "mtime": 1792503919.6654603,
+    "seen": 1792901395.8684928,
+    "ast_hash": "335ab16c36a22e74100db95b0d3c7c72",
     "semantic_hash": ""
   },
   "tools/test_merge.mjs": {
-    "mtime": 1792503341.5043964,
-    "seen": 1792503363.3176963,
-    "ast_hash": "73e247588e45bdaf0ad831a54d5fa6bc",
+    "mtime": 1792503926.1251233,
+    "seen": 1792901395.8685238,
+    "ast_hash": "cf548f67c32919f91ead5141006a31cf",
     "semantic_hash": ""
   },
   "js/account.js": {
-    "mtime": 1792503449.7381752,
-    "seen": 1792503579.605737,
-    "ast_hash": "3b43153f2555be73a6320fb4a905dadb",
+    "mtime": 1792504004.352958,
+    "seen": 1792901395.8684728,
+    "ast_hash": "aef5693f697ee52d3be6fed2fba361c4",
     "semantic_hash": ""
   },
   "js/sync.js": {
-    "mtime": 1792503450.4650311,
-    "seen": 1792503579.6057863,
-    "ast_hash": "215bb70ea3d62a43a2b828e28828f8c5",
+    "mtime": 1792503987.3714082,
+    "seen": 1792901395.868508,
+    "ast_hash": "38e5062875f6dbbabf5b1ecf692166d0",
+    "semantic_hash": ""
+  },
+  "supabase/eb2_progress.sql": {
+    "mtime": 1792503347.832298,
+    "seen": 1792901395.8685129,
+    "ast_hash": "ac043e3c0fec33c071d8f364aee874f3",
     "semantic_hash": ""
   }
 }

@@ -31,7 +31,7 @@ const LEVEL_HINT = {
 };
 
 const cut = (v, n) => String(v ?? "").slice(0, n);
-const nameLine = (b) => (b.studentName ? ` Ученика зовут ${cut(b.studentName, 40)}; иногда обращайся к нему по имени.` : "");
+const nameLine = (b) => (b.studentName ? ` Ученика зовут ${cut(b.studentName, 40)}; имя используй изредка и только в дополнение: сначала всегда полностью ответь на сам вопрос ученика.` : "");
 const lvl = (b) => LEVEL_HINT[b.level] || LEVEL_HINT.A1;
 
 const TUTOR =
@@ -146,7 +146,7 @@ function buildRequest(mode, b) {
     return {
       system:
         "You are a friendly English conversation partner and tutor for a Russian-speaking adult. " +
-        (b.studentName ? `The student's name is ${cut(b.studentName, 40)}; occasionally address them by name. ` : "") +
+        (b.studentName ? `The student's name is ${cut(b.studentName, 40)}; occasionally address them by name, but always answer the student's actual question first. ` : "") +
         `Student level: ${b.level || "A1"} (${lvl(b)}). Conversation topic: ${cut(b.topic, 300)}. ` +
         (b.role ? `Role-play: ${cut(b.role, 600)}. Stay in role. ` : "") +
         "Rules: speak ONLY English in `reply`, using vocabulary and grammar of the student's level " +
