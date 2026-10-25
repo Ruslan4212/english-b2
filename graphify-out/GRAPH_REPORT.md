@@ -1,17 +1,17 @@
 # Graph Report - english-b2  (2026-10-25)
 
 ## Corpus Check
-- 92 files · ~154,403 words
+- 92 files · ~154,573 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 5 file(s) not represented in the graph (top: (none) 3, .css 1, .toml 1)
 
 ## Summary
-- 520 nodes · 931 edges · 36 communities (20 shown, 16 thin omitted)
+- 520 nodes · 932 edges · 36 communities (20 shown, 16 thin omitted)
 - Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 28 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `cf3efeeb`
+- Built from commit: `39e09211`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -43,9 +43,9 @@
 ## God Nodes (most connected - your core abstractions)
 1. `$$` - 22 edges
 2. `mergeState()` - 15 edges
-3. `S()` - 13 edges
-4. `renderPath()` - 13 edges
-5. `run()` - 13 edges
+3. `renderPath()` - 13 edges
+4. `run()` - 13 edges
+5. `S()` - 13 edges
 6. `ai()` - 12 edges
 7. `renderStep()` - 11 edges
 8. `startSync()` - 11 edges
@@ -55,14 +55,14 @@
 ## Surprising Connections (you probably didn't know these)
 - `taskLink()` --calls--> `lessonById()`  [EXTRACTED]
   js/app.js → data/index.js
-- `renderSetup()` --calls--> `S()`  [EXTRACTED]
-  js/practice.js → data/work.js
 - `renderWeekly()` --calls--> `S()`  [EXTRACTED]
   js/practice.js → data/work.js
+- `renderSetup()` --calls--> `S()`  [EXTRACTED]
+  js/practice.js → data/work.js
+- `renderMsg()` --indirect_call--> `esc()`  [INFERRED]
+  js/helper.js → js/util.js
 - `renderLesson()` --calls--> `lessonById()`  [EXTRACTED]
   js/lesson.js → data/index.js
-- `allDialogs()` --calls--> `S()`  [EXTRACTED]
-  js/practice.js → data/work.js
 
 ## Import Cycles
 - None detected.

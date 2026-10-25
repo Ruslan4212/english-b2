@@ -16,7 +16,7 @@ import { hasStoredSession, currentUser, onAuth } from "./auth.js?v=20261026a";
 import { startSync, stopSync, onApplied, onStatus, syncStatus } from "./sync.js?v=20261026a";
 import { switchUser } from "./store.js?v=20261026a";
 import { renderDuo } from "./duo.js?v=20261026a";
-import { renderPlacement } from "./placement.js?v=20261026a";
+import { renderPlacement, goToWeek } from "./placement.js?v=20261026a";
 
 const app = $("#app");
 bindSay(app);
@@ -435,6 +435,12 @@ function renderSettings() {
     <p class="muted small">Голос: ${esc(voiceName())}. Лучше всего звучат «Natural»/«Online» голоса в браузере Microsoft Edge.</p>
     <div class="row"><button class="btn primary" data-save2>Сохранить</button><button class="btn sm" data-voice>🔊 Проверить голос</button></div>
   </div>
+  <div class="card"><h2>⏪ Перейти к неделе</h2><p class="muted small">Вернуться назад или перескочить вперёд по плану. Сейчас: неделя ${dayInfo(S().day || 0).week}, фаза ${dayInfo(S().day || 0).phase.level}.</p>
+    <div class="row" style="gap:8px;flex-wrap:wrap;align-items:center"><label class="small">Уровень <select data-wk-ph>${PHASES.map((p) => `<option value="${p.n}" ${p.n === dayInfo(S().day || 0).phase.n ? "selected" : ""}>${p.level} «${esc(p.title)}»</option>`).join("")}</select></label>
+      <label class="small">Неделя <select data-wk-w></select></label></div>
+    <label class="small" style="display:block;margin-top:8px"><input type="checkbox" data-wk-wipe> Начать заново с этой недели: стереть отметки о пройденных уроках и задачах после неё</label>
+    <div class="muted small" data-wk-info style="margin-top:6px"></div>
+    <div class="row" style="margin-top:8px"><button class="btn primary" data-wk-go>Перейти</button></div></div>
   <div class="card"><h2>🎯 Стартовый тест</h2><p class="muted small">Уже занимаетесь, но кажется, что курс слишком лёгкий или трудный? Тест проверит темы по порядку и перенесёт вас к первому незнакомому уроку. Пройденные уроки останутся пройденными.</p><a class="btn" href="#/placement">Пройти стартовый тест</a></div>
   <div class="card"><h2>☁️ Аккаунт и синхронизация</h2><p class="muted small">Войдите по email, чтобы прогресс хранился в облаке и был на всех устройствах. ${syncStatus().user ? `Вы вошли как <b>${esc(syncStatus().user.email || "")}</b>.` : "Без входа прогресс хранится только в этом браузере."}</p><a class="btn" href="#/account">${syncStatus().user ? "Открыть аккаунт" : "Войти или зарегистрироваться"}</a></div>
   <div class="card"><h2>Данные</h2><p class="muted small">Прогресс хранится в этом браузере. Сделайте резервную копию файлом, чтобы перенести на другое устройство.</p>
@@ -483,6 +489,22 @@ function renderSettings() {
     } catch (err) {
       toast("Ошибка: " + err.message);
     }
+  };
+  const wkPh = app.querySelector("[data-wk-ph]"), wkW = app.querySelector("[data-wk-w]"), wkInfo = app.querySelector("[data-wk-info]");
+  const fillWeeks = () => {
+    const p = PHASES.find((x) => x.n === +wkPh.value);
+    const cur = dayInfo(S().day || 0).week;
+    wkW.innerHTML = Array.from({ length: p.to - p.from + 1 }, (_, i) => p.from + i).map((w, i) => `<option value="${w}" ${w === cur ? "selected" : ""}>${i + 1}-я неделя фазы (неделя ${w} из ${TOTAL_WEEKS})</option>`).join("");
+    showInfo();
+  };
+  const showInfo = () => { const w = +wkW.value; wkInfo.textContent = `Месяц ${monthOfWeek(w)}. ${w === 1 ? "Самое начало: звуки и чтение." : ""}`; };
+  wkPh.onchange = fillWeeks; wkW.onchange = showInfo; fillWeeks();
+  app.querySelector("[data-wk-go]").onclick = () => {
+    const w = +wkW.value, wipe = app.querySelector("[data-wk-wipe]").checked;
+    if (!confirm(`Перейти к неделе ${w}${wipe ? " и стереть отметки о прохождении после неё" : ""}? Карточки, часы, ошибки и тексты сохранятся.`)) return;
+    goToWeek(w, wipe);
+    toast(`Вы на неделе ${w}`);
+    location.hash = "#/today";
   };
   app.querySelector("[data-reset]").onclick = () => {
     if (confirm("Удалить весь прогресс? Это нельзя отменить. Сначала можно скачать копию.")) {

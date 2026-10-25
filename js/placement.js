@@ -129,3 +129,28 @@ export function renderPlacement(app) {
   };
   nextUnit();
 }
+
+/**
+ * Перейти к неделе плана (сброс назад или прыжок вперёд). Уроки до этой точки — «пройдены/пропущены»,
+ * после — снова открыты. wipe=true стирает и настоящие прохождения после точки (начать заново).
+ */
+export function goToWeek(week, wipe = false) {
+  const day = (Math.max(1, week) - 1) * 7;
+  const ph = PHASES.find((p) => week >= p.from && week <= p.to) || PHASES[0];
+  const inPhase = LESSONS.filter((l) => l.phase === ph.n && l.unit.id !== "u_ph");
+  const slots = [];
+  for (let i = (ph.from - 1) * 7; i < ph.to * 7; i++) if (dayInfo(i).week > 1 && tasksForDay(i).some((t) => t.id === "lesson")) slots.push(i);
+  const k = slots.filter((i) => i < day).length;
+  const cut = week === 1 ? null : inPhase[Math.floor((k * inPhase.length) / Math.max(1, slots.length))] || null;
+  const cutIdx = cut ? LESSONS.indexOf(cut) : week === 1 ? 0 : LESSONS.findIndex((l) => l.phase > ph.n);
+  update((s) => {
+    LESSONS.forEach((l, i) => {
+      const before = cutIdx === -1 || i < cutIdx;
+      if (before) { if (!s.lessons[l.id]?.done) s.lessons[l.id] = { done: true, skipped: true, date: today() }; }
+      else if (wipe || s.lessons[l.id]?.skipped) delete s.lessons[l.id];
+    });
+    if (wipe) for (const d of Object.keys(s.days)) if (+d >= day) delete s.days[d];
+    s.day = day;
+    if (s.profile) s.profile.startWeek = week > 1 ? week : 0;
+  });
+}
