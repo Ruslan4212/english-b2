@@ -1,8 +1,8 @@
 // Интервальное повторение как в Anki (упрощённый SM-2).
 // Карточка без due — «новая»: она ещё не показывалась. В день вводится ограниченное
 // число новых (план: 8–10 в фазе A1), остальное — повторение тех, чей срок настал.
-import { S, update } from "./store.js";
-import { today, addDays } from "./util.js";
+import { S, update } from "./store.js?v=20261020a";
+import { today, addDays } from "./util.js?v=20261020a";
 
 export function newLimit(phase) {
   return phase <= 1 ? 10 : phase === 2 ? 12 : 15;
@@ -57,6 +57,7 @@ export function grade(id, g) {
     c.due = addDays(d, c.ivl);
     c.last = d;
     c.lastGrade = g;
+    c.mod = Date.now();
     s.reviewDays[d] = (s.reviewDays[d] || 0) + 1;
   });
 }

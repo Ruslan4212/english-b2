@@ -1,9 +1,9 @@
 // Плавающая панель ИИ-репетитора Мии: «объясни подробнее» из урока и свободные вопросы.
-import { $, esc, studentName } from "./util.js";
-import { explain, askTutor, translate, NO_AI } from "./ai.js";
-import { currentLevel } from "./progress.js";
-import { avatar, richText, TUTOR } from "./avatar.js";
-import { speakMia } from "./speech.js";
+import { $, esc, studentName } from "./util.js?v=20261020a";
+import { explain, askTutor, translate, NO_AI } from "./ai.js?v=20261020a";
+import { currentLevel } from "./progress.js?v=20261020a";
+import { avatar, richText, TUTOR } from "./avatar.js?v=20261020a";
+import { speakMia } from "./speech.js?v=20261020a";
 
 let history = []; // [{role, content}]
 

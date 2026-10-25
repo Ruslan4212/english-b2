@@ -92,7 +92,7 @@ code { background: var(--panel2); padding: 1px 5px; border-radius: 5px; font-siz
 .pill.b1 { background: #fff1d9; color: #a86800; }
 .pill.b2 { background: #f6e5ff; color: #8237b0; }
 :root[data-theme="dark"] .pill.a1, :root[data-theme="dark"] .pill.a2, :root[data-theme="dark"] .pill.b1, :root[data-theme="dark"] .pill.b2 { background: var(--panel2); }
-input[type="text"], input[type="number"], input[type="date"], input[type="password"], select, textarea {
+input[type="text"], input[type="email"], input[type="number"], input[type="date"], input[type="password"], select, textarea {
   font: inherit; color: var(--text); background: var(--panel); border: 1px solid var(--line); border-radius: 9px; padding: 8px 10px; width: 100%;
 }
 textarea { resize: vertical; }

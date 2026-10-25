@@ -3,9 +3,9 @@
 //  ctx.mistake(wrong, right, why) — записать ошибку в «Мои ошибки»
 //  ctx.explain(topic, context, attempt) — открыть ИИ-наставника с объяснением
 //  ctx.level — уровень ученика для ИИ-проверки
-import { esc, md, inline, matches, closeness, shuffle, norm, pz } from "./util.js";
-import { speak, hasASR, listen, similarity } from "./speech.js";
-import { checkAnswer } from "./ai.js";
+import { esc, md, inline, matches, closeness, shuffle, norm, pz } from "./util.js?v=20261020a";
+import { speak, hasASR, listen, similarity } from "./speech.js?v=20261020a";
+import { checkAnswer } from "./ai.js?v=20261020a";
 
 const sayBtn = (text, slow = false) => `<button class="say" data-say="${esc(text)}" ${slow ? 'data-slow="1"' : ""} title="Послушать">🔊</button>`;
 /** 🔊 обычная скорость + 🐢 очень медленно, по словам. */

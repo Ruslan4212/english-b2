@@ -1,17 +1,17 @@
 // Экраны практики: слова, слушание, чтение, говорение, письмо, рабочий английский,
 // ошибки, ресурсы, контрольные точки, обзор недели, старт, тест уровня, запись голоса.
-import { S, update, addCard, addError, logTime } from "./store.js";
-import { $$, esc, md, today, toast, shuffle, uid, fmtDate, pz } from "./util.js";
-import { queue, grade, preview, stats as srsStats } from "./srs.js";
-import { speak, speakMia, stopSpeak, hasASR, asrError, listen as asr, startRecording, saveRecording, listRecordings, deleteRecording } from "./speech.js";
-import { chatTurn, correctText, generate, story, NO_AI } from "./ai.js";
-import { markToday, currentPhase, currentLevel, currentDay } from "./progress.js";
-import { dialog, renderStep, bindSay } from "./exercises.js";
-import { openHelper, renderMsg } from "./helper.js";
-import { avatar, TUTOR, richText } from "./avatar.js";
-import { extraPractice } from "./lesson.js";
+import { S, update, addCard, addError, logTime, deleteCard } from "./store.js?v=20261020a";
+import { $$, esc, md, today, toast, shuffle, uid, fmtDate, pz } from "./util.js?v=20261020a";
+import { queue, grade, preview, stats as srsStats } from "./srs.js?v=20261020a";
+import { speak, speakMia, stopSpeak, hasASR, asrError, listen as asr, startRecording, saveRecording, listRecordings, deleteRecording } from "./speech.js?v=20261020a";
+import { chatTurn, correctText, generate, story, NO_AI } from "./ai.js?v=20261020a";
+import { markToday, currentPhase, currentLevel, currentDay } from "./progress.js?v=20261020a";
+import { dialog, renderStep, bindSay } from "./exercises.js?v=20261020a";
+import { openHelper, renderMsg } from "./helper.js?v=20261020a";
+import { avatar, TUTOR, richText } from "./avatar.js?v=20261020a";
+import { extraPractice } from "./lesson.js?v=20261020a";
 import { LESSONS } from "../data/index.js";
-import { dayInfo, PHASES } from "./plan.js";
+import { dayInfo, PHASES } from "./plan.js?v=20261020a";
 import VOCAB from "../data/vocab.js";
 import LIBRARY from "../data/listening.js";
 import READING from "../data/reading.js";
@@ -79,7 +79,7 @@ export function renderWords(app) {
     const v = VOCAB.find((x) => x.id === b.dataset.peek);
     app.querySelector("[data-peekbox]").innerHTML = `<h3>${esc(v.title)}</h3>` + v.items.map(([en, ru]) => `<div class="ex-line"><button class="say" data-say="${esc(en)}">🔊</button><div><div class="en">${esc(en)}</div><div class="ru">${esc(ru)}</div></div></div>`).join("");
   }));
-  $$("[data-delc]", app).forEach((b) => (b.onclick = () => { update((s) => delete s.cards[b.dataset.delc]); renderWords(app); }));
+  $$("[data-delc]", app).forEach((b) => (b.onclick = () => { deleteCard(b.dataset.delc); renderWords(app); }));
   app.querySelector("[data-gen]").onclick = async () => {
     const topic = app.querySelector("[data-topic]").value.trim();
     if (!topic) return toast("Напишите тему");

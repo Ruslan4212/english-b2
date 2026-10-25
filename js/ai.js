@@ -2,14 +2,11 @@
 //  1) функция Supabase english-tutor — ключ провайдера живёт на сервере, в браузер не попадает;
 //  2) если функции нет — личный бесплатный ключ ученика (Groq / Gemini / OpenRouter),
 //     который хранится только в этом браузере.
-import { buildRequest } from "./prompts.js";
-import { setServerTTS } from "./speech.js";
-import { studentName } from "./util.js";
+import { buildRequest } from "./prompts.js?v=20261020a";
+import { setServerTTS } from "./speech.js?v=20261020a";
+import { studentName } from "./util.js?v=20261020a";
 
-// Публичный проект Supabase (тот же, что у DevOps-игры). Это publishable-ключ:
-// он по дизайну открыт, защита — белый список Origin и лимиты внутри функции.
-const DEFAULT_URL = "https://eotzgzaeuzvreidwkltf.supabase.co";
-const DEFAULT_KEY = "sb_publishable_mRzT0lXHpvXgfQiO8o--Jw_9ii-wJ39";
+import { DEFAULT_URL, DEFAULT_KEY } from "./config.js?v=20261020a";
 const CFG = "english_b2_ai_cfg";
 
 const PROVIDERS = {

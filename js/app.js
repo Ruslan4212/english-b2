@@ -1,16 +1,20 @@
 // Точка входа: роутер по hash, шапка, онбординг, «Сегодня», карта, уроки, прогресс, настройки.
-import { S, update, save, exportJson, importJson, reset, BLOCKS, logTime, totalHours } from "./store.js";
-import { $, $$, esc, md, today, fmtDate, daysBetween, toast, plural, translit, studentName } from "./util.js";
-import { PHASES, DOW, TOTAL_WEEKS, dayInfo, tasksForDay, projectedFinish, CHECKPOINT_WEEKS, monthOfWeek } from "./plan.js";
+import { S, update, save, exportJson, importJson, reset, BLOCKS, logTime, totalHours } from "./store.js?v=20261020a";
+import { $, $$, esc, md, today, fmtDate, daysBetween, toast, plural, translit, studentName } from "./util.js?v=20261020a";
+import { PHASES, DOW, TOTAL_WEEKS, dayInfo, tasksForDay, projectedFinish, CHECKPOINT_WEEKS, monthOfWeek } from "./plan.js?v=20261020a";
 import { UNITS, LESSONS, lessonById } from "../data/index.js";
-import { renderLesson, nextLesson, lessonForToday } from "./lesson.js";
-import { initHelper } from "./helper.js";
-import { currentDay, currentPhase, dayState, toggleTask, dayComplete, finishDay } from "./progress.js";
-import { queue, stats as srsStats } from "./srs.js";
-import { aiConfig, saveAiConfig, providerList, aiPing } from "./ai.js";
-import { voiceName, speak } from "./speech.js";
-import * as P from "./practice.js";
-import { bindSay } from "./exercises.js";
+import { renderLesson, nextLesson, lessonForToday } from "./lesson.js?v=20261020a";
+import { initHelper } from "./helper.js?v=20261020a";
+import { currentDay, currentPhase, dayState, toggleTask, dayComplete, finishDay } from "./progress.js?v=20261020a";
+import { queue, stats as srsStats } from "./srs.js?v=20261020a";
+import { aiConfig, saveAiConfig, providerList, aiPing } from "./ai.js?v=20261020a";
+import { voiceName, speak } from "./speech.js?v=20261020a";
+import * as P from "./practice.js?v=20261020a";
+import { bindSay } from "./exercises.js?v=20261020a";
+import { renderAccount, initAccount, statusChanged, authNag, bindAuthNag } from "./account.js?v=20261020a";
+import { hasStoredSession, currentUser, onAuth } from "./auth.js?v=20261020a";
+import { startSync, stopSync, onApplied, onStatus, syncStatus } from "./sync.js?v=20261020a";
+import { switchUser } from "./store.js?v=20261020a";
 
 const app = $("#app");
 bindSay(app);
@@ -62,12 +66,21 @@ const routes = {
   test: () => P.renderLevelTest(app),
   record: () => P.renderRecord(app),
   day: (i) => renderToday(+i),
+  account: () => renderAccount(app),
 };
 
 function route() {
   const s = S();
   window.__ctx = null;
   const [name, arg] = location.hash.replace(/^#\/?/, "").split("/");
+  // экран входа доступен и без профиля (новое устройство)
+  if (name === "account") {
+    $$(".side a").forEach((a) => a.classList.toggle("active", a.dataset.r === "account"));
+    $("#side").classList.remove("open");
+    topStats();
+    routes[name](arg ? decodeURIComponent(arg) : undefined);
+    return;
+  }
   if (!s.profile) return renderOnboarding();
   // существующий ученик без имени: один раз за сессию уводим на «Сегодня», где висит карточка-вопрос
   if (!s.profile.name && !sessionStorage.getItem("english_b2_name_shown") && name !== "today") {
@@ -145,6 +158,7 @@ function renderOnboarding() {
 - Фразы с уроков сами попадают в карточки (как Anki), ошибки — в ваш личный список для отработки.
 
 >i Говорить нужно с первого месяца. Ваш собеседник — AI-репетитор **Мия**: живой звонок голосом, исправления и объяснения. Всё обучение — внутри приложения, ничего искать не нужно.`)}
+    <p class="small">Уже занимались на другом устройстве? <a href="#/account">Войти в аккаунт</a> — прогресс подтянется из облака.</p>
   </div>
   <div class="card">
     <h2>1. Как вас зовут?</h2>
@@ -256,7 +270,7 @@ function renderToday(viewDay) {
     <div class="row"><h1 style="margin:6px 0 0">${isCur ? 'Твой план <span class="hl-blue">на сегодня</span>' : 'День <span class="hl-blue">плана</span>'}</h1><span class="spacer"></span>
       ${i > 0 ? `<a class="btn sm ghost" href="#/day/${i - 1}">←</a>` : ""}<a class="btn sm ghost" href="#/day/${i + 1}">→</a>${!isCur ? `<a class="btn sm" href="#/today">К текущему дню</a>` : ""}</div>
     <p class="muted" style="margin-top:4px">Неделя <b>${info.week}</b> · ${DOW[info.dow]} по плану · месяц ${info.month} · <span class="pill ${ph.level.toLowerCase()}">Фаза ${ph.n}: ${ph.level} «${ph.title}»</span> · ≈${totalMin} мин</p>
-    ${banners}
+    ${banners}${authNag()}
     <div class="bar ok" style="margin:10px 0"><i style="width:${tasks.length ? (doneN / tasks.length) * 100 : 0}%"></i></div>
     <div data-tasks>${tasks
       .map((t) => {
@@ -276,6 +290,7 @@ function renderToday(viewDay) {
     <div class="card" style="margin-top:18px"><h3>Фаза ${ph.n}: ${ph.level} — к концу фазы</h3><p>${esc(ph.goal)}</p><p class="muted small">Словарь: ${ph.vocab}. Ориентир накопленных часов: ${ph.hoursMark}.</p></div>`;
 
   bindNameAsk();
+  bindAuthNag(app);
   if (!isCur) return;
   $$("[data-chk]", app).forEach((el) =>
     (el.onclick = () => {
@@ -414,6 +429,7 @@ function renderSettings() {
     <p class="muted small">Голос: ${esc(voiceName())}. Лучше всего звучат «Natural»/«Online» голоса в браузере Microsoft Edge.</p>
     <div class="row"><button class="btn primary" data-save2>Сохранить</button><button class="btn sm" data-voice>🔊 Проверить голос</button></div>
   </div>
+  <div class="card"><h2>☁️ Аккаунт и синхронизация</h2><p class="muted small">Войдите по email, чтобы прогресс хранился в облаке и был на всех устройствах. ${syncStatus().user ? `Вы вошли как <b>${esc(syncStatus().user.email || "")}</b>.` : "Без входа прогресс хранится только в этом браузере."}</p><a class="btn" href="#/account">${syncStatus().user ? "Открыть аккаунт" : "Войти или зарегистрироваться"}</a></div>
   <div class="card"><h2>Данные</h2><p class="muted small">Прогресс хранится в этом браузере. Сделайте резервную копию файлом, чтобы перенести на другое устройство.</p>
     <div class="row"><button class="btn" data-exp>⬇ Скачать копию прогресса</button><label class="btn">⬆ Загрузить копию<input type="file" accept=".json" data-imp hidden></label><span class="spacer"></span><button class="btn" data-reset style="color:var(--bad)">Сбросить всё</button></div></div>`;
 
@@ -469,6 +485,58 @@ function renderSettings() {
   };
 }
 
+/* ------------------------------ аккаунт и синхронизация ------------------------------ */
+const LAST_UID = "english_b2_last_uid";
+const setLastUid = (v) => { try { if (v) localStorage.setItem(LAST_UID, v); else localStorage.removeItem(LAST_UID); } catch { /* нет хранилища */ } };
+let syncUid = null;
+initAccount({ rerender: () => route(), afterSignOut: () => { syncUid = null; setLastUid(null); switchUser(null); route(); } });
+
+// экраны, которые безопасно перерисовать, когда из облака пришли изменения (не посреди упражнения)
+const SAFE_SCREENS = ["", "today", "day", "map", "grammar", "progress", "settings", "errors", "account"];
+function refreshAfterRemote() {
+  const name = location.hash.replace(/^#\/?/, "").split("/")[0];
+  topStats();
+  if (SAFE_SCREENS.includes(name)) route();
+}
+onApplied(refreshAfterRemote);
+onStatus(() => { statusChanged(app); });
+
+async function enterUser(u) {
+  if (!u || syncUid === u.id) return;
+  syncUid = u.id;
+  setLastUid(u.id);
+  await startSync(u);
+  refreshAfterRemote();
+}
+onAuth((event, session) => {
+  if ((event === "SIGNED_IN" || event === "INITIAL_SESSION" || event === "TOKEN_REFRESHED") && session?.user) {
+    enterUser(session.user);
+  } else if (event === "SIGNED_OUT" && syncUid) {
+    syncUid = null;
+    setLastUid(null);
+    stopSync(true).then(() => { switchUser(null); route(); });
+  }
+});
+
+// офлайн-запуск вошедшего пользователя: сразу показываем его локальный прогресс, не дожидаясь библиотеки
+if (hasStoredSession()) {
+  try {
+    const last = localStorage.getItem(LAST_UID);
+    if (last) switchUser(last);
+  } catch { /* нет хранилища */ }
+}
 initHelper();
 save();
 route();
+
+// есть сохранённая сессия или вернулись по ссылке с ?code= — поднимаем клиент и синхронизацию
+if (hasStoredSession() || new URLSearchParams(location.search).has("code")) {
+  currentUser()
+    .then((u) => {
+      if (u) return enterUser(u);
+      setLastUid(null); // сессия недействительна — возвращаемся к гостю
+      switchUser(null);
+    })
+    .then(() => { route(); })
+    .catch(() => { /* нет сети: работаем локально, при следующем запуске попробуем снова */ });
+}
