@@ -290,7 +290,7 @@ function renderToday(viewDay) {
       .join("")}</div>
     ${isCur ? `<div class="row" style="margin-top:14px"><button class="btn ${dayComplete(i) ? "ok" : ""}" data-finish>${dayComplete(i) ? "✅ День выполнен — перейти к следующему" : "Завершить день (не всё сделано)"}</button>
       <span class="muted small">Учебный день не привязан к календарю: делайте его, когда удобно. Темп ${s.profile.hoursPerWeek} ч/нед → финиш ≈ ${fmtDate(projectedFinish(i))}.</span></div>` : ""}
-    <div class="card" style="margin-top:18px"><h3>Фаза ${ph.n}: ${ph.level} — к концу фазы</h3><p>${esc(ph.goal)}</p><p class="muted small">Словарь: ${ph.vocab}. Ориентир накопленных часов: ${ph.hoursMark}.</p></div>`;
+    <div class="card" style="margin-top:18px"><h3>Фаза ${ph.n}: ${ph.level} — к концу фазы</h3><p>${esc(ph.goal)}</p><p class="muted small">Цель к концу фазы: словарь ${ph.vocab}, всего ${ph.hoursMark} часов занятий. Это ориентир, а не ваш текущий уровень.</p></div>`;
 
   bindNameAsk();
   bindAuthNag(app);

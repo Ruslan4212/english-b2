@@ -1,7 +1,7 @@
 # Graph Report - english-b2  (2026-10-25)
 
 ## Corpus Check
-- 86 files · ~128,506 words
+- 86 files · ~128,541 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 5 file(s) not represented in the graph (top: (none) 3, .css 1, .toml 1)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `cfa41a31`
+- Built from commit: `5becb51d`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -50,18 +50,18 @@
 7. `renderStep()` - 11 edges
 8. `setStatus()` - 9 edges
 9. `clone()` - 9 edges
-10. `renderLesson()` - 8 edges
+10. `cycle()` - 8 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `renderWeekly()` --calls--> `S()`  [EXTRACTED]
-  js/practice.js → data/work.js
-- `renderSetup()` --calls--> `S()`  [EXTRACTED]
-  js/practice.js → data/work.js
 - `renderLesson()` --calls--> `lessonById()`  [EXTRACTED]
   js/lesson.js → data/index.js
+- `renderSetup()` --calls--> `S()`  [EXTRACTED]
+  js/practice.js → data/work.js
+- `renderWeekly()` --calls--> `S()`  [EXTRACTED]
+  js/practice.js → data/work.js
 - `taskLink()` --calls--> `lessonById()`  [EXTRACTED]
   js/app.js → data/index.js
-- `renderWords()` --calls--> `S()`  [EXTRACTED]
+- `allDialogs()` --calls--> `S()`  [EXTRACTED]
   js/practice.js → data/work.js
 
 ## Import Cycles
