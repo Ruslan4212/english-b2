@@ -1,24 +1,23 @@
-# Graph Report - english-b2  (2026-10-25)
+# Graph Report - english-b2  (2026-10-28)
 
 ## Corpus Check
-- 92 files · ~155,011 words
+- 106 files · ~159,443 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 5 file(s) not represented in the graph (top: (none) 3, .css 1, .toml 1)
 
 ## Summary
-- 521 nodes · 933 edges · 37 communities (21 shown, 16 thin omitted)
-- Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 28 edges (avg confidence: 0.85)
+- 557 nodes · 955 edges · 54 communities (22 shown, 32 thin omitted)
+- Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 31 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `b9426989`
+- Built from commit: `065a09fb`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - app.js
 - practice.js
-- index.js
 - esc
 - helper.js
 - index.ts
@@ -38,64 +37,63 @@
 - plan.js
 - account.js
 - progress.js
+- gamify.js
 - avatar.js
 - config.js
+- placement.js
+- data/index.js
 
 ## God Nodes (most connected - your core abstractions)
 1. `$$` - 22 edges
-2. `mergeState()` - 15 edges
-3. `S()` - 13 edges
-4. `run()` - 13 edges
-5. `renderPath()` - 13 edges
-6. `ai()` - 12 edges
-7. `startSync()` - 11 edges
-8. `renderStep()` - 11 edges
-9. `setStatus()` - 9 edges
+2. `mergeState()` - 16 edges
+3. `run()` - 13 edges
+4. `ai()` - 12 edges
+5. `renderPath()` - 12 edges
+6. `renderStep()` - 11 edges
+7. `startSync()` - 10 edges
+8. `renderDuo()` - 9 edges
+9. `drawTiles()` - 9 edges
 10. `clone()` - 9 edges
 
 ## Surprising Connections (you probably didn't know these)
+- `2. Что берём у Duolingo (и чего не берём)` --references--> `logTime()`  [INFERRED]
+  docs/STRATEGY.md → js/store.js
 - `taskLink()` --calls--> `lessonById()`  [EXTRACTED]
   js/app.js → data/index.js
-- `renderSetup()` --calls--> `S()`  [EXTRACTED]
-  js/practice.js → data/work.js
-- `renderWeekly()` --calls--> `S()`  [EXTRACTED]
-  js/practice.js → data/work.js
-- `allDialogs()` --calls--> `S()`  [EXTRACTED]
-  js/practice.js → data/work.js
-- `autoCheck()` --calls--> `S()`  [EXTRACTED]
-  js/practice.js → data/work.js
+- `renderLesson()` --calls--> `lessonById()`  [EXTRACTED]
+  js/lesson.js → data/index.js
+- `renderMsg()` --indirect_call--> `esc()`  [INFERRED]
+  js/helper.js → js/util.js
+- `liveCall()` --indirect_call--> `esc()`  [INFERRED]
+  js/practice.js → js/util.js
 
 ## Import Cycles
 - None detected.
 
-## Communities (37 total, 16 thin omitted)
+## Communities (54 total, 32 thin omitted)
 
 ### Community 0 - "app.js"
-Cohesion: 0.13
+Cohesion: 0.12
 Nodes (17): app, bindNameAsk(), enterUser(), nameAsk(), nameFields(), nameFieldsHtml(), refreshAfterRemote(), renderOnboarding() (+9 more)
 
 ### Community 1 - "practice.js"
-Cohesion: 0.08
-Nodes (27): S(), allDialogs(), autoCheck(), chat(), curWeek(), inlineQ(), listenOne(), liveCall() (+19 more)
-
-### Community 2 - "index.js"
-Cohesion: 0.06
-Nodes (9): LESSONS, UNITS, applyStart(), dayFor(), inlineQ(), knownLevels(), norm(), renderPlacement() (+1 more)
+Cohesion: 0.07
+Nodes (24): allDialogs(), autoCheck(), chat(), curWeek(), inlineQ(), listenOne(), liveCall(), lvlOrder (+16 more)
 
 ### Community 3 - "esc"
-Cohesion: 0.31
-Nodes (15): choice(), dialog(), dictation(), drill(), examples(), fill(), head(), order() (+7 more)
+Cohesion: 0.17
+Nodes (17): choice(), dialog(), dictation(), drill(), examples(), fill(), head(), order() (+9 more)
 
 ### Community 4 - "helper.js"
 Cohesion: 0.14
 Nodes (17): lessonById(), addMsg(), ctxText(), history, initHelper(), openHelper(), quick(), renderMsg() (+9 more)
 
 ### Community 5 - "index.ts"
-Cohesion: 0.17
+Cohesion: 0.16
 Nodes (18): ALLOWED_ORIGINS, buildRequest(), cors(), cut(), env(), extractJson(), hits, json() (+10 more)
 
 ### Community 6 - "server_template.ts"
-Cohesion: 0.21
+Cohesion: 0.19
 Nodes (13): ALLOWED_ORIGINS, cors(), env(), extractJson(), hits, json(), pickProvider(), PREFERRED (+5 more)
 
 ### Community 7 - "$$"
@@ -119,8 +117,8 @@ Cohesion: 0.13
 Nodes (31): ABORT, answerChoice(), appliedSubs, askChoice(), backupGuest(), check(), choiceSubs, cycle() (+23 more)
 
 ### Community 14 - "store.js"
-Cohesion: 0.13
-Nodes (20): addCard(), addError(), BLOCKS, deleteCard(), ensureIds(), fnv(), fresh(), GUEST_KEY (+12 more)
+Cohesion: 0.10
+Nodes (25): 1. Конкурентные преимущества перед Duolingo, 2. Что берём у Duolingo (и чего не берём), 3. Roadmap, 4. Команда (субагенты в `.claude/agents/`), English B2 Path × Duolingo — стратегия, addCard(), addError(), BLOCKS (+17 more)
 
 ### Community 15 - "ai.js"
 Cohesion: 0.18
@@ -140,37 +138,45 @@ Nodes (17): clone(), isEmptyState(), isObj(), mapUnion(), maxMap(), mergeByMeta(
 
 ### Community 30 - "duo.js"
 Cohesion: 0.09
-Nodes (41): PHRASES, TOPICS, addPhraseStat(), addXp(), answer(), bar(), buildSession(), BY_ID (+33 more)
+Nodes (40): PHRASES, TOPICS, addPhraseStat(), addXp(), answer(), bar(), buildSession(), BY_ID (+32 more)
 
 ### Community 31 - "plan.js"
 Cohesion: 0.22
 Nodes (13): CHECKPOINT_WEEKS, dayInfo(), DOW, isLastWeekOfMonth(), levelTestWeek(), monthOfWeek(), pace(), phaseOfWeek() (+5 more)
 
 ### Community 33 - "account.js"
-Cohesion: 0.12
-Nodes (13): doSignOut(), hhmm(), hooks, initAccount(), LABEL, paintBadge(), renderAccount(), renderProfile() (+5 more)
+Cohesion: 0.18
+Nodes (11): doSignOut(), hhmm(), hooks, initAccount(), LABEL, paintBadge(), renderAccount(), renderProfile() (+3 more)
 
 ### Community 34 - "progress.js"
 Cohesion: 0.36
 Nodes (7): currentDay(), currentLevel(), currentPhase(), dayComplete(), dayState(), markToday(), toggleTask()
 
+### Community 35 - "gamify.js"
+Cohesion: 0.23
+Nodes (14): badges(), badgesCard(), goal(), league(), mondayOf(), pct(), POOL, quests() (+6 more)
+
+### Community 40 - "placement.js"
+Cohesion: 0.39
+Nodes (7): applyStart(), dayFor(), inlineQ(), knownLevels(), norm(), renderPlacement(), unitQuestions()
+
 ## Knowledge Gaps
-- **16 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **32 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `$$` connect `$$` to `plan.js`?**
-  _High betweenness centrality (0.059) - this node is a cross-community bridge._
+  _High betweenness centrality (0.055) - this node is a cross-community bridge._
 - **Are the 4 inferred relationships involving `mergeState()` (e.g. with `mergeCard()` and `mergeDay()`) actually correct?**
   _`mergeState()` has 4 INFERRED edges - model-reasoned connections that need verification._
 - **Should `app.js` be split into smaller, more focused modules?**
-  _Cohesion score 0.13105413105413105 - nodes in this community are weakly interconnected._
-- **Why does `esc()` connect `$$` to `practice.js`, `helper.js`?**
-  _High betweenness centrality (0.003) - this node is a cross-community bridge._
+  _Cohesion score 0.12433862433862433 - nodes in this community are weakly interconnected._
 - **Should `practice.js` be split into smaller, more focused modules?**
-  _Cohesion score 0.08084163898117387 - nodes in this community are weakly interconnected._
-- **Should `index.js` be split into smaller, more focused modules?**
-  _Cohesion score 0.05853658536585366 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06755260243632337 - nodes in this community are weakly interconnected._
 - **Should `helper.js` be split into smaller, more focused modules?**
   _Cohesion score 0.14333333333333334 - nodes in this community are weakly interconnected._
+- **Should `$$` be split into smaller, more focused modules?**
+  _Cohesion score 0.12554112554112554 - nodes in this community are weakly interconnected._
+- **Should `speech.js` be split into smaller, more focused modules?**
+  _Cohesion score 0.13333333333333333 - nodes in this community are weakly interconnected._

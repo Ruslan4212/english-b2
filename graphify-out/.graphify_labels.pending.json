@@ -1,7 +1,7 @@
 {
   "0": "app.js",
   "1": "practice.js",
-  "2": "index.js",
+  "2": "data/b1.js",
   "3": "esc",
   "4": "helper.js",
   "5": "index.ts",
@@ -34,6 +34,23 @@
   "32": "data/b2.js",
   "33": "account.js",
   "34": "progress.js",
+  "35": "gamify.js",
   "36": "avatar.js",
-  "37": "config.js"
+  "37": "config.js",
+  "38": "data/a1.js",
+  "39": "data/a2.js",
+  "40": "placement.js",
+  "41": "data/index.js",
+  "42": "business-analyst.md",
+  "43": "ceo.md",
+  "44": "cpo.md",
+  "45": "delivery-manager.md",
+  "46": "fullstack-dev.md",
+  "47": "mobile-dev.md",
+  "48": "project-manager.md",
+  "49": "qa-automation.md",
+  "50": "qa-lead.md",
+  "51": "system-analyst.md",
+  "52": "team-lead.md",
+  "53": "technical-writer.md"
 }

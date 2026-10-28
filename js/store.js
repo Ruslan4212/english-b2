@@ -1,6 +1,6 @@
 // Весь прогресс ученика — один объект в localStorage. Можно выгрузить/загрузить файлом.
-import { today, uid } from "./util.js?v=20261026b";
-import { stable } from "./merge.js?v=20261026b";
+import { today, uid } from "./util.js?v=20261028a";
+import { stable } from "./merge.js?v=20261028a";
 
 export const GUEST_KEY = "english_b2_path_v1";
 let KEY = GUEST_KEY; // ключ текущего пользователя: гость — общий, вошедший — english_b2_path_u_<uid>
@@ -167,9 +167,16 @@ export const BLOCKS = {
   write: "Письмо",
 };
 
-export function logTime(block, min, note = "") {
+/** xp: false — для ручных записей (их нельзя проверить), иначе 1 XP за минуту занятия в общую копилку XP. */
+export function logTime(block, min, note = "", xp = true) {
   if (!min || min <= 0) return;
-  update((s) => s.log.push({ date: today(), min: Math.round(min), block, note }));
+  update((s) => {
+    s.log.push({ date: today(), min: Math.round(min), block, note });
+    if (!xp) return;
+    const d = (s.duo ||= { p: {}, xp: {}, goal: 30 });
+    d.xp ||= {};
+    d.xp[today()] = (d.xp[today()] || 0) + Math.min(60, Math.round(min));
+  });
 }
 
 export function totalHours() {

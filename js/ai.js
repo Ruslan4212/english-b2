@@ -2,11 +2,11 @@
 //  1) функция Supabase english-tutor — ключ провайдера живёт на сервере, в браузер не попадает;
 //  2) если функции нет — личный бесплатный ключ ученика (Groq / Gemini / OpenRouter),
 //     который хранится только в этом браузере.
-import { buildRequest } from "./prompts.js?v=20261026b";
-import { setServerTTS } from "./speech.js?v=20261026b";
-import { studentName } from "./util.js?v=20261026b";
+import { buildRequest } from "./prompts.js?v=20261028a";
+import { setServerTTS } from "./speech.js?v=20261028a";
+import { studentName } from "./util.js?v=20261028a";
 
-import { DEFAULT_URL, DEFAULT_KEY } from "./config.js?v=20261026b";
+import { DEFAULT_URL, DEFAULT_KEY } from "./config.js?v=20261028a";
 const CFG = "english_b2_ai_cfg";
 
 const PROVIDERS = {

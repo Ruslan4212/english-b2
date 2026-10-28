@@ -1,17 +1,17 @@
 // Экраны практики: слова, слушание, чтение, говорение, письмо, рабочий английский,
 // ошибки, ресурсы, контрольные точки, обзор недели, старт, тест уровня, запись голоса.
-import { S, update, addCard, addError, logTime, deleteCard } from "./store.js?v=20261026b";
-import { $$, esc, md, today, toast, shuffle, uid, fmtDate, pz } from "./util.js?v=20261026b";
-import { queue, grade, preview, stats as srsStats } from "./srs.js?v=20261026b";
-import { speak, speakMia, stopSpeak, hasASR, asrError, listen as asr, startRecording, saveRecording, listRecordings, deleteRecording } from "./speech.js?v=20261026b";
-import { chatTurn, correctText, generate, story, NO_AI } from "./ai.js?v=20261026b";
-import { markToday, currentPhase, currentLevel, currentDay } from "./progress.js?v=20261026b";
-import { dialog, renderStep, bindSay } from "./exercises.js?v=20261026b";
-import { openHelper, renderMsg } from "./helper.js?v=20261026b";
-import { avatar, TUTOR, richText } from "./avatar.js?v=20261026b";
-import { extraPractice } from "./lesson.js?v=20261026b";
+import { S, update, addCard, addError, logTime, deleteCard } from "./store.js?v=20261028a";
+import { $$, esc, md, today, toast, shuffle, uid, fmtDate, pz } from "./util.js?v=20261028a";
+import { queue, grade, preview, stats as srsStats } from "./srs.js?v=20261028a";
+import { speak, speakMia, stopSpeak, hasASR, asrError, listen as asr, startRecording, saveRecording, listRecordings, deleteRecording } from "./speech.js?v=20261028a";
+import { chatTurn, correctText, generate, story, NO_AI } from "./ai.js?v=20261028a";
+import { markToday, currentPhase, currentLevel, currentDay } from "./progress.js?v=20261028a";
+import { dialog, renderStep, bindSay } from "./exercises.js?v=20261028a";
+import { openHelper, renderMsg } from "./helper.js?v=20261028a";
+import { avatar, TUTOR, richText } from "./avatar.js?v=20261028a";
+import { extraPractice } from "./lesson.js?v=20261028a";
 import { LESSONS } from "../data/index.js";
-import { dayInfo, PHASES } from "./plan.js?v=20261026b";
+import { dayInfo, PHASES } from "./plan.js?v=20261028a";
 import VOCAB from "../data/vocab.js";
 import LIBRARY from "../data/listening.js";
 import READING from "../data/reading.js";
@@ -510,7 +510,7 @@ export function renderResources(app) {
     <div class="card"><h2>Типичные проблемы и что делать при застое</h2><div class="tbl-wrap"><table><tr><th>Проблема</th><th>Что делать</th></tr>${PROBLEMS.map(([x, y]) => `<tr><td>${esc(x)}</td><td>${esc(y)}</td></tr>`).join("")}</table></div>
       ${md("Если за 2–3 месяца заметного прогресса нет, проверьте три вещи: **сколько часов вы реально занимались**, **сколько из них говорили и писали** (а не только слушали и читали) и **разбираете ли ошибки**. Всё это видно в «📊 Прогресс».")}</div>`;
   app.querySelector("[data-log]").onclick = () => {
-    logTime(app.querySelector("[data-b]").value, +app.querySelector("[data-min]").value, app.querySelector("[data-note]").value);
+    logTime(app.querySelector("[data-b]").value, +app.querySelector("[data-min]").value, app.querySelector("[data-note]").value, false);
     markToday("free");
     toast("Записано");
   };

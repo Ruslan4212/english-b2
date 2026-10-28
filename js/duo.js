@@ -1,9 +1,10 @@
 // Тренажёр «Фразы» в духе Duolingo: путь по темам, сессии из заданий разных типов, повторения по силе фразы.
-import { S, update, logTime } from "./store.js?v=20261026b";
-import { esc, shuffle, today, addDays, toast, lev, norm } from "./util.js?v=20261026b";
-import { speak } from "./speech.js?v=20261026b";
-import { sayBoth } from "./exercises.js?v=20261026b";
-import { markToday } from "./progress.js?v=20261026b";
+import { S, update, logTime } from "./store.js?v=20261028a";
+import { esc, shuffle, today, addDays, toast, lev, norm } from "./util.js?v=20261028a";
+import { speak } from "./speech.js?v=20261028a";
+import { sayBoth } from "./exercises.js?v=20261028a";
+import { markToday } from "./progress.js?v=20261028a";
+import { streakInfo, xpToday } from "./gamify.js?v=20261028a";
 import { TOPICS, PHRASES } from "../data/phrases/index.js";
 
 const INTERVALS = [1, 2, 4, 8, 16, 32]; // дней до следующего показа для силы 1..5 (индекс s-1)
@@ -44,15 +45,7 @@ function reviewList() {
     return r && r.n > 0 && (r.due <= t || (r.w >= 2 && r.s <= 2));
   }).sort((a, b) => (p[a.id].due < p[b.id].due ? -1 : p[a.id].due > p[b.id].due ? 1 : p[a.id].s - p[b.id].s));
 }
-const xpToday = () => (D().xp || {})[today()] || 0;
-function streak() {
-  const xp = D().xp || {};
-  let d = today();
-  if (!(xp[d] > 0)) d = addDays(d, -1);
-  let n = 0;
-  while (xp[d] > 0) { n++; d = addDays(d, -1); }
-  return n;
-}
+const streak = () => streakInfo().n;
 
 /* ------------------------------ проверка ответов ------------------------------ */
 /** "ok" | "typo" (одна опечатка в длинном слове) | "bad". Регистр, пунктуация, ’ и сокращения — через norm(). */
@@ -433,7 +426,7 @@ function finish() {
   const bonus = s.errs === 0 ? 5 : 0;
   const mins = Math.max(1, Math.round((Date.now() - s.t0) / 60000));
   if (bonus) addXp(bonus);
-  logTime("words", mins, `Фразы: ${s.title}`);
+  logTime("words", mins, `Фразы: ${s.title}`, false); // XP уже начислен за ответы
   markToday("duo");
   const acc = s.attempts ? Math.round((s.firstOk / s.attempts) * 100) : 100;
   const goal = D().goal || 30, xp = xpToday();
