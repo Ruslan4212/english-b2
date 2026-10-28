@@ -1,8 +1,8 @@
 // Экраны входа и аккаунта, значок статуса в шапке, плашка для гостя.
-import { S } from "./store.js?v=20261028a";
-import { esc, toast } from "./util.js?v=20261028a";
-import { hasStoredSession, signUp, signIn, signOut, ruError } from "./auth.js?v=20261028a";
-import { syncStatus, onStatus, syncNow, flush, stopSync, answerChoice, onChoice } from "./sync.js?v=20261028a";
+import { S } from "./store.js?v=20261028b";
+import { esc, toast } from "./util.js?v=20261028b";
+import { hasStoredSession, signUp, signIn, signOut, ruError } from "./auth.js?v=20261028b";
+import { syncStatus, onStatus, syncNow, flush, stopSync, answerChoice, onChoice } from "./sync.js?v=20261028b";
 
 const NAG_KEY = "english_b2_auth_nag";
 let tab = "login"; // login | signup

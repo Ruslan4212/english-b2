@@ -1,8 +1,8 @@
 // Петля мотивации в духе Duolingo для ВСЕГО курса, а не только «Фраз»: общий XP, серия дней с заморозками,
 // задания дня, недельная «лига с собой» и достижения. Всё выводится из уже хранимых данных (duo.xp, log, lessons,
 // reviewDays) — отдельного состояния нет, поэтому слияние с облаком (merge.js) ничего не теряет.
-import { S } from "./store.js?v=20261028a";
-import { esc, today, addDays } from "./util.js?v=20261028a";
+import { S } from "./store.js?v=20261028b";
+import { esc, today, addDays } from "./util.js?v=20261028b";
 
 const FREEZE_EVERY = 7; // заморозка серии за каждые 7 дней подряд
 const FREEZE_MAX = 2; // больше двух в запасе не копится (как в Duolingo)

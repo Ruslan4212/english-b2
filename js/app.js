@@ -1,23 +1,24 @@
 // Точка входа: роутер по hash, шапка, онбординг, «Сегодня», карта, уроки, прогресс, настройки.
-import { todayCard, badgesCard } from "./gamify.js?v=20261028a";
-import { S, update, save, exportJson, importJson, reset, BLOCKS, logTime, totalHours } from "./store.js?v=20261028a";
-import { $, $$, esc, md, today, fmtDate, daysBetween, toast, plural, translit, studentName } from "./util.js?v=20261028a";
-import { PHASES, DOW, TOTAL_WEEKS, dayInfo, tasksForDay, projectedFinish, CHECKPOINT_WEEKS, monthOfWeek } from "./plan.js?v=20261028a";
+import { todayCard, badgesCard } from "./gamify.js?v=20261028b";
+import { S, update, save, exportJson, importJson, reset, BLOCKS, logTime, totalHours } from "./store.js?v=20261028b";
+import { $, $$, esc, md, today, fmtDate, daysBetween, toast, plural, translit, studentName } from "./util.js?v=20261028b";
+import { PHASES, DOW, TOTAL_WEEKS, dayInfo, tasksForDay, projectedFinish, CHECKPOINT_WEEKS, monthOfWeek } from "./plan.js?v=20261028b";
 import { UNITS, LESSONS, lessonById } from "../data/index.js";
-import { renderLesson, nextLesson, lessonForToday } from "./lesson.js?v=20261028a";
-import { initHelper } from "./helper.js?v=20261028a";
-import { currentDay, currentPhase, dayState, toggleTask, dayComplete, finishDay } from "./progress.js?v=20261028a";
-import { queue, stats as srsStats } from "./srs.js?v=20261028a";
-import { aiConfig, saveAiConfig, providerList, aiPing } from "./ai.js?v=20261028a";
-import { voiceName, speak } from "./speech.js?v=20261028a";
-import * as P from "./practice.js?v=20261028a";
-import { bindSay } from "./exercises.js?v=20261028a";
-import { renderAccount, initAccount, statusChanged, authNag, bindAuthNag } from "./account.js?v=20261028a";
-import { hasStoredSession, currentUser, onAuth } from "./auth.js?v=20261028a";
-import { startSync, stopSync, onApplied, onStatus, syncStatus } from "./sync.js?v=20261028a";
-import { switchUser } from "./store.js?v=20261028a";
-import { renderDuo } from "./duo.js?v=20261028a";
-import { renderPlacement, goToWeek } from "./placement.js?v=20261028a";
+import { renderLesson, nextLesson, lessonForToday } from "./lesson.js?v=20261028b";
+import { initHelper } from "./helper.js?v=20261028b";
+import { currentDay, currentPhase, dayState, toggleTask, dayComplete, finishDay } from "./progress.js?v=20261028b";
+import { queue, stats as srsStats } from "./srs.js?v=20261028b";
+import { aiConfig, saveAiConfig, providerList, aiPing } from "./ai.js?v=20261028b";
+import { voiceName, speak } from "./speech.js?v=20261028b";
+import * as P from "./practice.js?v=20261028b";
+import { bindSay } from "./exercises.js?v=20261028b";
+import { renderAccount, initAccount, statusChanged, authNag, bindAuthNag } from "./account.js?v=20261028b";
+import { hasStoredSession, currentUser, onAuth } from "./auth.js?v=20261028b";
+import { startSync, stopSync, onApplied, onStatus, syncStatus } from "./sync.js?v=20261028b";
+import { switchUser } from "./store.js?v=20261028b";
+import { renderDuo } from "./duo.js?v=20261028b";
+import { initPwa, pwaCard, bindPwaCard } from "./pwa.js?v=20261028b";
+import { renderPlacement, goToWeek } from "./placement.js?v=20261028b";
 
 const app = $("#app");
 bindSay(app);
@@ -411,6 +412,7 @@ function renderSettings() {
   const s = S();
   const c = aiConfig();
   app.innerHTML = `<h1>⚙️ Настройки</h1>
+  ${pwaCard()}
   <div class="card"><h2>🤖 ИИ-наставник</h2>
     ${md(`Наставник объясняет непонятные темы, проверяет переводы и письма, ведёт разговор. Работает так же, как в DevOps-игре:
 
@@ -515,6 +517,7 @@ function renderSettings() {
       route();
     }
   };
+  bindPwaCard(app, renderSettings);
 }
 
 /* ------------------------------ аккаунт и синхронизация ------------------------------ */
@@ -558,6 +561,7 @@ if (hasStoredSession()) {
   } catch { /* нет хранилища */ }
 }
 initHelper();
+initPwa();
 save();
 route();
 
