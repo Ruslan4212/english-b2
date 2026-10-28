@@ -1,22 +1,23 @@
 // Точка входа: роутер по hash, шапка, онбординг, «Сегодня», карта, уроки, прогресс, настройки.
-import { S, update, save, exportJson, importJson, reset, BLOCKS, logTime, totalHours } from "./store.js?v=20261026b";
-import { $, $$, esc, md, today, fmtDate, daysBetween, toast, plural, translit, studentName } from "./util.js?v=20261026b";
-import { PHASES, DOW, TOTAL_WEEKS, dayInfo, tasksForDay, projectedFinish, CHECKPOINT_WEEKS, monthOfWeek } from "./plan.js?v=20261026b";
+import { todayCard, badgesCard } from "./gamify.js?v=20261028a";
+import { S, update, save, exportJson, importJson, reset, BLOCKS, logTime, totalHours } from "./store.js?v=20261028a";
+import { $, $$, esc, md, today, fmtDate, daysBetween, toast, plural, translit, studentName } from "./util.js?v=20261028a";
+import { PHASES, DOW, TOTAL_WEEKS, dayInfo, tasksForDay, projectedFinish, CHECKPOINT_WEEKS, monthOfWeek } from "./plan.js?v=20261028a";
 import { UNITS, LESSONS, lessonById } from "../data/index.js";
-import { renderLesson, nextLesson, lessonForToday } from "./lesson.js?v=20261026b";
-import { initHelper } from "./helper.js?v=20261026b";
-import { currentDay, currentPhase, dayState, toggleTask, dayComplete, finishDay } from "./progress.js?v=20261026b";
-import { queue, stats as srsStats } from "./srs.js?v=20261026b";
-import { aiConfig, saveAiConfig, providerList, aiPing } from "./ai.js?v=20261026b";
-import { voiceName, speak } from "./speech.js?v=20261026b";
-import * as P from "./practice.js?v=20261026b";
-import { bindSay } from "./exercises.js?v=20261026b";
-import { renderAccount, initAccount, statusChanged, authNag, bindAuthNag } from "./account.js?v=20261026b";
-import { hasStoredSession, currentUser, onAuth } from "./auth.js?v=20261026b";
-import { startSync, stopSync, onApplied, onStatus, syncStatus } from "./sync.js?v=20261026b";
-import { switchUser } from "./store.js?v=20261026b";
-import { renderDuo } from "./duo.js?v=20261026b";
-import { renderPlacement, goToWeek } from "./placement.js?v=20261026b";
+import { renderLesson, nextLesson, lessonForToday } from "./lesson.js?v=20261028a";
+import { initHelper } from "./helper.js?v=20261028a";
+import { currentDay, currentPhase, dayState, toggleTask, dayComplete, finishDay } from "./progress.js?v=20261028a";
+import { queue, stats as srsStats } from "./srs.js?v=20261028a";
+import { aiConfig, saveAiConfig, providerList, aiPing } from "./ai.js?v=20261028a";
+import { voiceName, speak } from "./speech.js?v=20261028a";
+import * as P from "./practice.js?v=20261028a";
+import { bindSay } from "./exercises.js?v=20261028a";
+import { renderAccount, initAccount, statusChanged, authNag, bindAuthNag } from "./account.js?v=20261028a";
+import { hasStoredSession, currentUser, onAuth } from "./auth.js?v=20261028a";
+import { startSync, stopSync, onApplied, onStatus, syncStatus } from "./sync.js?v=20261028a";
+import { switchUser } from "./store.js?v=20261028a";
+import { renderDuo } from "./duo.js?v=20261028a";
+import { renderPlacement, goToWeek } from "./placement.js?v=20261028a";
 
 const app = $("#app");
 bindSay(app);
@@ -277,6 +278,7 @@ function renderToday(viewDay) {
       ${i > 0 ? `<a class="btn sm ghost" href="#/day/${i - 1}">←</a>` : ""}<a class="btn sm ghost" href="#/day/${i + 1}">→</a>${!isCur ? `<a class="btn sm" href="#/today">К текущему дню</a>` : ""}</div>
     <p class="muted" style="margin-top:4px">Неделя <b>${info.week}</b> · ${DOW[info.dow]} по плану · месяц ${info.month} · <span class="pill ${ph.level.toLowerCase()}">Фаза ${ph.n}: ${ph.level} «${ph.title}»</span> · ≈${totalMin} мин</p>
     ${banners}${authNag()}
+    ${isCur ? todayCard() : ""}
     <div class="bar ok" style="margin:10px 0"><i style="width:${tasks.length ? (doneN / tasks.length) * 100 : 0}%"></i></div>
     <div data-tasks>${tasks
       .map((t) => {
@@ -302,7 +304,7 @@ function renderToday(viewDay) {
     (el.onclick = () => {
       const t = tasks.find((x) => x.id === el.dataset.chk);
       const on = !st.tasks[t.id];
-      if (on && ["manual", "free", "phrases", "errors", "speak"].includes(t.kind)) logTime(t.block, t.min, t.title);
+      if (on && ["manual", "free", "phrases", "errors", "speak"].includes(t.kind)) logTime(t.block, t.min, t.title, false);
       toggleTask(t.id, on);
       renderToday();
       topStats();
@@ -381,6 +383,7 @@ function renderProgress() {
       <div class="card stat"><b>${srsDays}/7</b><span class="muted small">дней с Anki (норма > 5)</span></div>
       <div class="card stat"><b>${st.learned}</b><span class="muted small">фраз изучается${st.accuracy != null ? `, точность ${st.accuracy}%` : ""}</span></div>
     </div>
+    ${badgesCard()}
     <div class="card"><h3>Путь по накопленным часам</h3>
       <div class="bar"><i style="width:${Math.min(100, (h / 550) * 100)}%"></i></div>
       <div class="levels">${marks.map(([l, m]) => `<div>${h >= m ? "✅" : "⬜"} ${l} ≈ ${m} ч</div>`).join("")}</div></div>
@@ -396,7 +399,7 @@ function renderProgress() {
   app.querySelector("[data-add]").onclick = () => {
     const m = +app.querySelector("[data-min]").value;
     if (!m) return toast("Укажите минуты");
-    logTime(app.querySelector("[data-block]").value, m, app.querySelector("[data-note]").value);
+    logTime(app.querySelector("[data-block]").value, m, app.querySelector("[data-note]").value, false);
     renderProgress();
     topStats();
   };

@@ -373,3 +373,14 @@ mark.k { background: var(--hl-ai); color: inherit; padding: 0 3px; border-radius
 .duo-owl { font-size: 3rem; }
 .duo-run .fab { display: none; }
 .duo-run .main { padding-bottom: 150px; }
+
+/* ---------- геймификация (js/gamify.js) ---------- */
+.gm-q { display: flex; align-items: center; gap: 10px; padding: 8px 4px; color: inherit; text-decoration: none; border-radius: 10px; }
+.gm-q:hover { background: rgba(127, 127, 127, .08); }
+.gm-q .gm-t { flex: 1; min-width: 0; }
+.gm-q .bar { margin-top: 4px; height: 6px; }
+.gm-q.done .gm-t { opacity: .7; }
+.gm-badges { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; }
+.gm-b { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 2px; padding: 10px 6px; border-radius: 12px; border: 1px solid rgba(127, 127, 127, .2); opacity: .45; filter: grayscale(1); }
+.gm-b.on { opacity: 1; filter: none; }
+.gm-b > span:first-child { font-size: 26px; }
