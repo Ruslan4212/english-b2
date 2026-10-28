@@ -1,17 +1,17 @@
 # Graph Report - english-b2  (2026-10-28)
 
 ## Corpus Check
-- 106 files · ~159,443 words
+- 108 files · ~160,309 words
 - Verdict: corpus is large enough that graph structure adds value.
-- Unclassified: 5 file(s) not represented in the graph (top: (none) 3, .css 1, .toml 1)
+- Unclassified: 6 file(s) not represented in the graph (top: (none) 3, .css 1, .webmanifest 1)
 
 ## Summary
-- 557 nodes · 955 edges · 54 communities (22 shown, 32 thin omitted)
+- 572 nodes · 982 edges · 50 communities (22 shown, 28 thin omitted)
 - Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 31 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `065a09fb`
+- Built from commit: `3e0e2ecc`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -19,7 +19,7 @@
 - app.js
 - practice.js
 - esc
-- helper.js
+- sw.js
 - index.ts
 - server_template.ts
 - $$
@@ -35,13 +35,12 @@
 - merge.js
 - duo.js
 - plan.js
+- placement.js
 - account.js
-- progress.js
+- ref_util_js_v_20261028b
 - gamify.js
 - avatar.js
 - config.js
-- placement.js
-- data/index.js
 
 ## God Nodes (most connected - your core abstractions)
 1. `$$` - 22 edges
@@ -70,23 +69,23 @@
 ## Import Cycles
 - None detected.
 
-## Communities (54 total, 32 thin omitted)
+## Communities (50 total, 28 thin omitted)
 
 ### Community 0 - "app.js"
-Cohesion: 0.12
-Nodes (17): app, bindNameAsk(), enterUser(), nameAsk(), nameFields(), nameFieldsHtml(), refreshAfterRemote(), renderOnboarding() (+9 more)
+Cohesion: 0.07
+Nodes (34): lessonById(), app, bindNameAsk(), enterUser(), nameAsk(), nameFields(), nameFieldsHtml(), refreshAfterRemote() (+26 more)
 
 ### Community 1 - "practice.js"
 Cohesion: 0.07
 Nodes (24): allDialogs(), autoCheck(), chat(), curWeek(), inlineQ(), listenOne(), liveCall(), lvlOrder (+16 more)
 
 ### Community 3 - "esc"
-Cohesion: 0.17
-Nodes (17): choice(), dialog(), dictation(), drill(), examples(), fill(), head(), order() (+9 more)
+Cohesion: 0.31
+Nodes (15): choice(), dialog(), dictation(), drill(), examples(), fill(), head(), order() (+7 more)
 
-### Community 4 - "helper.js"
-Cohesion: 0.14
-Nodes (17): lessonById(), addMsg(), ctxText(), history, initHelper(), openHelper(), quick(), renderMsg() (+9 more)
+### Community 4 - "sw.js"
+Cohesion: 0.83
+Nodes (3): check(), day(), meta()
 
 ### Community 5 - "index.ts"
 Cohesion: 0.16
@@ -141,42 +140,42 @@ Cohesion: 0.09
 Nodes (40): PHRASES, TOPICS, addPhraseStat(), addXp(), answer(), bar(), buildSession(), BY_ID (+32 more)
 
 ### Community 31 - "plan.js"
-Cohesion: 0.22
+Cohesion: 0.24
 Nodes (13): CHECKPOINT_WEEKS, dayInfo(), DOW, isLastWeekOfMonth(), levelTestWeek(), monthOfWeek(), pace(), phaseOfWeek() (+5 more)
+
+### Community 32 - "placement.js"
+Cohesion: 0.06
+Nodes (9): LESSONS, UNITS, applyStart(), dayFor(), inlineQ(), knownLevels(), norm(), renderPlacement() (+1 more)
 
 ### Community 33 - "account.js"
 Cohesion: 0.18
 Nodes (11): doSignOut(), hhmm(), hooks, initAccount(), LABEL, paintBadge(), renderAccount(), renderProfile() (+3 more)
 
-### Community 34 - "progress.js"
-Cohesion: 0.36
-Nodes (7): currentDay(), currentLevel(), currentPhase(), dayComplete(), dayState(), markToday(), toggleTask()
+### Community 34 - "ref_util_js_v_20261028b"
+Cohesion: 0.11
+Nodes (18): currentDay(), currentLevel(), currentPhase(), dayComplete(), dayState(), markToday(), toggleTask(), bindPwaCard() (+10 more)
 
 ### Community 35 - "gamify.js"
 Cohesion: 0.23
 Nodes (14): badges(), badgesCard(), goal(), league(), mondayOf(), pct(), POOL, quests() (+6 more)
 
-### Community 40 - "placement.js"
-Cohesion: 0.39
-Nodes (7): applyStart(), dayFor(), inlineQ(), knownLevels(), norm(), renderPlacement(), unitQuestions()
-
 ## Knowledge Gaps
-- **32 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **28 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `$$` connect `$$` to `plan.js`?**
-  _High betweenness centrality (0.055) - this node is a cross-community bridge._
+- **Why does `$$` connect `$$` to `ref_util_js_v_20261028b`?**
+  _High betweenness centrality (0.054) - this node is a cross-community bridge._
 - **Are the 4 inferred relationships involving `mergeState()` (e.g. with `mergeCard()` and `mergeDay()`) actually correct?**
   _`mergeState()` has 4 INFERRED edges - model-reasoned connections that need verification._
 - **Should `app.js` be split into smaller, more focused modules?**
-  _Cohesion score 0.12433862433862433 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07039187227866474 - nodes in this community are weakly interconnected._
 - **Should `practice.js` be split into smaller, more focused modules?**
   _Cohesion score 0.06755260243632337 - nodes in this community are weakly interconnected._
-- **Should `helper.js` be split into smaller, more focused modules?**
-  _Cohesion score 0.14333333333333334 - nodes in this community are weakly interconnected._
 - **Should `$$` be split into smaller, more focused modules?**
   _Cohesion score 0.12554112554112554 - nodes in this community are weakly interconnected._
 - **Should `speech.js` be split into smaller, more focused modules?**
   _Cohesion score 0.13333333333333333 - nodes in this community are weakly interconnected._
+- **Should `sync.js` be split into smaller, more focused modules?**
+  _Cohesion score 0.12941176470588237 - nodes in this community are weakly interconnected._

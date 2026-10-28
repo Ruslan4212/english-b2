@@ -1,13 +1,13 @@
 // Плеер урока: шаги по одному, прогресс-бар, мини-повтор в начале, итог в конце.
-import { S, update, addError, addCard, logTime } from "./store.js?v=20261028a";
+import { S, update, addError, addCard, logTime } from "./store.js?v=20261028b";
 import { LESSONS, lessonById } from "../data/index.js";
-import { renderStep, bindSay } from "./exercises.js?v=20261028a";
-import { esc, today, shuffle, md, pz } from "./util.js?v=20261028a";
-import { openHelper } from "./helper.js?v=20261028a";
-import { markToday, currentPhase, currentDay } from "./progress.js?v=20261028a";
-import { dayInfo, tasksForDay } from "./plan.js?v=20261028a";
-import { generate } from "./ai.js?v=20261028a";
-import { stopSpeak } from "./speech.js?v=20261028a";
+import { renderStep, bindSay } from "./exercises.js?v=20261028b";
+import { esc, today, shuffle, md, pz } from "./util.js?v=20261028b";
+import { openHelper } from "./helper.js?v=20261028b";
+import { markToday, currentPhase, currentDay } from "./progress.js?v=20261028b";
+import { dayInfo, tasksForDay } from "./plan.js?v=20261028b";
+import { generate } from "./ai.js?v=20261028b";
+import { stopSpeak } from "./speech.js?v=20261028b";
 
 const DRILLS = ["choice", "fill", "order", "translate"];
 
